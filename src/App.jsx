@@ -1,0 +1,151 @@
+import { useEffect, useState, useContext } from "react";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { ShopProvider, ShopContext } from "./context/ShopContext";
+
+// Components
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import WhatsAppWidget from "./components/WhatsAppWidget";
+import LoadingScreen from "./components/LoadingScreen";
+import PromoBanner from "./components/PromoBanner";
+import ScrollToTopButton from "./components/ScrollToTop";
+import CompareBar from "./components/CompareBar";
+import NewsletterPopup from "./components/NewsletterPopup";
+
+// Pages
+import Home from "./pages/Home";
+import Products from "./pages/Products";
+import ProductDetails from "./pages/ProductDetails";
+import ServiceCenter from "./pages/ServiceCenter";
+import GiftFinder from "./pages/GiftFinder";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Wishlist from "./pages/Wishlist";
+import Checkout from "./pages/Checkout";
+import OrderSuccess from "./pages/OrderSuccess";
+import Profile from "./pages/Profile";
+import AdminDashboard from "./pages/AdminDashboard";
+import Invoice from "./pages/Invoice";
+import Compare from "./pages/Compare";
+import WatchFinder from "./pages/WatchFinder";
+import Brands from "./pages/Brands";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
+import FAQ from "./pages/FAQ";
+import GiftCards from "./pages/GiftCards";
+import Chatbot from "./components/Chatbot";
+import AICongierge from "./pages/AICongierge";
+import WarrantyPortal from "./pages/WarrantyPortal";
+import ShowroomLocator from "./pages/ShowroomLocator";
+import Lookbook from "./pages/Lookbook";
+import ReferralProgram from "./pages/ReferralProgram";
+import SubscriptionBox from "./pages/SubscriptionBox";
+import CorporateOrders from "./pages/CorporateOrders";
+import TradeIn from "./pages/TradeIn";
+import ReturnsExchange from "./pages/ReturnsExchange";
+
+// Scroll to Top on route changes for fluid UX
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "instant",
+    });
+  }, [pathname]);
+
+  return null;
+}
+
+function AppContent() {
+  const [isLoading, setIsLoading] = useState(true);
+  const { theme, fontSize, highContrast, promoBanner } = useContext(ShopContext);
+  const location = useLocation();
+  const isInvoiceRoute = location.pathname.startsWith("/invoice");
+  const isAdminRoute = location.pathname.startsWith("/admin");
+  const hideHeaderFooter = isInvoiceRoute || isAdminRoute;
+
+  const wrapperClass = [
+    "min-h-screen flex flex-col justify-between antialiased selection:bg-amber-500/20 selection:text-amber-500 transition-all duration-300",
+    theme === "light" ? "light-theme bg-neutral-50 text-neutral-900" : "bg-neutral-950 text-neutral-100 dark-theme",
+    fontSize === "large" ? "accessibility-large-text" : "",
+    highContrast === "high" ? "high-contrast-mode" : ""
+  ].join(" ");
+
+  return (
+    <div className={wrapperClass}>
+      {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
+      
+      {!hideHeaderFooter && <PromoBanner />}
+      {/* Persistent Navigation */}
+      {!hideHeaderFooter && <Navbar />}
+
+      {/* Primary Route Stage */}
+      <main className={`grow flex flex-col ${!hideHeaderFooter ? (promoBanner?.isVisible ? "pt-[116px] sm:pt-[116px]" : "pt-[76px]") : ""}`}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/collections" element={<Products />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/service" element={<ServiceCenter />} />
+          <Route path="/gift-finder" element={<GiftFinder />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/order-success/:orderId" element={<OrderSuccess />} />
+          <Route path="/invoice/:orderId" element={<Invoice />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/compare" element={<Compare />} />
+          <Route path="/watch-finder" element={<WatchFinder />} />
+          <Route path="/brands" element={<Brands />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:id" element={<BlogPost />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/gift-cards" element={<GiftCards />} />
+          <Route path="/ai-advisor" element={<WatchFinder />} />
+          <Route path="/warranty" element={<WarrantyPortal />} />
+          <Route path="/showroom-locator" element={<ShowroomLocator />} />
+          <Route path="/lookbook" element={<Lookbook />} />
+          <Route path="/referral" element={<ReferralProgram />} />
+          <Route path="/subscription" element={<SubscriptionBox />} />
+          <Route path="/corporate" element={<CorporateOrders />} />
+          <Route path="/trade-in" element={<TradeIn />} />
+          <Route path="/returns" element={<ReturnsExchange />} />
+          <Route path="*" element={<Home />} /> {/* Fallback routing */}
+        </Routes>
+      </main>
+
+      {/* Global Components */}
+      {!hideHeaderFooter && <CompareBar />}
+      {!hideHeaderFooter && <NewsletterPopup />}
+
+      {/* Persistent Footer */}
+      {!hideHeaderFooter && <Footer />}
+
+      {/* Floating Actions */}
+      {!hideHeaderFooter && (
+        <>
+          <ScrollToTopButton />
+          <WhatsAppWidget />
+          <Chatbot />
+        </>
+      )}
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <ShopProvider>
+      <Router>
+        <ScrollToTop />
+        <AppContent />
+      </Router>
+    </ShopProvider>
+  );
+}
+
+export default App;

@@ -1,0 +1,435 @@
+export const mockProducts = [
+  {
+    id: "rolex-submariner-01",
+    name: "Submariner Date \"Starbucks\"",
+    brand: "Rolex",
+    price: 1385000,
+    category: "Men",
+    style: "Luxury",
+    movement: "Automatic",
+    rating: 4.9,
+    isFeatured: true,
+    description: "The Rolex Submariner Date in Oystersteel with a green Cerachrom ceramic bezel and a black dial. An iconic divers' watch that has transcended its tool heritage to become a global symbol of achievement and luxury.",
+    images: [
+      "https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1622434641406-a158123450f9?auto=format&fit=crop&q=80&w=800"
+    ],
+    specs: {
+      movement: "Rolex Calibre 3235, Manufacture Mechanical",
+      caseDiameter: "41 mm",
+      caseMaterial: "Oystersteel (904L Stainless Steel)",
+      strapMaterial: "Oystersteel Bracelet with Oysterlock Safety Clasp",
+      waterResistance: "300 meters / 1000 feet",
+      glass: "Scratch-resistant Sapphire, Cyclops lens over the date",
+      warranty: "5 Years International Warranty",
+      powerReserve: "Approx. 70 hours"
+    },
+    reviews: [
+      { id: 1, author: "Vikram S.", rating: 5, comment: "Absolutely stunning. The green bezel pops in the sunlight.", date: "2026-05-12" },
+      { id: 2, author: "Rahul M.", rating: 5, comment: "A grail watch. Happy to finally have it in my collection.", date: "2026-04-20" },
+      { id: 3, author: "Aman K.", rating: 4, comment: "Waitlist was long but worth it.", date: "2026-03-15" }
+    ]
+  },
+  {
+    id: "omega-speedmaster-02",
+    name: "Speedmaster Professional Moonwatch",
+    brand: "Omega",
+    price: 720000,
+    category: "Men",
+    style: "Luxury",
+    movement: "Automatic",
+    rating: 4.8,
+    isFeatured: true,
+    description: "The Omega Speedmaster Professional Moonwatch is one of the world's most iconic timepieces. Having played a part in all six lunar missions, the legendary chronograph is an impressive representation of the brand’s adventurous pioneering spirit.",
+    images: [
+      "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&q=80&w=800"
+    ],
+    specs: {
+      movement: "Omega Co-Axial Master Chronometer Calibre 3861",
+      caseDiameter: "42 mm",
+      caseMaterial: "Stainless Steel",
+      strapMaterial: "Polished Stainless Steel Bracelet",
+      waterResistance: "50 meters / 167 feet",
+      glass: "Hesalite Crystal (traditional) or Domed Sapphire",
+      warranty: "5 Years International Warranty",
+      powerReserve: "Approx. 50 hours"
+    },
+    reviews: [
+      { id: 1, author: "Karan D.", rating: 5, comment: "The history behind this watch is unmatched.", date: "2026-06-01" },
+      { id: 2, author: "Siddharth J.", rating: 4, comment: "Great watch but the bracelet could be slightly better.", date: "2026-05-28" }
+    ]
+  },
+  {
+    id: "rado-centrix-03",
+    name: "Centrix Automatic Open Heart",
+    brand: "Rado",
+    price: 215000,
+    category: "Unisex",
+    style: "Luxury",
+    movement: "Automatic",
+    rating: 4.7,
+    isFeatured: true,
+    description: "The popular Centrix Automatic Open Heart watch showcases the high-quality Swiss automatic movement inside through a beautifully cut-out dial. Crafted in signature high-tech ceramic and stainless steel for scratch-resistant luxury.",
+    images: [
+      "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=800"
+    ],
+    specs: {
+      movement: "Swiss Automatic Movement, 80-hour power reserve",
+      caseDiameter: "38 mm",
+      caseMaterial: "Stainless Steel & Rose Gold PVD coating",
+      strapMaterial: "High-Tech Ceramic and Stainless Steel Links",
+      waterResistance: "30 meters / 100 feet",
+      glass: "Curved Sapphire Crystal",
+      warranty: "2 Years International Rado Warranty",
+      powerReserve: "Approx. 80 hours"
+    },
+    reviews: [
+      { id: 1, author: "Priya T.", rating: 5, comment: "Looks incredibly elegant on the wrist. Love the open heart.", date: "2026-06-10" }
+    ]
+  },
+  {
+    id: "tag-heuer-carrera-04",
+    name: "Carrera Chronograph \"Glassbox\"",
+    brand: "TAG Heuer",
+    price: 545000,
+    category: "Men",
+    style: "Luxury",
+    movement: "Automatic",
+    rating: 4.8,
+    isFeatured: true,
+    description: "Designed for high-speed racing drivers, this TAG Heuer Carrera features a signature 'glassbox' dome sapphire crystal that curves elegantly over the tachymeter scale, wrapping around the edge of the case for maximum legibility.",
+    images: [
+      "https://images.unsplash.com/photo-1639006570490-79c0c53f1080?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1604242692760-2f7b0c26856d?auto=format&fit=crop&q=80&w=800"
+    ],
+    specs: {
+      movement: "Calibre TH20-00 Automatic Chronograph",
+      caseDiameter: "39 mm",
+      caseMaterial: "Fine-brushed & Polished Stainless Steel",
+      strapMaterial: "Black Perforated Calfskin Leather Strap",
+      waterResistance: "100 meters / 330 feet",
+      glass: "Domed Sapphire Crystal with double anti-reflective treatment",
+      warranty: "2 Years International Warranty",
+      powerReserve: "Approx. 80 hours"
+    },
+    reviews: [
+      { id: 1, author: "Arjun P.", rating: 5, comment: "The glassbox design is a game changer for TAG.", date: "2026-05-05" }
+    ]
+  },
+  {
+    id: "tissot-prx-05",
+    name: "PRX Powermatic 80 Blue Dial",
+    brand: "Tissot",
+    price: 68500,
+    category: "Men",
+    style: "Luxury",
+    movement: "Automatic",
+    rating: 4.7,
+    isFeatured: false,
+    description: "An essential timepiece with an integrated bracelet and a distinctive waffle dial. The Tissot PRX Powermatic 80 is a modern rebirth of a classic 1978 design, powered by a state-of-the-art Swiss automatic movement.",
+    images: [
+      "https://images.unsplash.com/photo-1619134778706-7015533a6150?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1539874754764-5a96559165b0?auto=format&fit=crop&q=80&w=800"
+    ],
+    specs: {
+      movement: "POWERMATIC 80.111 Swiss Automatic, Nivachron Hairspring",
+      caseDiameter: "40 mm",
+      caseMaterial: "316L Stainless Steel Case",
+      strapMaterial: "Integrated Stainless Steel Single-link Bracelet",
+      waterResistance: "100 meters / 330 feet",
+      glass: "Scratch-resistant Sapphire Crystal with anti-reflective coating",
+      warranty: "2 Years Tissot Warranty",
+      powerReserve: "Up to 80 hours"
+    },
+    reviews: [
+      { id: 1, author: "Rohan B.", rating: 5, comment: "Best value for money Swiss watch right now.", date: "2026-06-12" },
+      { id: 2, author: "Neeraj G.", rating: 4, comment: "Fits perfectly. The integrated bracelet is super comfortable.", date: "2026-06-08" }
+    ]
+  },
+  {
+    id: "seiko-5-sports-06",
+    name: "5 Sports GMT 'Blueberry'",
+    brand: "Seiko",
+    price: 35000,
+    category: "Men",
+    style: "Sport",
+    movement: "Automatic",
+    rating: 4.6,
+    isFeatured: false,
+    description: "The highly anticipated Seiko 5 Sports GMT series brings dual-time capabilities to an accessible price point. Features a striking blue dial, a two-tone blue and black rotating bezel, and a robust five-row steel bracelet.",
+    images: [
+      "https://images.unsplash.com/photo-1623998021450-85c24c626a5a?auto=format&fit=crop&q=80&w=800"
+    ],
+    specs: {
+      movement: "Seiko Caliber 4R34 Automatic, Manual Winding Capable",
+      caseDiameter: "42.5 mm",
+      caseMaterial: "Stainless Steel",
+      strapMaterial: "Stainless Steel Jubilee-style Bracelet",
+      waterResistance: "100 meters / 330 feet",
+      glass: "Hardlex Crystal with Date Magnifier",
+      warranty: "2 Years Seiko India Warranty",
+      powerReserve: "Approx. 41 hours"
+    },
+    reviews: []
+  },
+  {
+    id: "citizen-ecodrive-07",
+    name: "Eco-Drive Promaster Diver",
+    brand: "Citizen",
+    price: 29500,
+    category: "Men",
+    style: "Sport",
+    movement: "Solar",
+    rating: 4.5,
+    isFeatured: false,
+    description: "Powered by light, any light, this Citizen Promaster Diver never needs a battery. Built to ISO standards with a durable blue polyurethane strap, deep blue dial, and easy-to-read luminous hands and markers.",
+    images: [
+      "https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&q=80&w=800"
+    ],
+    specs: {
+      movement: "Eco-Drive Caliber E168 (Solar Powered)",
+      caseDiameter: "44 mm",
+      caseMaterial: "Silver-Tone Stainless Steel, Promaster Crown",
+      strapMaterial: "Durable Blue Polyurethane Strap",
+      waterResistance: "200 meters / 660 feet (ISO certified)",
+      glass: "Anti-Reflective Mineral Crystal",
+      warranty: "3 Years Citizen India Warranty",
+      powerReserve: "6 months on full charge in complete darkness"
+    },
+    reviews: []
+  },
+  {
+    id: "titan-edge-08",
+    name: "Edge Ultra-Thin Ceramic",
+    brand: "Titan",
+    price: 24995,
+    category: "Men",
+    style: "Formal",
+    movement: "Quartz",
+    rating: 4.6,
+    isFeatured: false,
+    description: "One of the slimmest ceramic watches in the world, the Titan Edge series is a marvel of indigenous watch engineering. Measuring just 4.4 mm in thickness, it delivers sophisticated minimalist elegance.",
+    images: [
+      "https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=800"
+    ],
+    specs: {
+      movement: "Titan Ultra-slim Quartz Movement (1.15 mm thick)",
+      caseThickness: "4.4 mm",
+      caseDiameter: "40 mm",
+      caseMaterial: "Scratch-resistant High-Tech Ceramic",
+      strapMaterial: "High-Tech Ceramic Bracelet",
+      waterResistance: "30 meters / 100 feet",
+      glass: "Sapphire Crystal",
+      warranty: "2 Years Titan India Warranty",
+      powerReserve: "Battery operated"
+    },
+    reviews: []
+  },
+  {
+    id: "timex-expedition-09",
+    name: "Expedition North Field Post",
+    brand: "Timex",
+    price: 11995,
+    category: "Men",
+    style: "Casual",
+    movement: "Solar",
+    rating: 4.4,
+    isFeatured: false,
+    description: "A rugged solar-powered field watch designed for the outdoors. Features an eco-friendly fabric strap made from recycled plastics, a stainless steel case, and Timex's legendary adventure-ready durability.",
+    images: [
+      "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&q=80&w=800"
+    ],
+    specs: {
+      movement: "Solar Quartz Movement",
+      caseDiameter: "36 mm",
+      caseMaterial: "Stainless Steel, Screw-down crown",
+      strapMaterial: "Green Eco-friendly Fabric Strap",
+      waterResistance: "100 meters / 330 feet",
+      glass: "Sapphire Crystal",
+      warranty: "1 Year Timex Warranty",
+      powerReserve: "Up to 4 months on full charge"
+    },
+    reviews: []
+  },
+  {
+    id: "fossil-townsman-10",
+    name: "Townsman Mechanical Chronograph",
+    brand: "Fossil",
+    price: 18995,
+    category: "Men",
+    style: "Casual",
+    movement: "Automatic",
+    rating: 4.3,
+    isFeatured: false,
+    description: "Featuring an eye-catching skeleton dial that showcases the intricate automatic movement, the Townsman is a sophisticated design that adds style to both casual and formal outfits.",
+    images: [
+      "https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?auto=format&fit=crop&q=80&w=800"
+    ],
+    specs: {
+      movement: "Automatic Self-Winding Skeleton Movement",
+      caseDiameter: "44 mm",
+      caseMaterial: "Stainless Steel Case, Rose Gold PVD",
+      strapMaterial: "Genuine Brown Amber Leather Strap",
+      waterResistance: "50 meters / 167 feet",
+      glass: "Hardened Mineral Crystal",
+      warranty: "2 Years Fossil India Warranty",
+      powerReserve: "Approx. 40 hours"
+    },
+    reviews: []
+  },
+  {
+    id: "fastrack-reflex-11",
+    name: "Reflex Beat Smart Watch",
+    brand: "Fastrack",
+    price: 3495,
+    category: "Unisex",
+    style: "Sport",
+    movement: "Quartz",
+    rating: 4.2,
+    isFeatured: false,
+    description: "An active lifestyle smartwatch from Fastrack, featuring a vibrant touch display, heart rate monitor, sleep tracker, multiple sports modes, and up to 7 days of battery life.",
+    images: [
+      "https://images.unsplash.com/photo-1622434641406-a158123450f9?auto=format&fit=crop&q=80&w=800"
+    ],
+    specs: {
+      movement: "Rechargeable Smart Module",
+      display: "1.69\" Ultra Bright Touchscreen",
+      caseMaterial: "Polycarbonate and Zinc Alloy",
+      strapMaterial: "Interchangeable Silicone Strap",
+      waterResistance: "IP68 Dust & Water Resistant",
+      glass: "Curved 2.5D Mineral Glass",
+      warranty: "1 Year Fastrack India Warranty",
+      batteryLife: "Up to 7 Days"
+    },
+    reviews: []
+  },
+  {
+    id: "gshock-mudmaster-12",
+    name: "G-Shock Master of G Mudmaster",
+    brand: "G-Shock",
+    price: 27995,
+    category: "Men",
+    style: "Sport",
+    movement: "Quartz",
+    rating: 4.7,
+    isFeatured: false,
+    description: "The ultimate rugged timepiece. The Mudmaster is built to withstand the harshest environments with a mud-resistant structure, carbon-fiber reinforced core, compass, altimeter, and step counter.",
+    images: [
+      "https://images.unsplash.com/photo-1604242692760-2f7b0c26856d?auto=format&fit=crop&q=80&w=800"
+    ],
+    specs: {
+      movement: "Tough Solar Multi-band Quartz Module",
+      caseDiameter: "55 mm",
+      caseMaterial: "Carbon / Resin Bezel, Mud-Resistant Buttons",
+      strapMaterial: "Resin Band",
+      waterResistance: "200 meters / 660 feet",
+      glass: "Mineral Glass",
+      warranty: "2 Years Casio India Warranty",
+      sensors: "Altimeter, Barometer, Compass, Thermometer"
+    },
+    reviews: []
+  },
+  {
+    id: "titan-raga-13",
+    name: "Raga Viva Rose Gold Edition",
+    brand: "Titan",
+    price: 6495,
+    category: "Women",
+    style: "Formal",
+    movement: "Quartz",
+    rating: 4.6,
+    isFeatured: false,
+    description: "Designed for the modern Indian woman, the Titan Raga Viva features an elegant rose-gold dial with jewel-encrusted markers and a beautifully crafted metal jewelry bracelet.",
+    images: [
+      "https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?auto=format&fit=crop&q=80&w=800"
+    ],
+    specs: {
+      movement: "Precision Japanese Quartz",
+      caseDiameter: "30 mm",
+      caseMaterial: "Brass, Rose Gold Plating",
+      strapMaterial: "Rose Gold Jewelry Style Bracelet",
+      waterResistance: "30 meters / 100 feet",
+      glass: "Mineral Glass",
+      warranty: "2 Years Titan India Warranty"
+    },
+    reviews: []
+  },
+  {
+    id: "gshock-vintage-14",
+    name: "Classic DW-5600 Digital",
+    brand: "G-Shock",
+    price: 5995,
+    category: "Unisex",
+    style: "Casual",
+    movement: "Quartz",
+    rating: 4.8,
+    isFeatured: false,
+    description: "The original square G-Shock design that started it all. Highly shock-resistant, water-resistant, featuring a multi-function alarm, stopwatch, and EL backlight for total utility.",
+    images: [
+      "https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&q=80&w=800"
+    ],
+    specs: {
+      movement: "Quartz Digital Module",
+      caseDiameter: "43 mm",
+      caseMaterial: "Resin Case and Bezel",
+      strapMaterial: "Resin Band",
+      waterResistance: "200 meters / 660 feet",
+      glass: "Mineral Glass",
+      warranty: "2 Years Casio India Warranty"
+    },
+    reviews: []
+  },
+  {
+    id: "omega-constellation-15",
+    name: "Constellation Co-Axial 29mm",
+    brand: "Omega",
+    price: 485000,
+    category: "Women",
+    style: "Luxury",
+    movement: "Automatic",
+    rating: 4.8,
+    isFeatured: false,
+    description: "The dramatic and enduring design of the OMEGA Constellation is characterized by its famous half-moons, 'claws' on the case, and mono-rang bracelet. Features a mother-of-pearl dial with diamond hour markers.",
+    images: [
+      "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80&w=800"
+    ],
+    specs: {
+      movement: "OMEGA Co-Axial Master Chronometer Calibre 8700",
+      caseDiameter: "29 mm",
+      caseMaterial: "Stainless Steel & 18K Yellow Gold",
+      strapMaterial: "Stainless Steel and 18K Yellow Gold Bracelet",
+      waterResistance: "50 meters / 167 feet",
+      glass: "Domed scratch-resistant sapphire crystal with anti-reflective treatment on both sides",
+      warranty: "5 Years International Warranty",
+      powerReserve: "Approx. 50 hours"
+    },
+    reviews: []
+  },
+  {
+    id: "casio-vintage-16",
+    name: "Vintage Digital Gold Dial",
+    brand: "Casio",
+    price: 3295,
+    category: "Unisex",
+    style: "Casual",
+    movement: "Quartz",
+    rating: 4.5,
+    isFeatured: false,
+    description: "A retro classic from Casio. Featuring a stainless steel band, gold-plated case, daily alarm, hourly time signal, and auto-calendar. Perfect for daily casual wear.",
+    images: [
+      "https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=800"
+    ],
+    specs: {
+      movement: "Japanese Quartz",
+      caseDiameter: "36 mm",
+      caseMaterial: "Resin / Gold-toned chrome plating",
+      strapMaterial: "Stainless Steel Adjustable Band",
+      waterResistance: "Water resistant (splash proof)",
+      glass: "Resin Glass",
+      warranty: "2 Years Casio India Warranty"
+    },
+    reviews: []
+  }
+];

@@ -1,0 +1,62 @@
+{
+  "chronex_promo_banner": {
+    "isVisible": true,
+    "title": "CHRONEX EXCLUSIVES SALE",
+    "subtitle": "Complimentary Winder with Automatics. Ends in:",
+    "endDate": "2026-07-06T03:22:36.088Z"
+  },
+  "chronex_showrooms": [
+    {
+      "id": "vadodara",
+      "city": "Vadodara",
+      "name": "Chronex Alkapuri Boutique",
+      "address": "SF-12, Premium Galleria, RC Dutt Rd, Alkapuri, Vadodara, Gujarat 390007",
+      "hours": "10:30 AM - 8:30 PM (Daily)",
+      "phone": "+91 83206 06850",
+      "coords": {
+        "x": 38,
+        "y": 55
+      },
+      "email": "alkapuri@chronex.in"
+    },
+    {
+      "id": "mumbai",
+      "city": "Mumbai",
+      "name": "Chronex Colaba Flagship",
+      "address": "Taj Mahal Palace Galleria, Colaba, Mumbai, Maharashtra 400001",
+      "hours": "11:00 AM - 9:00 PM (Daily)",
+      "phone": "+91 22 8765 4321",
+      "coords": {
+        "x": 35,
+        "y": 70
+      },
+      "email": "colaba@chronex.in"
+    },
+    {
+      "id": "delhi",
+      "city": "Delhi",
+      "name": "Chronex Connaught Place",
+      "address": "Block H, Connaught Place, New Delhi, Delhi 110001",
+      "hours": "10:30 AM - 8:30 PM (Daily)",
+      "phone": "+91 11 9876 5432",
+      "coords": {
+        "x": 45,
+        "y": 30
+      },
+      "email": "delhi@chronex.in"
+    },
+    {
+      "id": "bangalore",
+      "city": "Bangalore",
+      "name": "Chronex UB City Lounge",
+      "address": "Level 2, UB City Mall, Vittal Mallya Rd, Bangalore, Karnataka 560001",
+      "hours": "11:00 AM - 9:30 PM (Daily)",
+      "phone": "+91 80 8765 4321",
+      "coords": {
+        "x": 40,
+        "y": 88
+      },
+      "email": "ubcity@chronex.in"
+    }
+  ]
+}
