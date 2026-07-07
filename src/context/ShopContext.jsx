@@ -1414,7 +1414,6 @@ Please let me know how to proceed.`;
         referralCode,
         referrals,
         referralEarnings,
-        applyReferral,
         subscription,
         corporateInquiries,
         usersList,
