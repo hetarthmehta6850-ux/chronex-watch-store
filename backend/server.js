@@ -51,9 +51,13 @@ app.post('/api/data', (req, res) => {
 const distPath = path.join(__dirname, '..', 'dist');
 if (fs.existsSync(distPath)) {
   app.use(express.static(distPath));
-  // SPA fallback: serve index.html for all non-API routes
+  // SPA fallback: serve index.html for all non-API routes, but return 404 for missing asset files
   app.get('*', (req, res) => {
-    res.sendFile(path.join(distPath, 'index.html'));
+    if (path.extname(req.path)) {
+      res.status(404).send('Not Found');
+    } else {
+      res.sendFile(path.join(distPath, 'index.html'));
+    }
   });
 }
 
