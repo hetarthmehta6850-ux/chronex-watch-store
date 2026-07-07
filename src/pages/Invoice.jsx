@@ -1,4 +1,4 @@
-import { useState, useContext, useRef, useMemo } from "react";
+import { useState, useContext, useRef, useMemo, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { MapPin, Mail, Globe, Phone, QrCode, Truck, User, ShieldCheck, Download, Printer, ArrowLeft } from "lucide-react";
@@ -12,6 +12,31 @@ const Invoice = () => {
   const navigate = useNavigate();
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const invoiceRef = useRef(null);
+
+  const [scale, setScale] = useState(1);
+  const [invoiceHeight, setInvoiceHeight] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (invoiceRef.current) {
+        setInvoiceHeight(invoiceRef.current.offsetHeight);
+      }
+      if (window.innerWidth < 840) {
+        const newScale = (window.innerWidth - 32) / 800; // 16px padding on both sides
+        setScale(newScale > 0.1 ? newScale : 0.1);
+      } else {
+        setScale(1);
+      }
+    };
+    
+    // Allow initial paint to complete before measuring
+    const timer = setTimeout(handleResize, 150);
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(timer);
+    };
+  }, []);
 
   const order = useMemo(() => {
     return orders.find((o) => o.id === orderId);
@@ -206,11 +231,23 @@ const Invoice = () => {
       </div>
 
       {/* Invoice Container */}
-      <div className="flex justify-center pt-8 print:pt-0 w-full overflow-x-auto">
-        <div 
-          ref={invoiceRef}
-          className="bg-white w-[800px] min-w-[800px] shadow-2xl overflow-hidden print:shadow-none print:w-full print:max-w-full relative shrink-0 text-[11px] font-sans invoice-print-container"
+      <div className="flex justify-center pt-8 pb-12 print:pt-0 w-full overflow-hidden px-4">
+        <div
+          style={scale < 1 ? {
+            width: `${800 * scale}px`,
+            height: `${invoiceHeight * scale}px`,
+            overflow: "hidden"
+          } : {}}
+          className="relative transition-all"
         >
+          <div 
+            ref={invoiceRef}
+            style={scale < 1 ? {
+              transform: `scale(${scale})`,
+              transformOrigin: "top left"
+            } : {}}
+            className="bg-white w-[800px] min-w-[800px] shadow-2xl overflow-hidden print:shadow-none print:w-full print:max-w-full relative shrink-0 text-[11px] font-sans invoice-print-container"
+          >
           {/* 1. Header (Black) */}
           <div className="bg-[#0a0a0a] text-white p-6 print:p-4 flex justify-between items-center relative overflow-hidden">
             {/* Subtle background texture for premium feel */}
