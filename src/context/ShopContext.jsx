@@ -491,8 +491,8 @@ export const ShopProvider = ({ children }) => {
       return defaultShowrooms;
     }
   });
-  useEffect(() => {
-    fetch('/api/data')
+  const refreshDbData = () => {
+    return fetch('/api/data')
       .then(res => res.json())
       .then(data => {
         if (data && Object.keys(data).length > 0) {
@@ -533,10 +533,13 @@ export const ShopProvider = ({ children }) => {
           if (data.chronex_returns) setReturnRequests(data.chronex_returns);
           if (data.chronex_addresses) setSavedAddresses(data.chronex_addresses);
           if (data.chronex_showrooms) setShowrooms(data.chronex_showrooms);
-
         }
       })
       .catch(e => console.log("Backend not reachable", e));
+  };
+
+  useEffect(() => {
+    refreshDbData();
   }, []);
 
 
@@ -1425,6 +1428,7 @@ Please let me know how to proceed.`;
         setCurrentUser,
         updatePromoBanner,
         formatPrice,
+        refreshDbData,
         t: (key) => locales[language]?.[key] || locales.en[key] || key,
         setCurrency,
         getCartTotal,

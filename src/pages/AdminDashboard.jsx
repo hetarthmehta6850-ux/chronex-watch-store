@@ -20,7 +20,8 @@ const AdminDashboard = () => {
     referrals, corporateInquiries,
     usersList, updateUserLoyaltyPoints, cancelUserSubscription, removeNewsletterSubscriber,
     tradeInRequests, updateTradeInStatus, returnRequests, updateReturnStatus, processRefund, approveReview, rejectReview, updateProductStock,
-    showrooms, addShowroom, updateShowroom, deleteShowroom, resetShowrooms
+    showrooms, addShowroom, updateShowroom, deleteShowroom, resetShowrooms,
+    refreshDbData
   } = useContext(ShopContext);
 
   // 1. Simulated Auth States
@@ -62,6 +63,15 @@ const AdminDashboard = () => {
   useEffect(() => {
     localStorage.setItem("chronex_admin_tab", activeTab);
   }, [activeTab]);
+
+  // Sync database data on mount and poll every 15 seconds for real-time order updates
+  useEffect(() => {
+    refreshDbData();
+    const interval = setInterval(() => {
+      refreshDbData();
+    }, 15000);
+    return () => clearInterval(interval);
+  }, [refreshDbData]);
 
   // Search & Filter States
   const [prodSearch, setProdSearch] = useState("");
