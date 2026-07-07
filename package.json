@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start": "concurrently --kill-others --names \"BACKEND,FRONTEND\" --prefix-colors \"cyan,magenta\" \"node backend/server.js\" \"vite\"",
-    "dev": "vite",
+    "start": "node backend/server.js",
+    "dev": "concurrently --kill-others --names \"BACKEND,FRONTEND\" --prefix-colors \"cyan,magenta\" \"node backend/server.js\" \"vite\"",
     "backend": "node backend/server.js",
     "build": "vite build",
     "lint": "eslint .",
@@ -14,6 +14,8 @@
     "render-start": "node backend/server.js"
   },
   "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
     "html2canvas": "^1.4.1",
     "html2canvas-pro": "^2.2.1",
     "jimp": "^1.6.1",
