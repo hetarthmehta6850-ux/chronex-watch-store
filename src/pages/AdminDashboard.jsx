@@ -1104,7 +1104,7 @@ const AdminDashboard = () => {
                                 </td>
                                 <td className="p-4 text-center">
                                   <Link
-                                    to={`/invoice/${order.id}`}
+                                    to={`/invoice/${order.id}?from=admin`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="inline-flex p-2 text-neutral-500 hover:text-amber-400 hover:bg-neutral-950 border border-transparent hover:border-neutral-850 rounded-lg transition-all"

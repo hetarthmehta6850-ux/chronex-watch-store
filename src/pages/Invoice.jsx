@@ -126,11 +126,17 @@ const Invoice = () => {
   };
 
   const handleBack = () => {
-    const isAdmin = localStorage.getItem("chronex_admin_auth") === "true";
-    if (isAdmin) {
+    const params = new URLSearchParams(window.location.search);
+    const fromAdmin = params.get("from") === "admin";
+    if (fromAdmin) {
       navigate("/admin");
     } else {
-      navigate(`/order-success/${order.id}`);
+      const hasUser = localStorage.getItem("chronex_current_user");
+      if (hasUser) {
+        navigate("/profile");
+      } else {
+        navigate(`/order-success/${order.id}`);
+      }
     }
   };
 
