@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ShieldCheck, Calendar, Award, Sparkles, MapPin, ArrowRight } from "lucide-react";
+import { ShieldCheck, Award, Sparkles, MapPin } from "lucide-react";
 
 const About = () => {
   return (

@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
-import { Package, Star, Crown, Diamond, Check, AlertCircle, ArrowLeft, Calendar, Loader2 } from "lucide-react";
+import { Package, Star, Crown, Diamond, Check, AlertCircle, ArrowLeft, Calendar } from "lucide-react";
 
 const plans = [
   {

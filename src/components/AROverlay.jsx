@@ -155,7 +155,7 @@ const AROverlay = ({ product, onClose }) => {
           onTouchEnd={handlePointerUp}
           className="relative w-full h-[400px] bg-black overflow-hidden cursor-move select-none"
         >
-          {hasPermission === false && (
+          {hasPermission === false ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-neutral-900 text-neutral-350 z-20">
               <AlertCircle size={48} className="text-rose-500 mb-3" />
               <p className="font-bold text-sm text-neutral-200">Camera Access Not Enabled</p>
@@ -165,23 +165,20 @@ const AROverlay = ({ product, onClose }) => {
                 <strong className="text-amber-500/80">⚠️ Mobile Developers Note:</strong> Web camera streams require a secure **HTTPS** connection (or localhost) on mobile devices to initialize.
               </p>
             </div>
-          )}
-
-          {hasPermission === null && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-neutral-400">
-              <Camera size={48} className="animate-pulse text-amber-500/50 mb-3" />
-              <p className="text-sm">Initiating Camera Stream...</p>
-            </div>
-          )}
-
-          {hasPermission && (
+          ) : (
             <>
+              {hasPermission === null && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-neutral-400 bg-neutral-950 z-10">
+                  <Camera size={48} className="animate-pulse text-amber-500/50 mb-3" />
+                  <p className="text-sm">Initiating Camera Stream...</p>
+                </div>
+              )}
               <video 
                 ref={videoRef}
                 autoPlay 
                 playsInline 
                 muted
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover animate-fade-in"
               />
               {/* Floating Watch Graphic */}
               <div

@@ -1,13 +1,13 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { 
-  Landmark, IndianRupee, ShieldCheck, Box, RefreshCw, Layers, 
+  IndianRupee, ShieldCheck, Box, RefreshCw, Layers, 
   ClipboardList, Check, Plus, Edit3, Trash2, Eye, Key, User, 
-  Calendar, Wrench, Package, BarChart3, Building2, Users, Award, TrendingUp, Gift, Search, Filter, Mail,
+  Calendar, Wrench, Package, BarChart3, Building2, Users, Award, TrendingUp, Gift, Search, Mail,
   Scale, MessageSquare, MapPin, Megaphone, Menu, X
 } from "lucide-react";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import AnalyticsChart from '../components/AnalyticsChart';
 
 const AdminDashboard = () => {
@@ -15,7 +15,7 @@ const AdminDashboard = () => {
     promoBanner, updatePromoBanner,
     orders, updateOrderStatus, products, addProduct, editProduct, deleteProduct,
     serviceRequests, updateServiceStatus, appointments, updateAppointmentStatus,
-    newsletterSubscribers, compareList,
+    newsletterSubscribers,
     coupons, addCoupon, deleteCoupon, restockAlerts, blogPosts, addBlogPost, deleteBlogPost,
     referrals, corporateInquiries,
     usersList, updateUserLoyaltyPoints, cancelUserSubscription, removeNewsletterSubscriber,
@@ -26,7 +26,7 @@ const AdminDashboard = () => {
   // 1. Simulated Auth States
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return sessionStorage.getItem('chronex_admin_auth') === 'true';
+    return localStorage.getItem('chronex_admin_auth') === 'true';
   });
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -55,7 +55,13 @@ const AdminDashboard = () => {
   const [showroomCoordY, setShowroomCoordY] = useState(50);
   const [editingShowroomId, setEditingShowroomId] = useState(null);
 
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState(() => {
+    return localStorage.getItem("chronex_admin_tab") || "overview";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("chronex_admin_tab", activeTab);
+  }, [activeTab]);
 
   // Search & Filter States
   const [prodSearch, setProdSearch] = useState("");
@@ -86,7 +92,7 @@ const AdminDashboard = () => {
   };
 
   const logAdminAction = (action) => {
-    const newLog = { id: Date.now(), action, time: new Date().toLocaleTimeString() };
+    const newLog = { id: `log_${adminLogs.length + 1}`, action, time: new Date().toLocaleTimeString() };
     const updated = [newLog, ...adminLogs];
     setAdminLogs(updated);
     sessionStorage.setItem("chronex_admin_logs", JSON.stringify(updated));
@@ -150,7 +156,7 @@ const AdminDashboard = () => {
     e.preventDefault();
     if (loginEmail === "admin@chronex.com" && loginPassword === "admin123") {
       setIsAuthenticated(true);
-      sessionStorage.setItem('chronex_admin_auth', 'true');
+      localStorage.setItem('chronex_admin_auth', 'true');
       setLoginError(false);
     } else {
       setLoginError(true);
@@ -368,45 +374,42 @@ const AdminDashboard = () => {
 
   const r = 36;
   const circ = 2 * Math.PI * r; // ~226.2
-  let accumulatedPercent = 0;
   
-  const donutSegments = brandStats.slice(0, 5).map((brand, idx) => {
-    const percentage = (brand.count / (totalProducts || 1)) * 100;
-    const strokeLength = (brand.count / (totalProducts || 1)) * circ;
-    const strokeOffset = circ - ((accumulatedPercent / 100) * circ);
-    accumulatedPercent += percentage;
-    
-    const colors = [
-      "#d4af37", // Gold
-      "#a1a1aa", // Zinc/Platinum
-      "#3b82f6", // Royal Blue
-      "#10b981", // Emerald
-      "#f43f5e", // Rose
-    ];
-    
-    return {
-      ...brand,
-      strokeLength,
-      strokeOffset,
-      color: colors[idx % colors.length]
-    };
-  });
-
-  if (brandStats.length > 5) {
-    const otherCount = brandStats.slice(5).reduce((sum, b) => sum + b.count, 0);
-    const otherPercentage = Math.round((otherCount / (totalProducts || 1)) * 100);
-    const strokeLength = (otherCount / (totalProducts || 1)) * circ;
-    const strokeOffset = circ - ((accumulatedPercent / 100) * circ);
-    
-    donutSegments.push({
-      name: "Others",
-      count: otherCount,
-      percentage: otherPercentage,
-      strokeLength,
-      strokeOffset,
-      color: "#6b7280"
-    });
-  }
+  const donutSegments = brandStats.reduce((acc, brand, idx) => {
+    if (idx < 5) {
+      const percentage = (brand.count / (totalProducts || 1)) * 100;
+      const strokeLength = (brand.count / (totalProducts || 1)) * circ;
+      const currentAccumulated = acc.reduce((sum, item) => sum + item.originalPercentage, 0);
+      const strokeOffset = circ - ((currentAccumulated / 100) * circ);
+      
+      const colors = ["#d4af37", "#a1a1aa", "#3b82f6", "#10b981", "#f43f5e"];
+      
+      acc.push({
+        ...brand,
+        originalPercentage: percentage,
+        strokeLength,
+        strokeOffset,
+        color: colors[idx % colors.length]
+      });
+    } else if (idx === 5) {
+      const otherCount = brandStats.slice(5).reduce((sum, b) => sum + b.count, 0);
+      const otherPercentage = (otherCount / (totalProducts || 1)) * 100;
+      const strokeLength = (otherCount / (totalProducts || 1)) * circ;
+      const currentAccumulated = acc.reduce((sum, item) => sum + item.originalPercentage, 0);
+      const strokeOffset = circ - ((currentAccumulated / 100) * circ);
+      
+      acc.push({
+        name: "Others",
+        count: otherCount,
+        percentage: Math.round(otherPercentage),
+        originalPercentage: otherPercentage,
+        strokeLength,
+        strokeOffset,
+        color: "#52525b" // Zinc-600
+      });
+    }
+    return acc;
+  }, []);
 
   const averageOrderValue = totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 0;
   const fulfillmentRate = totalOrders > 0 ? Math.round((orders.filter(o => o.orderStatus === "Delivered").length / totalOrders) * 100) : 0;
@@ -543,7 +546,7 @@ const AdminDashboard = () => {
             <button
               onClick={() => {
                 setIsAuthenticated(false);
-                sessionStorage.removeItem('chronex_admin_auth');
+                localStorage.removeItem('chronex_admin_auth');
               }}
               className="px-4 py-2 bg-rose-950/15 hover:bg-rose-950/30 border border-rose-900/40 text-rose-400 text-xs font-bold uppercase tracking-wider rounded-xl transition-all"
             >

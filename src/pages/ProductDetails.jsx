@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { Heart, MessageSquare, Calendar, ShieldCheck, CheckCircle2, ChevronRight, Sparkles, Award, ArrowLeft, Truck, ShoppingBag, Star, StarHalf, Ruler, Scale, Landmark, Camera } from "lucide-react";
 import SizeGuide from "../components/SizeGuide";
@@ -8,11 +8,10 @@ import ThreeViewer from "../components/ThreeViewer";
 
 const ProductDetails = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { products, toggleWishlist, wishlist, getWhatsAppLink, addToCart, addAppointment, recentlyViewed, addRecentlyViewed, addReview, toggleCompare, compareList, addRestockAlert, formatPrice } = useContext(ShopContext);
   
-  const [product, setProduct] = useState(null);
-  const [activeImage, setActiveImage] = useState("");
+  const product = products.find((p) => p.id === id);
+  const [activeImage, setActiveImage] = useState(() => product?.images?.[0] || "");
   const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
   const [isEmiModalOpen, setIsEmiModalOpen] = useState(false);
   const [showBookingModal, setShowBookingModal] = useState(false);
@@ -46,18 +45,10 @@ const ProductDetails = () => {
   const [bookingTime, setBookingTime] = useState("11:00");
 
   useEffect(() => {
-    const foundProduct = products.find((p) => p.id === id);
-    if (foundProduct) {
-      setProduct(foundProduct);
-      setActiveImage(foundProduct.images[0]);
-      setBookingSuccess(false);
-      setDeliveryStatus(null);
-      setPincode("");
-      setAddedMessage(false);
-      setReviewSubmitted(false);
-      addRecentlyViewed(foundProduct.id);
+    if (product) {
+      addRecentlyViewed(product.id);
     }
-  }, [id, products]);
+  }, [id, addRecentlyViewed, product]);
 
   if (!product) {
     return (
@@ -140,11 +131,7 @@ Please confirm if this slot is available at your Alkapuri showroom. Thank you!`;
     }, 3000);
   };
 
-  // Buy Now handler
-  const handleBuyNow = () => {
-    addToCart(product.id, 1);
-    navigate("/checkout");
-  };
+
 
   const handleReviewSubmit = (e) => {
     e.preventDefault();

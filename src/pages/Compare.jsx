@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
-import { ArrowLeft, X, ShoppingBag, Scale, Check } from "lucide-react";
+import { ArrowLeft, X, ShoppingBag, Scale } from "lucide-react";
 
 const Compare = () => {
   const { compareList, products, removeFromCompare, addToCart } = useContext(ShopContext);

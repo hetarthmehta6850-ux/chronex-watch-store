@@ -1,19 +1,12 @@
-import { useEffect, useState, useContext } from "react";
+import { useContext } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
-import { CheckCircle2, ShieldCheck, Truck, ShoppingBag, ArrowRight } from "lucide-react";
+import { CheckCircle2, ArrowRight } from "lucide-react";
 
 const OrderSuccess = () => {
   const { orderId } = useParams();
   const { orders } = useContext(ShopContext);
-  const [order, setOrder] = useState(null);
-
-  useEffect(() => {
-    const foundOrder = orders.find((o) => o.id === orderId);
-    if (foundOrder) {
-      setOrder(foundOrder);
-    }
-  }, [orderId, orders]);
+  const order = orders.find((o) => o.id === orderId);
 
   if (!order) {
     return (

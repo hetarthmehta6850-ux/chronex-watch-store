@@ -1,5 +1,5 @@
-import { useState, useContext, useEffect } from "react";
-import { MapPin, Clock, Phone, Map, Compass, Calendar, Sparkles } from "lucide-react";
+import { useState, useContext } from "react";
+import { Clock, Phone, Map, Compass, Calendar, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 
@@ -7,13 +7,8 @@ const ShowroomLocator = () => {
   const { showrooms } = useContext(ShopContext);
   const [selectedId, setSelectedId] = useState("");
 
-  useEffect(() => {
-    if (showrooms && showrooms.length > 0 && !selectedId) {
-      setSelectedId(showrooms[0].id);
-    }
-  }, [showrooms, selectedId]);
-
-  const activeShowroom = showrooms.find((s) => s.id === selectedId) || showrooms[0];
+  const currentSelectedId = selectedId || (showrooms && showrooms.length > 0 ? showrooms[0].id : "");
+  const activeShowroom = showrooms.find((s) => s.id === currentSelectedId) || showrooms[0];
 
   return (
     <div className="min-h-screen py-32 max-w-6xl mx-auto px-6 font-sans">

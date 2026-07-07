@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { ShopContext } from "../context/ShopContext";
-import { ArrowLeft, ArrowRight, ShieldCheck, Scale, Award, Info, ClipboardCheck, Sparkles, Box } from "lucide-react";
+import { ArrowLeft, ArrowRight, ShieldCheck, Scale, Info, ClipboardCheck, Box } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const TradeIn = () => {
@@ -37,15 +37,14 @@ const TradeIn = () => {
   };
 
   const getEstimatedRange = () => {
-    // Standard mock pricing baseline
-    let basePrice = 250000; // default for Rolex
-    if (brand === "Omega") basePrice = 180000;
+    let basePrice = 40000; // default for other
+    if (brand === "Rolex") basePrice = 250000;
+    else if (brand === "Omega") basePrice = 180000;
     else if (brand === "Rado") basePrice = 85000;
     else if (brand === "TAG Heuer") basePrice = 95000;
     else if (brand === "Tissot") basePrice = 30000;
     else if (brand === "Seiko") basePrice = 20000;
     else if (brand === "Citizen") basePrice = 15000;
-    else basePrice = 40000; // other
 
     // Adjust by age
     const age = Math.max(0, new Date().getFullYear() - Number(year));

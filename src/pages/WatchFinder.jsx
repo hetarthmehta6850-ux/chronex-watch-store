@@ -156,7 +156,7 @@ const WatchFinder = () => {
 
           {recommendedWatches.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {recommendedWatches.map((product, idx) => (
+              {recommendedWatches.map((product) => (
                 <div key={product.id} className="bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden group flex flex-col">
                   {/* Match Badge */}
                   <div className="absolute z-10 m-3 px-3 py-1 bg-neutral-950/80 backdrop-blur-md border border-amber-500/30 rounded-full flex items-center gap-1.5">

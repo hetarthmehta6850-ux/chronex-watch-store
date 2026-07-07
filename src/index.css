@@ -226,3 +226,260 @@ body {
 .light-theme .hover\:bg-neutral-900\/50:hover {
   background-color: #f8fafc !important;
 }
+
+/* Luxury Admin Panel styling additions */
+.admin-premium-grid {
+  background-color: #050507 !important;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(212, 175, 55, 0.025) 0%, transparent 40%),
+    linear-gradient(rgba(255, 255, 255, 0.003) 1px, transparent 1px), 
+    linear-gradient(90deg, rgba(255, 255, 255, 0.003) 1px, transparent 1px) !important;
+  background-size: 100% 100%, 100% 100%, 60px 60px, 60px 60px !important;
+}
+
+.admin-sidebar-btn {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  position: relative;
+  overflow: hidden;
+  border-left: 2px solid transparent !important;
+  letter-spacing: 0.12em !important;
+  font-weight: 700 !important;
+}
+.admin-sidebar-btn::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background: linear-gradient(to bottom, #d4af37, #b8860b);
+  transform: scaleY(0);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center;
+}
+.admin-sidebar-btn.active {
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.08) 0%, rgba(212, 175, 55, 0.02) 100%) !important;
+  border-left: 3px solid #d4af37 !important;
+  color: #f3e5ab !important;
+  box-shadow: 
+    inset 1px 0 0 rgba(212, 175, 55, 0.05),
+    0 4px 15px rgba(0, 0, 0, 0.3) !important;
+  font-weight: 900 !important;
+}
+.admin-sidebar-btn.active::after {
+  transform: scaleY(1);
+}
+.admin-sidebar-btn:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.025) !important;
+  color: #ffffff !important;
+  border-left: 2px solid rgba(212, 175, 55, 0.3) !important;
+  padding-left: 1.25rem !important;
+}
+
+.admin-glass-card {
+  background: linear-gradient(135deg, rgba(13, 13, 15, 0.75) 0%, rgba(6, 6, 8, 0.85) 100%) !important;
+  border: 1px solid rgba(212, 175, 55, 0.06) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(24px) !important;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.01),
+    0 12px 40px -10px rgba(0, 0, 0, 0.7),
+    0 1px 2px 0 rgba(212, 175, 55, 0.02) !important;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  position: relative;
+  overflow: hidden;
+}
+.admin-glass-card:hover {
+  border-color: rgba(212, 175, 55, 0.22) !important;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 24px 50px -15px rgba(0, 0, 0, 0.95),
+    0 0 30px rgba(212, 175, 55, 0.04) !important;
+  transform: translateY(-4px) !important;
+}
+
+.admin-stat-icon {
+  background: radial-gradient(circle at center, rgba(212, 175, 55, 0.12) 0%, rgba(212, 175, 55, 0.02) 100%) !important;
+  border: 1px solid rgba(212, 175, 55, 0.18) !important;
+  color: #d4af37 !important;
+  box-shadow: 
+    0 0 20px rgba(212, 175, 55, 0.03),
+    inset 0 0 12px rgba(212, 175, 55, 0.05) !important;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-gold-gradient-btn {
+  background: linear-gradient(90deg, #aa7c11 0%, #d4af37 50%, #f3e5ab 100%) !important;
+  background-size: 200% auto !important;
+  color: #050505 !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.15em !important;
+  text-transform: uppercase !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 
+    0 4px 15px rgba(212, 175, 55, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  position: relative;
+  overflow: hidden;
+}
+.admin-gold-gradient-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: skewX(-20deg);
+  transition: none;
+}
+.admin-gold-gradient-btn:hover::before {
+  left: 150%;
+  transition: all 0.8s ease;
+}
+.admin-gold-gradient-btn:hover {
+  background-position: right center !important;
+  box-shadow: 
+    0 8px 25px rgba(212, 175, 55, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+  transform: translateY(-2px) !important;
+  color: #000000 !important;
+}
+
+.admin-table-row {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.admin-table-row:hover {
+  background-color: rgba(212, 175, 55, 0.018) !important;
+  box-shadow: inset 2px 0 0 #d4af37 !important;
+}
+
+.admin-input {
+  background-color: rgba(10, 10, 12, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.04) !important;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  color: #f3e5ab !important;
+}
+.admin-input:focus {
+  border-color: rgba(212, 175, 55, 0.45) !important;
+  background-color: rgba(3, 3, 4, 0.95) !important;
+  box-shadow: 
+    0 0 0 3px rgba(212, 175, 55, 0.06),
+    0 8px 16px rgba(0, 0, 0, 0.6) !important;
+}
+.admin-input option {
+  background-color: #0c0c0e !important;
+  color: #e5e5e7 !important;
+}
+
+/* Global Admin Workspace Selector Styling Overrides */
+.chronex-admin-workspace .bg-neutral-900\/20,
+.chronex-admin-workspace .bg-neutral-900\/10,
+.chronex-admin-workspace .bg-neutral-900 {
+  background: linear-gradient(135deg, rgba(13, 13, 15, 0.75) 0%, rgba(6, 6, 8, 0.85) 100%) !important;
+  border: 1px solid rgba(212, 175, 55, 0.06) !important;
+  backdrop-filter: blur(24px) !important;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.01),
+    0 12px 40px -10px rgba(0, 0, 0, 0.7) !important;
+  border-radius: 1.5rem !important;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.chronex-admin-workspace .bg-neutral-900\/20:hover,
+.chronex-admin-workspace .bg-neutral-900\/10:hover,
+.chronex-admin-workspace .bg-neutral-900:hover {
+  border-color: rgba(212, 175, 55, 0.22) !important;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 24px 50px -15px rgba(0, 0, 0, 0.95),
+    0 0 30px rgba(212, 175, 55, 0.04) !important;
+  transform: translateY(-3px) !important;
+}
+
+.chronex-admin-workspace input,
+.chronex-admin-workspace select,
+.chronex-admin-workspace textarea {
+  background-color: rgba(10, 10, 12, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.04) !important;
+  color: #f5f5f5 !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.chronex-admin-workspace input:focus,
+.chronex-admin-workspace select:focus,
+.chronex-admin-workspace textarea:focus {
+  border-color: rgba(212, 175, 55, 0.45) !important;
+  background-color: rgba(3, 3, 4, 0.95) !important;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.05) !important;
+}
+
+.chronex-admin-workspace table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+}
+
+.chronex-admin-workspace tr {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.chronex-admin-workspace th {
+  font-family: var(--font-sans);
+  font-size: 9px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.2em !important;
+  color: #a1a1b5 !important;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.1) !important;
+  background-color: rgba(0, 0, 0, 0.35) !important;
+  font-weight: 900 !important;
+  padding: 1.1rem 1rem !important;
+}
+.chronex-admin-workspace td {
+  padding: 1.1rem 1rem !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02) !important;
+  font-size: 11px !important;
+}
+
+.chronex-admin-workspace tbody tr:hover {
+  background-color: rgba(212, 175, 55, 0.018) !important;
+  box-shadow: inset 2px 0 0 #d4af37 !important;
+}
+
+.chronex-admin-workspace button.bg-amber-500,
+.chronex-admin-workspace button.bg-amber-400 {
+  background: linear-gradient(90deg, #aa7c11 0%, #d4af37 50%, #f3e5ab 100%) !important;
+  background-size: 200% auto !important;
+  color: #050505 !important;
+  font-weight: 800 !important;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 
+    0 4px 15px rgba(212, 175, 55, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  border: none !important;
+}
+
+.chronex-admin-workspace button.bg-amber-500:hover,
+.chronex-admin-workspace button.bg-amber-400:hover {
+  background-position: right center !important;
+  box-shadow: 
+    0 8px 25px rgba(212, 175, 55, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Mobile Sidebar Drawer Styling Overrides */
+@media (max-width: 1023px) {
+  .chronex-admin-workspace aside {
+    background: rgba(8, 8, 10, 0.96) !important;
+    border-right: 1px solid rgba(212, 175, 55, 0.12) !important;
+    backdrop-filter: blur(24px) !important;
+    box-shadow: 15px 0 50px rgba(0, 0, 0, 0.95) !important;
+    padding-top: 1.5rem !important;
+  }
+}

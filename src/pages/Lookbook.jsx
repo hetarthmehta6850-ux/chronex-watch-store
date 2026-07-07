@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect, useRef } from "react";
 import { ShopContext } from "../context/ShopContext";
-import { Play, Pause, Volume2, VolumeX, ShoppingBag, ArrowRight, Eye, Sparkles, SkipBack, SkipForward } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX, ShoppingBag, Eye, Sparkles, SkipBack, SkipForward } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const lookbooks = [
@@ -94,6 +94,7 @@ const Lookbook = () => {
     } else {
       initPlayer();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeLook.youtubeId]);
 
   // Synchronize Play/Pause states

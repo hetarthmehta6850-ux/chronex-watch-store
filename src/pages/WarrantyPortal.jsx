@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { ShieldCheck, QrCode, Search, Award, Download, CheckCircle2, AlertTriangle, Calendar, Award as CertificateIcon, Globe, Mail, Phone } from "lucide-react";
+import { ShieldCheck, QrCode, Search, Award, Download, CheckCircle2, AlertTriangle, Calendar, Globe, Mail, Phone } from "lucide-react";
 import { ShopContext } from "../context/ShopContext";
 
 const formatDate = (dateStr) => {
@@ -58,7 +58,7 @@ const getWatchSpecs = (brandName, watchName) => {
 };
 
 const WarrantyPortal = () => {
-  const { orders, currentUser } = useContext(ShopContext);
+  const { orders, currentUser, products } = useContext(ShopContext);
   const [serial, setSerial] = useState("");
   const [status, setStatus] = useState("idle"); // idle, searching, found, notfound
   const [certData, setCertData] = useState(null);
@@ -100,6 +100,8 @@ const WarrantyPortal = () => {
         }
       };
 
+      const mintedDict = JSON.parse(localStorage.getItem("chronex_warranty_valid_dict") || "{}");
+      const matchMinted = mintedDict[serial.toUpperCase().trim()];
       const matchDemo = validSerials[serial.toUpperCase().trim()];
       
       let realMatch = null;
@@ -109,9 +111,10 @@ const WarrantyPortal = () => {
            const item = foundOrder.items[0];
            const orderDate = new Date(foundOrder.date || Date.now());
            const expiryDate = new Date(orderDate);
-           expiryDate.setFullYear(expiryDate.getFullYear() + 2); // 2 Year Standard Warranty from image
+           expiryDate.setFullYear(expiryDate.getFullYear() + 2); // 2 Year Standard Warranty
            
            const specs = getWatchSpecs(item.brand, item.name);
+           const matchedProduct = products?.find(p => p.id === item.id || p.name.toUpperCase().includes(item.name.toUpperCase()));
            
            realMatch = {
              model: item.name,
@@ -121,27 +124,28 @@ const WarrantyPortal = () => {
              clientName: foundOrder.customer?.name || currentUser?.name || "Valued Chronex Client",
              status: "Authentic & Insured",
              certId: `CERT-${item.brand.substring(0,3).toUpperCase()}-${Math.floor(10000 + Math.random() * 90000)}`,
-             image: item.image,
+             image: matchedProduct?.image || item.image,
              ...specs
            };
         }
       }
       
-      let match = realMatch || matchDemo;
+      let match = realMatch || matchMinted || matchDemo;
       
       if (match) {
-        if (match === matchDemo) {
-          const specs = getWatchSpecs(match.brand, match.model);
-          let demoImg = "https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&q=80&w=400";
-          if (match.brand.toUpperCase().includes("OMEGA")) {
-            demoImg = "https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&q=80&w=400";
-          } else if (match.brand.toUpperCase().includes("TISSOT")) {
-            demoImg = "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80&w=400";
-          }
+        if (match === matchMinted || match === matchDemo) {
+          const matchedProduct = products?.find(p => 
+            p.name.toUpperCase().includes(match.model.toUpperCase()) || 
+            match.model.toUpperCase().includes(p.name.toUpperCase())
+          );
+          
+          const specs = getWatchSpecs(matchedProduct?.brand || match.brand || "Chronex", matchedProduct?.name || match.model);
           
           match = {
             ...match,
-            image: demoImg,
+            brand: matchedProduct?.brand || match.brand || "Chronex",
+            model: matchedProduct?.name || match.model,
+            image: matchedProduct?.image || match.image || "https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&q=80&w=400",
             ...specs
           };
         }
@@ -174,36 +178,175 @@ const WarrantyPortal = () => {
   };
 
   return (
-    <div className="min-h-screen py-32 max-w-4xl mx-auto px-6 font-sans">
+    <div className="min-h-screen py-32 max-w-4xl mx-auto px-6 font-sans warranty-portal-container">
       <style dangerouslySetInnerHTML={{__html: `
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
         
         @media print {
-          body * {
-            visibility: hidden;
+          /* Hide Navbar, Footer, Popups, search panel, and general page components */
+          nav, footer, .newsletter-popup, .compare-bar, header, button, .print-hidden, form, .no-print {
+            display: none !important;
           }
-          #certificate-print, #certificate-print * {
-            visibility: visible;
-          }
-          #certificate-print {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
+          
+          /* Set page size and margins to 0 to remove browser headers/footers */
+          @page {
+            size: A4 portrait;
             margin: 0;
-            padding: 20px;
-            border: none !important;
-            box-shadow: none !important;
-            background-color: #fdfbf7 !important;
+          }
+          
+          /* Force html/body to fill a single page exactly */
+          html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 210mm !important;
+            height: 297mm !important;
+            background-color: #ffffff !important;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
+            overflow: hidden !important;
+          }
+
+          /* Ensure parent components collapse to allow full page layout */
+          body, #root, #root > div, main, .warranty-portal-container, .certificate-wrapper {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            min-height: 0 !important;
+            height: 100% !important;
+            display: block !important;
+          }
+
+          /* Make the certificate container absolute and exactly fill A4 dimensions */
+          #certificate-print {
+            position: absolute !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 210mm !important;
+            height: 297mm !important;
+            max-width: 210mm !important;
+            max-height: 297mm !important;
+            margin: 0 !important;
+            padding: 10mm 12mm !important; /* Balanced inner padding */
+            box-sizing: border-box !important;
+            background-color: #fdfbf7 !important;
+            border: none !important;
+            box-shadow: none !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+            gap: 12px !important;
+            page-break-after: avoid !important;
+            page-break-inside: avoid !important;
+          }
+          
+          /* Force details grid to render as 3 side-by-side columns on print */
+          #certificate-details-grid {
+            grid-template-columns: 1.15fr 1.15fr 0.7fr !important;
+            display: grid !important;
+            gap: 12px !important;
+          }
+
+          /* Force bottom notes, stamp, signature grid to 3 side-by-side columns on print */
+          #certificate-bottom-grid {
+            grid-template-columns: 1.3fr 0.8fr 0.9fr !important;
+            display: grid !important;
+            align-items: center !important;
+            gap: 12px !important;
+          }
+
+          /* Force signatory block and text to align to the right on print */
+          #certificate-signatory-block {
+            align-items: flex-end !important;
+            text-align: right !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+          }
+          #certificate-signatory-info {
+            align-items: flex-end !important;
+            display: flex !important;
+            flex-direction: column !important;
+          }
+
+          /* Allow footer items to expand horizontally to print bounds */
+          #certificate-print .max-w-md {
+            max-width: 100% !important;
+          }
+
+          /* Make layout content tight and precise */
+          #certificate-print .grid {
+            gap: 12px !important;
+          }
+          
+          /* Reduce font sizes and text line heights so it fits on 1 page */
+          #certificate-print p, 
+          #certificate-print span, 
+          #certificate-print li, 
+          #certificate-print td,
+          #certificate-print strong,
+          #certificate-print ul {
+            font-size: 8pt !important;
+            line-height: 1.25 !important;
+          }
+          
+          #certificate-print h2 {
+            font-size: 18pt !important;
+            margin-bottom: 1px !important;
+          }
+          
+          #certificate-print svg {
+            margin-top: 2px !important;
+            margin-bottom: 2px !important;
+          }
+          
+          #certificate-print .pb-4 {
+            padding-bottom: 4px !important;
+          }
+          #certificate-print .pt-6 {
+            padding-top: 8px !important;
+          }
+          #certificate-print .pt-4 {
+            padding-top: 6px !important;
+          }
+          
+          /* Reduce watch visual image height so it stays within boundary */
+          #certificate-print img {
+            max-height: 22mm !important;
+            object-fit: contain !important;
+          }
+          
+          /* Reduce bottom notes and seal layout sizes */
+          #certificate-print .w-24 {
+            width: 16mm !important;
+            height: 16mm !important;
+          }
+          #certificate-print .w-20 {
+            width: 13mm !important;
+            height: 13mm !important;
+          }
+          
+          /* Ensure text colors match original high contrast */
+          #certificate-print text,
+          #certificate-print span,
+          #certificate-print td {
+            color: #171717 !important;
+          }
+          #certificate-print .text-amber-600 {
+            color: #d97706 !important;
+          }
+          #certificate-print .text-neutral-550,
+          #certificate-print .text-neutral-500,
+          #certificate-print .text-neutral-400 {
+            color: #737373 !important;
           }
         }
       `}} />
       <div className="flex flex-col gap-8">
         
         {/* Banner */}
-        <div className="text-center flex flex-col items-center gap-3">
+        <div className="text-center flex flex-col items-center gap-3 print-hidden">
           <div className="p-3.5 bg-amber-500/10 text-amber-500 rounded-full border border-amber-500/20">
             <ShieldCheck size={32} />
           </div>
@@ -214,9 +357,9 @@ const WarrantyPortal = () => {
             Every timepiece purchased through Chronex features an encrypted secure serial. Verify your watch authenticity and inspect your active warranty status below.
           </p>
         </div>
-
+ 
         {/* Search Panel */}
-        <div className="p-8 bg-neutral-900 border border-neutral-800 rounded-3xl shadow-xl max-w-xl mx-auto w-full">
+        <div className="p-8 bg-neutral-900 border border-neutral-800 rounded-3xl shadow-xl max-w-xl mx-auto w-full print-hidden">
           <form onSubmit={handleVerify} className="flex flex-col gap-4">
             <label className="text-xs uppercase font-extrabold tracking-widest text-neutral-400">Enter Watch Serial Number</label>
             <div className="flex gap-2">
@@ -265,7 +408,7 @@ const WarrantyPortal = () => {
 
         {/* Status: Found Certificate Card */}
         {status === "found" && certData && (
-          <div className="flex flex-col items-center gap-6 max-w-4xl mx-auto w-full animate-fade-in print:p-0">
+          <div className="flex flex-col items-center gap-6 max-w-4xl mx-auto w-full animate-fade-in print:p-0 certificate-wrapper">
             {/* The Luxury Certificate */}
             <div className="w-full max-w-[800px] border border-amber-500/20 shadow-2xl rounded-2xl overflow-hidden print:shadow-none print:border-none print:m-0 bg-[#fdfbf7] text-neutral-900 font-serif select-none p-10 flex flex-col gap-8 relative text-left" id="certificate-print">
               
@@ -314,7 +457,7 @@ const WarrantyPortal = () => {
               </div>
 
               {/* 3. Grid Details (3 columns) */}
-              <div className="grid grid-cols-1 md:grid-cols-[1.1fr_1.1fr_0.8fr] gap-6 items-stretch relative z-10 mt-2">
+              <div className="grid grid-cols-1 md:grid-cols-[1.1fr_1.1fr_0.8fr] gap-6 items-stretch relative z-10 mt-2" id="certificate-details-grid">
                 
                 {/* Column 1: WATCH DETAILS */}
                 <div className="border border-neutral-200/50 bg-[#faf8f4]/60 p-4 rounded-xl flex flex-col gap-4">
@@ -416,7 +559,7 @@ const WarrantyPortal = () => {
               </div>
 
               {/* 4. Bottom Block (Notes, Seal, Signatures) */}
-              <div className="grid grid-cols-1 md:grid-cols-[1.3fr_0.8fr_0.9fr] gap-6 items-center border-t border-neutral-200/50 pt-6 relative z-10 mt-2">
+              <div className="grid grid-cols-1 md:grid-cols-[1.3fr_0.8fr_0.9fr] gap-6 items-center border-t border-neutral-200/50 pt-6 relative z-10 mt-2" id="certificate-bottom-grid">
                 
                 {/* Important notes */}
                 <div className="border border-neutral-200/50 p-4 rounded-xl bg-[#faf8f4]/60 text-[8px]">
@@ -443,8 +586,8 @@ const WarrantyPortal = () => {
                 </div>
 
                 {/* Signatory & QR */}
-                <div className="flex flex-col items-center md:items-end justify-center gap-4 text-center md:text-right">
-                  <div className="flex flex-col items-center md:items-end w-full">
+                <div className="flex flex-col items-center md:items-end justify-center gap-4 text-center md:text-right" id="certificate-signatory-block">
+                  <div className="flex flex-col items-center md:items-end w-full" id="certificate-signatory-info">
                      {/* Signature */}
                      <div className="text-3xl text-neutral-800 -rotate-3 mb-1 pr-4" style={{ fontFamily: "'Dancing Script', cursive", fontWeight: 700 }}>
                        Hetarth Mehta

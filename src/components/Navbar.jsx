@@ -76,6 +76,8 @@ const Navbar = () => {
   return (
     <>
       <nav
+        role="navigation"
+        aria-label="Primary Navigation"
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'scrolled' : ''} ${
           isScrolled
             ? "bg-neutral-950/95 backdrop-blur-md border-b border-neutral-800/40 py-4 shadow-xl"
@@ -85,7 +87,7 @@ const Navbar = () => {
         <div className="max-w-[1400px] mx-auto px-3 sm:px-6 md:px-12 flex justify-between items-center w-full">
           {/* Left Side: Brand Logo */}
           <div className="flex-1 flex justify-start shrink-0">
-            <Link to="/" className="group flex items-center gap-1.5 md:gap-3 shrink-0">
+            <Link to="/" aria-label="Chronex Luxury Watches Home" className="group flex items-center gap-1.5 md:gap-3 shrink-0">
               <img src="/favicon.png" alt="Chronex Logo" className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 object-contain drop-shadow-[0_0_8px_rgba(212,175,55,0.4)] transition-transform duration-500 group-hover:scale-110" />
               <div className="flex flex-col">
                 <span className="text-[17px] sm:text-lg md:text-2xl font-extrabold tracking-[0.25em] md:tracking-[0.3em] text-amber-400 font-serif leading-none group-hover:text-amber-300 transition-colors">
@@ -106,6 +108,7 @@ const Navbar = () => {
                 <Link
                   key={link.name}
                   to={link.path}
+                  aria-label={`View collection for ${link.name}`}
                   className={`text-[10px] xl:text-[11px] tracking-[0.18em] uppercase transition-all duration-300 relative py-1 hover:text-amber-400 ${
                     isActive ? "text-amber-400 font-semibold" : (!isScrolled ? "text-always-white" : "text-neutral-300")
                   }`}
@@ -125,6 +128,7 @@ const Navbar = () => {
             {/* Profile */}
             <Link 
               to="/profile" 
+              aria-label="View user profile"
               className={`relative p-1.5 md:p-2 hover:text-amber-400 transition-colors shrink-0 ${!isScrolled ? 'text-always-white' : 'text-neutral-300'}`}
               title="User Profile"
             >
@@ -141,7 +145,7 @@ const Navbar = () => {
             </button>
 
             {/* Wishlist */}
-            <Link to="/wishlist" className={`relative p-1.5 md:p-2 hover:text-rose-500 transition-colors shrink-0 ${!isScrolled ? 'text-always-white' : 'text-neutral-300'}`}>
+            <Link to="/wishlist" aria-label="View wishlist items" className={`relative p-1.5 md:p-2 hover:text-rose-500 transition-colors shrink-0 ${!isScrolled ? 'text-always-white' : 'text-neutral-300'}`}>
               <Heart size={18} className={`w-[16px] h-[16px] md:w-[18px] md:h-[18px] ${wishlist.length > 0 ? "fill-rose-500 text-rose-500" : ""}`} />
               {wishlist.length > 0 && (
                 <span className="absolute top-0 md:top-0.5 right-0 md:right-0.5 bg-rose-600 text-white text-[8px] md:text-[9px] w-3.5 h-3.5 md:w-4.5 md:h-4.5 rounded-full flex items-center justify-center font-bold">
@@ -154,6 +158,9 @@ const Navbar = () => {
             <div className="relative shrink-0 hidden lg:block">
               <button
                 onClick={() => { setIsAccessOpen(!isAccessOpen); }}
+                aria-label="Toggle accessibility scaling and contrast settings"
+                aria-haspopup="true"
+                aria-expanded={isAccessOpen}
                 className={`p-2 hover:text-amber-400 transition-colors ${!isScrolled ? 'text-always-white' : 'text-neutral-300'}`}
                 title="Accessibility settings"
               >
@@ -219,8 +226,10 @@ const Navbar = () => {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsOpen(!isOpen)}
+              aria-expanded={isOpen}
+              aria-controls="mobile-menu"
               className={`lg:hidden p-1.5 md:p-2 hover:text-amber-400 transition-colors shrink-0 ml-1 md:ml-2 ${!isScrolled ? 'text-always-white' : 'text-neutral-300'}`}
-              aria-label="Toggle mobile menu"
+              aria-label="Toggle mobile navigation menu"
             >
               {isOpen ? <X size={20} className="w-[18px] h-[18px] md:w-[20px] md:h-[20px]" /> : <Menu size={20} className="w-[18px] h-[18px] md:w-[20px] md:h-[20px]" />}
             </button>

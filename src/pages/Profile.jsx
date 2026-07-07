@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
-import { Clock, Box, ShieldCheck, CreditCard, ChevronRight, User, Sparkles, Award, LogOut, Key, Gift, Package, Calendar, RefreshCw, Landmark, Heart, QrCode } from "lucide-react";
+import { Clock, Box, CreditCard, ChevronRight, User, Award, LogOut, Key, Gift, Package, Calendar, RefreshCw, Landmark, QrCode } from "lucide-react";
 
 const getOrderTimeline = (status) => {
   if (status === "Cancelled" || status === "Rejected") {

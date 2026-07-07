@@ -1,23 +1,20 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
-import { ArrowLeft, User, Calendar, Clock, ChevronRight } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, ChevronRight } from "lucide-react";
 
 const BlogPost = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { blogPosts } = useContext(ShopContext);
-  const [post, setPost] = useState(null);
+  const post = blogPosts.find((p) => p.id === id);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const found = blogPosts.find((p) => p.id === id);
-    if (found) {
-      setPost(found);
-    } else {
+    if (!post) {
       navigate("/blog");
     }
-  }, [id, blogPosts, navigate]);
+  }, [post, navigate]);
 
   if (!post) return null;
 

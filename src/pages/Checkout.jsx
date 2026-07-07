@@ -1,15 +1,16 @@
 import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
-import { ShoppingBag, Truck, CreditCard, ShieldCheck, CheckCircle2, QrCode, ArrowLeft, Loader2, Landmark, Tag } from "lucide-react";
+import { ShoppingBag, Truck, ShieldCheck, CheckCircle2, ArrowLeft, Loader2, Landmark, Tag } from "lucide-react";
 import RazorpayModal from "../components/RazorpayModal";
 
 const Checkout = () => {
   const { cartItems, products, getCartTotal, placeOrder, coupons, giftCards, loyaltyPoints, currentUser } = useContext(ShopContext);
   const navigate = useNavigate();
+  const [demoOrderId] = useState(() => `order_demo_${Math.floor(100000 + Math.random() * 900000)}`);
 
   const [usePoints, setUsePoints] = useState(false);
-  const [selectedEmi, setSelectedEmi] = useState(() => {
+  const [selectedEmi] = useState(() => {
     return JSON.parse(sessionStorage.getItem("chronex_selected_emi") || "null");
   });
 
@@ -215,7 +216,7 @@ const Checkout = () => {
   }
 
   // Vector SVG Fake QR Code Generator
-  const FakeQRCode = () => (
+  const renderFakeQRCode = () => (
     <svg className="w-40 h-40 bg-white p-2 rounded-xl border border-neutral-200 shadow-inner" viewBox="0 0 100 100">
       {/* Outer borders and positioning boxes */}
       <rect x="5" y="5" width="20" height="20" fill="black" />
@@ -404,7 +405,7 @@ const Checkout = () => {
                   {paymentMethod === "upi" && (
                     <div className="flex flex-col items-center text-center gap-6">
                       <div className="flex flex-col items-center">
-                        <FakeQRCode />
+                        {renderFakeQRCode()}
                         <span className="text-[10px] uppercase tracking-widest text-neutral-500 mt-2 font-semibold">
                           Demo BHIM UPI QR Code
                         </span>
@@ -936,7 +937,7 @@ const Checkout = () => {
       {showRazorpay && (
         <RazorpayModal
           amount={grandTotal}
-          orderId={`order_demo_${Math.floor(100000 + Math.random() * 900000)}`}
+          orderId={demoOrderId}
           onSuccess={(details) => {
             setShowRazorpay(false);
             startPaymentSimulation(details);

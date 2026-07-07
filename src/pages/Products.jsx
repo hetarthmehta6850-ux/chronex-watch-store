@@ -4,9 +4,15 @@ import { ShopContext } from "../context/ShopContext";
 import { Heart, Search, SlidersHorizontal, ArrowUpDown, X, Eye, ShoppingBag, Star, StarHalf, Scale } from "lucide-react";
 import useScrollReveal from "../hooks/useScrollReveal";
 import QuickView from "../components/QuickView";
+import { useSEO } from "../hooks/useSEO";
 
 const Products = () => {
   useScrollReveal();
+  useSEO({
+    title: "Luxury Watch Collections",
+    description: "Browse our exclusive catalog of luxury watches. Discover automatic, mechanical, chronograph, and quartz watches from top global brands.",
+    keywords: "watch catalog, buy watches online, luxury watch brands, Chronex store",
+  });
   const { products, toggleWishlist, wishlist, addToCart, toggleCompare, compareList, formatPrice } = useContext(ShopContext);
   const location = useLocation();
 
@@ -14,7 +20,12 @@ const Products = () => {
   const [quickViewProduct, setQuickViewProduct] = useState(null);
 
   // Filter States
-  const [selectedBrands, setSelectedBrands] = useState([]);
+  const [selectedBrands, setSelectedBrands] = useState(() => {
+    if (location.state && location.state.selectedBrand) {
+      return [location.state.selectedBrand];
+    }
+    return [];
+  });
   const [selectedGender, setSelectedGender] = useState("");
   const [priceRange, setPriceRange] = useState(2000000); // Default to max (20 Lakhs)
   const [selectedStyle, setSelectedStyle] = useState("");
@@ -28,7 +39,6 @@ const Products = () => {
   // Handle pre-selected brand from navigation state (clicking brand on Home)
   useEffect(() => {
     if (location.state && location.state.selectedBrand) {
-      setSelectedBrands([location.state.selectedBrand]);
       // Clear navigation state so it doesn't lock on subsequent visits
       window.history.replaceState({}, document.title);
     }
@@ -88,7 +98,7 @@ const Products = () => {
     return 0; // Default (original order)
   });
 
-  const FilterSidebar = () => (
+  const renderFilterSidebar = () => (
     <div className="flex flex-col gap-8 text-neutral-300">
       {/* Search Bar inside sidebar for mobile, desktop can use top bar */}
       <div className="relative">
@@ -274,7 +284,7 @@ const Products = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* Sidebar - Desktop */}
           <aside className="hidden lg:block lg:col-span-3 h-fit sticky top-32">
-            <FilterSidebar />
+            {renderFilterSidebar()}
           </aside>
 
           {/* Product Grid - Desktop & Mobile */}
@@ -445,7 +455,7 @@ const Products = () => {
                     <X size={24} />
                   </button>
                 </div>
-                <FilterSidebar />
+                {renderFilterSidebar()}
               </div>
             </div>
           </div>

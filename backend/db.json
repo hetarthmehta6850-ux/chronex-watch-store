@@ -1,6 +1,6 @@
 {
   "chronex_promo_banner": {
-    "isVisible": true,
+    "isVisible": false,
     "title": "CHRONEX EXCLUSIVES SALE",
     "subtitle": "Complimentary Winder with Automatics. Ends in:",
     "endDate": "2026-07-06T03:22:36.088Z"
@@ -57,6 +57,1539 @@
         "y": 88
       },
       "email": "ubcity@chronex.in"
+    },
+    {
+      "city": "Vadodara",
+      "name": "Chronex ( Vemali ) Branch",
+      "address": "FF-12, Ambe Residency, opp Orchid Platinum,Vemali, Vadodara gujarat.",
+      "hours": "10:30 AM - 8:30 PM (Daily)",
+      "phone": "+918320606850",
+      "email": "hetarthmehta6850@gmail.com",
+      "coords": {
+        "x": 50,
+        "y": 50
+      },
+      "id": "vadodara"
+    }
+  ],
+  "chronex_users": [
+    {
+      "name": "Kabir Sharma",
+      "email": "kabir.sharma@gmail.com",
+      "role": "customer",
+      "phone": "+91 87492 01830"
+    },
+    {
+      "name": "Ananya Iyer",
+      "email": "ananya.iyer@outlook.com",
+      "role": "customer",
+      "phone": "+91 98321 04850"
+    },
+    {
+      "name": "Vikram Malhotra",
+      "email": "vikram.malhotra@yahoo.com",
+      "role": "customer",
+      "phone": "+91 74892 04820"
+    },
+    {
+      "name": "Meera Reddy",
+      "email": "meera.reddy@gmail.com",
+      "role": "customer",
+      "phone": "+91 93820 18402"
+    },
+    {
+      "name": "Aditya Sen",
+      "email": "aditya.sen@live.com",
+      "role": "customer",
+      "phone": "+91 88320 19302"
+    },
+    {
+      "name": "Admin User",
+      "email": "admin@chronex.in",
+      "role": "admin",
+      "phone": "+91 83206 06850"
+    },
+    {
+      "name": "Nisha Patel",
+      "email": "nisha.patel@gmail.com",
+      "role": "customer",
+      "phone": "+91 91234 56789"
+    },
+    {
+      "name": "Rajesh Gupta",
+      "email": "rajesh.gupta@yahoo.com",
+      "role": "customer",
+      "phone": "+91 98765 01234"
+    },
+    {
+      "name": "Shreya Joshi",
+      "email": "shreya.joshi@gmail.com",
+      "role": "customer",
+      "phone": "+91 99887 76655"
+    },
+    {
+      "name": "Karan Verma",
+      "email": "karan.verma@outlook.com",
+      "role": "customer",
+      "phone": "+91 88776 65544"
+    },
+    {
+      "name": "Diya Kapoor",
+      "email": "diya.kapoor@gmail.com",
+      "role": "customer",
+      "phone": "+91 77665 54433"
+    },
+    {
+      "name": "hetarthmehta6850",
+      "email": "hetarthmehta6850@gmail.com",
+      "role": "customer"
+    },
+    {
+      "name": "admin",
+      "email": "admin@chronex.com",
+      "role": "admin"
+    }
+  ],
+  "chronex_orders": [
+    {
+      "id": "CHX-703309",
+      "date": "2026-07-06T12:12:01.302Z",
+      "customer": {
+        "name": "Hetarth Mehta",
+        "phone": "+918320606850",
+        "email": "hetarthmehta6850@gmail.com",
+        "address": "KARELIBAUG Society Near Bright School",
+        "cityState": "Vadodara",
+        "pincode": "390018"
+      },
+      "items": [
+        {
+          "id": "rolex-submariner-01",
+          "name": "Submariner Date \"Starbucks\"",
+          "brand": "Rolex",
+          "price": 1385000,
+          "quantity": 1,
+          "image": "https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&q=80&w=800"
+        }
+      ],
+      "total": 1385000,
+      "paymentMethod": "UPI",
+      "paymentDetails": {
+        "paymentId": "pay_DEMO_1XDZOBEO",
+        "transactionId": "txn_DEMO_896240527",
+        "status": "Paid"
+      },
+      "orderStatus": "Delivered",
+      "status": "Delivered"
+    },
+    {
+      "id": "CHX-135837",
+      "date": "2026-07-06T10:59:55.376Z",
+      "customer": {
+        "name": "Kabir Sharma",
+        "email": "kabir.sharma@gmail.com",
+        "phone": "+91 87492 01830"
+      },
+      "items": [
+        {
+          "id": "p_0",
+          "name": "Submariner Date",
+          "brand": "Rolex",
+          "price": 950000,
+          "quantity": 1,
+          "image": ""
+        }
+      ],
+      "total": 950000,
+      "paymentMethod": "Credit Card",
+      "paymentDetails": "Visa ending in 4829",
+      "orderStatus": "Delivered"
+    },
+    {
+      "id": "CHX-870542",
+      "date": "2026-07-03T10:59:55.376Z",
+      "customer": {
+        "name": "Ananya Iyer",
+        "email": "ananya.iyer@outlook.com",
+        "phone": "+91 98321 04850"
+      },
+      "items": [
+        {
+          "id": "p_1",
+          "name": "Speedmaster Professional",
+          "brand": "Omega",
+          "price": 450000,
+          "quantity": 1,
+          "image": ""
+        }
+      ],
+      "total": 450000,
+      "paymentMethod": "Bank Transfer",
+      "paymentDetails": "HDFC Transaction ID 84920",
+      "orderStatus": "Shipped"
+    },
+    {
+      "id": "CHX-933150",
+      "date": "2026-06-30T10:59:55.376Z",
+      "customer": {
+        "name": "Vikram Malhotra",
+        "email": "vikram.malhotra@yahoo.com",
+        "phone": "+91 74892 04820"
+      },
+      "items": [
+        {
+          "id": "p_2",
+          "name": "Monaco Calibre 11",
+          "brand": "TAG Heuer",
+          "price": 180000,
+          "quantity": 1,
+          "image": ""
+        }
+      ],
+      "total": 180000,
+      "paymentMethod": "UPI",
+      "paymentDetails": "Google Pay UPI Ref 7291038",
+      "orderStatus": "Cancelled"
+    },
+    {
+      "id": "CHX-143101",
+      "date": "2026-06-27T10:59:55.376Z",
+      "customer": {
+        "name": "Meera Reddy",
+        "email": "meera.reddy@gmail.com",
+        "phone": "+91 93820 18402"
+      },
+      "items": [
+        {
+          "id": "p_3",
+          "name": "Prospex Alpinist",
+          "brand": "Seiko",
+          "price": 95000,
+          "quantity": 1,
+          "image": ""
+        }
+      ],
+      "total": 95000,
+      "paymentMethod": "Cash on Delivery",
+      "paymentDetails": "Verified COD Request",
+      "orderStatus": "Delivered"
+    },
+    {
+      "id": "CHX-224921",
+      "date": "2026-06-24T10:59:55.376Z",
+      "customer": {
+        "name": "Aditya Sen",
+        "email": "aditya.sen@live.com",
+        "phone": "+91 88320 19302"
+      },
+      "items": [
+        {
+          "id": "p_4",
+          "name": "Black Bay Fifty-Eight",
+          "brand": "Tudor",
+          "price": 250000,
+          "quantity": 1,
+          "image": ""
+        }
+      ],
+      "total": 250000,
+      "paymentMethod": "Credit Card",
+      "paymentDetails": "Mastercard ending in 9012",
+      "orderStatus": "Delivered"
+    },
+    {
+      "id": "CHX-446252",
+      "date": "2026-06-21T10:59:55.376Z",
+      "customer": {
+        "name": "Nisha Patel",
+        "email": "nisha.patel@gmail.com",
+        "phone": "+91 91234 56789"
+      },
+      "items": [
+        {
+          "id": "p_5",
+          "name": "Santos de Cartier",
+          "brand": "Cartier",
+          "price": 380000,
+          "quantity": 1,
+          "image": ""
+        }
+      ],
+      "total": 380000,
+      "paymentMethod": "UPI",
+      "paymentDetails": "Paytm UPI Ref 9283018",
+      "orderStatus": "Cancelled"
+    },
+    {
+      "id": "CHX-280524",
+      "date": "2026-06-18T10:59:55.376Z",
+      "customer": {
+        "name": "Rajesh Gupta",
+        "email": "rajesh.gupta@yahoo.com",
+        "phone": "+91 98765 01234"
+      },
+      "items": [
+        {
+          "id": "p_6",
+          "name": "HydroConquest",
+          "brand": "Longines",
+          "price": 120000,
+          "quantity": 1,
+          "image": ""
+        }
+      ],
+      "total": 120000,
+      "paymentMethod": "Debit Card",
+      "paymentDetails": "Visa Debit ending in 7731",
+      "orderStatus": "Shipped"
+    },
+    {
+      "id": "CHX-912986",
+      "date": "2026-06-15T10:59:55.376Z",
+      "customer": {
+        "name": "Shreya Joshi",
+        "email": "shreya.joshi@gmail.com",
+        "phone": "+91 99887 76655"
+      },
+      "items": [
+        {
+          "id": "p_7",
+          "name": "Datejust 41",
+          "brand": "Rolex",
+          "price": 720000,
+          "quantity": 1,
+          "image": ""
+        }
+      ],
+      "total": 720000,
+      "paymentMethod": "Bank Transfer",
+      "paymentDetails": "ICICI Transaction ID 93021",
+      "orderStatus": "Cancelled"
+    },
+    {
+      "id": "CHX-877160",
+      "date": "2026-06-12T10:59:55.377Z",
+      "customer": {
+        "name": "Karan Verma",
+        "email": "karan.verma@outlook.com",
+        "phone": "+91 88776 65544"
+      },
+      "items": [
+        {
+          "id": "p_8",
+          "name": "Constellation",
+          "brand": "Omega",
+          "price": 210000,
+          "quantity": 1,
+          "image": ""
+        }
+      ],
+      "total": 210000,
+      "paymentMethod": "UPI",
+      "paymentDetails": "PhonePe UPI Ref 8301928",
+      "orderStatus": "Delivered"
+    },
+    {
+      "id": "CHX-543460",
+      "date": "2026-06-09T10:59:55.377Z",
+      "customer": {
+        "name": "Diya Kapoor",
+        "email": "diya.kapoor@gmail.com",
+        "phone": "+91 77665 54433"
+      },
+      "items": [
+        {
+          "id": "p_9",
+          "name": "PRX Powermatic 80",
+          "brand": "Tissot",
+          "price": 65000,
+          "quantity": 1,
+          "image": ""
+        }
+      ],
+      "total": 65000,
+      "paymentMethod": "Cash on Delivery",
+      "paymentDetails": "COD Request",
+      "orderStatus": "Cancelled"
+    },
+    {
+      "id": "CHX-847291",
+      "date": "2026-07-04T12:07:16.045Z",
+      "customer": {
+        "name": "Ananya Iyer",
+        "email": "ananya.iyer@outlook.com",
+        "phone": "+91 98321 04850"
+      },
+      "items": [
+        {
+          "id": "p1",
+          "name": "Submariner Date",
+          "brand": "Rolex",
+          "price": 950000,
+          "quantity": 1,
+          "image": ""
+        }
+      ],
+      "total": 950000,
+      "paymentMethod": "Credit Card",
+      "paymentDetails": "Visa ending in 4829",
+      "orderStatus": "Delivered"
+    },
+    {
+      "id": "CHX-103849",
+      "date": "2026-07-01T12:07:16.045Z",
+      "customer": {
+        "name": "Kabir Sharma",
+        "email": "kabir.sharma@gmail.com",
+        "phone": "+91 87492 01830"
+      },
+      "items": [
+        {
+          "id": "p2",
+          "name": "Speedmaster Professional",
+          "brand": "Omega",
+          "price": 450000,
+          "quantity": 1,
+          "image": ""
+        }
+      ],
+      "total": 450000,
+      "paymentMethod": "Bank Transfer",
+      "paymentDetails": "HDFC Transaction ID 84920",
+      "orderStatus": "Shipped"
+    },
+    {
+      "id": "CHX-928471",
+      "date": "2026-06-28T12:07:16.045Z",
+      "customer": {
+        "name": "Vikram Malhotra",
+        "email": "vikram.malhotra@yahoo.com",
+        "phone": "+91 74892 04820"
+      },
+      "items": [
+        {
+          "id": "p3",
+          "name": "Monaco Calibre 11",
+          "brand": "TAG Heuer",
+          "price": 180000,
+          "quantity": 1,
+          "image": ""
+        }
+      ],
+      "total": 180000,
+      "paymentMethod": "UPI",
+      "paymentDetails": "Google Pay UPI Ref 7291038",
+      "orderStatus": "Cancelled"
+    },
+    {
+      "id": "CHX-374920",
+      "date": "2026-06-24T12:07:16.045Z",
+      "customer": {
+        "name": "Meera Reddy",
+        "email": "meera.reddy@gmail.com",
+        "phone": "+91 93820 18402"
+      },
+      "items": [
+        {
+          "id": "p4",
+          "name": "Prospex Alpinist",
+          "brand": "Seiko",
+          "price": 95000,
+          "quantity": 1,
+          "image": ""
+        }
+      ],
+      "total": 95000,
+      "paymentMethod": "Cash on Delivery",
+      "paymentDetails": "Verified COD Request",
+      "orderStatus": "Delivered"
+    }
+  ],
+  "chronex_appointments": [
+    {
+      "id": "BK-125390",
+      "date": "2026-07-06T10:59:55.376Z",
+      "name": "Kabir Sharma",
+      "phone": "+91 87492 01830",
+      "email": "kabir.sharma@gmail.com",
+      "showroomId": "vadodara",
+      "time": "11:30 AM",
+      "notes": "Interested in trying out the Rolex Submariner Date.",
+      "status": "Confirmed"
+    },
+    {
+      "id": "BK-649957",
+      "date": "2026-07-05T10:59:55.376Z",
+      "name": "Ananya Iyer",
+      "phone": "+91 98321 04850",
+      "email": "ananya.iyer@outlook.com",
+      "showroomId": "mumbai",
+      "time": "02:30 PM",
+      "notes": "Would like to view the Cartier Santos and Jaeger-LeCoultre Reverso.",
+      "status": "Confirmed"
+    },
+    {
+      "id": "BK-425137",
+      "date": "2026-07-08T10:59:55.376Z",
+      "name": "Vikram Malhotra",
+      "phone": "+91 74892 04820",
+      "email": "vikram.malhotra@yahoo.com",
+      "showroomId": "delhi",
+      "time": "04:00 PM",
+      "notes": "Looking for a luxury sports chronograph. Please keep options ready.",
+      "status": "Confirmed"
+    },
+    {
+      "id": "BK-647122",
+      "date": "2026-07-03T10:59:55.376Z",
+      "name": "Meera Reddy",
+      "phone": "+91 93820 18402",
+      "email": "meera.reddy@gmail.com",
+      "showroomId": "bangalore",
+      "time": "05:30 PM",
+      "notes": "Gift shopping for husband. Omega or Tudor preferred.",
+      "status": "Completed"
+    },
+    {
+      "id": "BK-354254",
+      "date": "2026-07-10T10:59:55.376Z",
+      "name": "Aditya Sen",
+      "phone": "+91 88320 19302",
+      "email": "aditya.sen@live.com",
+      "showroomId": "vadodara",
+      "time": "12:00 PM",
+      "notes": "First high-end watch purchase. Needs custom consulting.",
+      "status": "Pending Approval"
+    },
+    {
+      "id": "BK-478865",
+      "date": "2026-07-01T10:59:55.376Z",
+      "name": "Nisha Patel",
+      "phone": "+91 91234 56789",
+      "email": "nisha.patel@gmail.com",
+      "showroomId": "mumbai",
+      "time": "03:00 PM",
+      "notes": "Wants to view ladies Diamond collection.",
+      "status": "Completed"
+    },
+    {
+      "id": "BK-930981",
+      "date": "2026-07-12T10:59:55.376Z",
+      "name": "Rajesh Gupta",
+      "phone": "+91 98765 01234",
+      "email": "rajesh.gupta@yahoo.com",
+      "showroomId": "delhi",
+      "time": "01:30 PM",
+      "notes": "Corporate order presentation for 10 pieces.",
+      "status": "Confirmed"
+    },
+    {
+      "id": "BK-180533",
+      "date": "2026-06-29T10:59:55.376Z",
+      "name": "Shreya Joshi",
+      "phone": "+91 99887 76655",
+      "email": "shreya.joshi@gmail.com",
+      "showroomId": "bangalore",
+      "time": "06:00 PM",
+      "notes": "Sizing request for Cartier Tank.",
+      "status": "Cancelled"
+    },
+    {
+      "id": "BK-412202",
+      "date": "2026-07-14T10:59:55.377Z",
+      "name": "Karan Verma",
+      "phone": "+91 88776 65544",
+      "email": "karan.verma@outlook.com",
+      "showroomId": "vadodara",
+      "time": "04:30 PM",
+      "notes": "Trade-in evaluation in showroom.",
+      "status": "Confirmed"
+    },
+    {
+      "id": "BK-560520",
+      "date": "2026-06-27T10:59:55.377Z",
+      "name": "Diya Kapoor",
+      "phone": "+91 77665 54433",
+      "email": "diya.kapoor@gmail.com",
+      "showroomId": "mumbai",
+      "time": "11:00 AM",
+      "notes": "Omega Speedmaster viewing.",
+      "status": "Completed"
+    }
+  ],
+  "chronex_services": [
+    {
+      "id": "TKT-609407",
+      "date": "2026-07-06T10:59:55.376Z",
+      "name": "Kabir Sharma",
+      "phone": "+91 87492 01830",
+      "watchBrand": "Rolex",
+      "watchModel": "Submariner Date",
+      "serviceType": "Complete Overhaul",
+      "issueDescription": "Gaining 15 seconds per day, needs regulation and movement lubrication.",
+      "status": "In Progress"
+    },
+    {
+      "id": "TKT-350014",
+      "date": "2026-07-04T10:59:55.376Z",
+      "name": "Ananya Iyer",
+      "phone": "+91 98321 04850",
+      "watchBrand": "Omega",
+      "watchModel": "Speedmaster Professional",
+      "serviceType": "Water Resistance Restoral",
+      "issueDescription": "Condensation inside glass after swimming. Gaskets probably worn out.",
+      "status": "Awaiting Parts"
+    },
+    {
+      "id": "TKT-261150",
+      "date": "2026-07-02T10:59:55.376Z",
+      "name": "Vikram Malhotra",
+      "phone": "+91 74892 04820",
+      "watchBrand": "TAG Heuer",
+      "watchModel": "Monaco Calibre 11",
+      "serviceType": "Polishing & Refinishing",
+      "issueDescription": "Deep desk-diving scratches on the bracelet and case side.",
+      "status": "Delivered"
+    },
+    {
+      "id": "TKT-460053",
+      "date": "2026-06-30T10:59:55.376Z",
+      "name": "Meera Reddy",
+      "phone": "+91 93820 18402",
+      "watchBrand": "Seiko",
+      "watchModel": "Prospex Alpinist",
+      "serviceType": "Crystal Replacement",
+      "issueDescription": "Sapphire glass has a minor chip near the 2 o'clock position.",
+      "status": "Completed"
+    },
+    {
+      "id": "TKT-941713",
+      "date": "2026-06-28T10:59:55.376Z",
+      "name": "Aditya Sen",
+      "phone": "+91 88320 19302",
+      "watchBrand": "Tudor",
+      "watchModel": "Black Bay Fifty-Eight",
+      "serviceType": "Movement Calibration",
+      "issueDescription": "Bezel alignment is slightly off center. Movement runs fine.",
+      "status": "Ticket Created"
+    },
+    {
+      "id": "TKT-412003",
+      "date": "2026-06-26T10:59:55.376Z",
+      "name": "Nisha Patel",
+      "phone": "+91 91234 56789",
+      "watchBrand": "Cartier",
+      "watchModel": "Santos de Cartier",
+      "serviceType": "Strap Customization",
+      "issueDescription": "Change steel bracelet to premium brown alligator leather strap.",
+      "status": "Delivered"
+    },
+    {
+      "id": "TKT-990866",
+      "date": "2026-06-24T10:59:55.376Z",
+      "name": "Rajesh Gupta",
+      "phone": "+91 98765 01234",
+      "watchBrand": "Longines",
+      "watchModel": "HydroConquest",
+      "serviceType": "Battery Replacement",
+      "issueDescription": "Quartz movement stopped running last week. Needs new battery.",
+      "status": "Delivered"
+    },
+    {
+      "id": "TKT-286053",
+      "date": "2026-06-22T10:59:55.376Z",
+      "name": "Shreya Joshi",
+      "phone": "+91 99887 76655",
+      "watchBrand": "Rolex",
+      "watchModel": "Datejust 41",
+      "serviceType": "Battery & Seal Service",
+      "issueDescription": "Replace battery and pressure test for water resistance.",
+      "status": "Completed"
+    },
+    {
+      "id": "TKT-770736",
+      "date": "2026-06-20T10:59:55.377Z",
+      "name": "Karan Verma",
+      "phone": "+91 88776 65544",
+      "watchBrand": "Omega",
+      "watchModel": "Constellation",
+      "serviceType": "Complete Restoration",
+      "issueDescription": "Vintage piece inherited, hasn't run in 10 years. Needs full service.",
+      "status": "Under Evaluation"
+    },
+    {
+      "id": "TKT-735899",
+      "date": "2026-06-18T10:59:55.377Z",
+      "name": "Diya Kapoor",
+      "phone": "+91 77665 54433",
+      "watchBrand": "Tissot",
+      "watchModel": "PRX Powermatic 80",
+      "serviceType": "Chronograph Repair",
+      "issueDescription": "Top pusher is sticky and chronograph second hand doesn't reset to zero.",
+      "status": "Awaiting Customer Approval"
+    }
+  ],
+  "chronex_tradeins": [
+    {
+      "id": "TRD-479614",
+      "date": "2026-07-06T10:59:55.376Z",
+      "name": "Kabir Sharma",
+      "email": "kabir.sharma@gmail.com",
+      "phone": "+91 87492 01830",
+      "brand": "Omega",
+      "model": "Speedmaster",
+      "purchaseYear": "2015",
+      "condition": "Good",
+      "boxPapers": "Both",
+      "estimatedRange": "₹22,000 - ₹28,000",
+      "image": "",
+      "status": "Pending"
+    },
+    {
+      "id": "TRD-494714",
+      "date": "2026-07-04T10:59:55.376Z",
+      "name": "Ananya Iyer",
+      "email": "ananya.iyer@outlook.com",
+      "phone": "+91 98321 04850",
+      "brand": "Rolex",
+      "model": "Seamaster",
+      "purchaseYear": "2016",
+      "condition": "Excellent",
+      "boxPapers": "Both",
+      "estimatedRange": "₹3,20,000 - ₹3,80,000",
+      "image": "",
+      "status": "Accepted"
+    },
+    {
+      "id": "TRD-638205",
+      "date": "2026-07-02T10:59:55.376Z",
+      "name": "Vikram Malhotra",
+      "email": "vikram.malhotra@yahoo.com",
+      "phone": "+91 74892 04820",
+      "brand": "Rolex",
+      "model": "Seamaster",
+      "purchaseYear": "2017",
+      "condition": "Very Good",
+      "boxPapers": "Box Only",
+      "estimatedRange": "₹1,60,000 - ₹2,00,000",
+      "image": "",
+      "status": "Pending"
+    },
+    {
+      "id": "TRD-228438",
+      "date": "2026-06-30T10:59:55.376Z",
+      "name": "Meera Reddy",
+      "email": "meera.reddy@gmail.com",
+      "phone": "+91 93820 18402",
+      "brand": "Rolex",
+      "model": "Seamaster",
+      "purchaseYear": "2018",
+      "condition": "Excellent",
+      "boxPapers": "Both",
+      "estimatedRange": "₹30,000 - ₹40,000",
+      "image": "",
+      "status": "Accepted"
+    },
+    {
+      "id": "TRD-263295",
+      "date": "2026-06-28T10:59:55.376Z",
+      "name": "Aditya Sen",
+      "email": "aditya.sen@live.com",
+      "phone": "+91 88320 19302",
+      "brand": "Rolex",
+      "model": "Seamaster",
+      "purchaseYear": "2019",
+      "condition": "Fair",
+      "boxPapers": "None",
+      "estimatedRange": "₹35,000 - ₹45,000",
+      "image": "",
+      "status": "Rejected"
+    },
+    {
+      "id": "TRD-508543",
+      "date": "2026-06-26T10:59:55.376Z",
+      "name": "Nisha Patel",
+      "email": "nisha.patel@gmail.com",
+      "phone": "+91 91234 56789",
+      "brand": "Rolex",
+      "model": "Seamaster",
+      "purchaseYear": "2020",
+      "condition": "Good",
+      "boxPapers": "Papers Only",
+      "estimatedRange": "₹55,000 - ₹65,000",
+      "image": "",
+      "status": "Accepted"
+    },
+    {
+      "id": "TRD-787332",
+      "date": "2026-06-24T10:59:55.376Z",
+      "name": "Rajesh Gupta",
+      "email": "rajesh.gupta@yahoo.com",
+      "phone": "+91 98765 01234",
+      "brand": "Rolex",
+      "model": "Seamaster",
+      "purchaseYear": "2021",
+      "condition": "Excellent",
+      "boxPapers": "Both",
+      "estimatedRange": "₹25,000 - ₹35,000",
+      "image": "",
+      "status": "Pending"
+    },
+    {
+      "id": "TRD-374907",
+      "date": "2026-06-22T10:59:55.376Z",
+      "name": "Shreya Joshi",
+      "email": "shreya.joshi@gmail.com",
+      "phone": "+91 99887 76655",
+      "brand": "Omega",
+      "model": "Seamaster",
+      "purchaseYear": "2022",
+      "condition": "Good",
+      "boxPapers": "Both",
+      "estimatedRange": "₹75,000 - ₹95,000",
+      "image": "",
+      "status": "Pending"
+    },
+    {
+      "id": "TRD-596542",
+      "date": "2026-06-20T10:59:55.377Z",
+      "name": "Karan Verma",
+      "email": "karan.verma@outlook.com",
+      "phone": "+91 88776 65544",
+      "brand": "Rolex",
+      "model": "Seamaster",
+      "purchaseYear": "2015",
+      "condition": "Excellent",
+      "boxPapers": "Both",
+      "estimatedRange": "₹1,30,000 - ₹1,70,000",
+      "image": "",
+      "status": "Accepted"
+    },
+    {
+      "id": "TRD-361629",
+      "date": "2026-06-18T10:59:55.377Z",
+      "name": "Diya Kapoor",
+      "email": "diya.kapoor@gmail.com",
+      "phone": "+91 77665 54433",
+      "brand": "Rolex",
+      "model": "Seamaster",
+      "purchaseYear": "2016",
+      "condition": "Very Good",
+      "boxPapers": "Both",
+      "estimatedRange": "₹95,000 - ₹1,25,000",
+      "image": "",
+      "status": "Pending"
+    }
+  ],
+  "chronex_returns": [
+    {
+      "id": "RET-295620",
+      "date": "2026-07-07T11:25:06.106Z",
+      "status": "Completed",
+      "orderId": "CHX-703309",
+      "email": "hetarthmehta6850@gmail.com",
+      "reason": "Minor visual defect",
+      "notes": "please redund me as soon as possible\n",
+      "items": [
+        {
+          "id": "rolex-submariner-01",
+          "name": "Submariner Date \"Starbucks\"",
+          "brand": "Rolex",
+          "price": 1385000,
+          "quantity": 1,
+          "image": "https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&q=80&w=800"
+        }
+      ],
+      "total": 1385000
+    },
+    {
+      "id": "RET-837898",
+      "date": "2026-07-06T10:59:55.376Z",
+      "orderId": "CHX-135837",
+      "name": "Kabir Sharma",
+      "email": "kabir.sharma@gmail.com",
+      "watchName": "Submariner Date",
+      "reason": "Sizing issue / watch too large for wrist",
+      "type": "Exchange",
+      "status": "Pending",
+      "total": 950000
+    },
+    {
+      "id": "RET-843218",
+      "date": "2026-07-04T10:59:55.376Z",
+      "orderId": "CHX-870542",
+      "name": "Ananya Iyer",
+      "email": "ananya.iyer@outlook.com",
+      "watchName": "Speedmaster Professional",
+      "reason": "Found minor defect on bezel alignment",
+      "type": "Replacement",
+      "status": "Completed",
+      "total": 450000
+    },
+    {
+      "id": "RET-219132",
+      "date": "2026-07-02T10:59:55.376Z",
+      "orderId": "CHX-933150",
+      "name": "Vikram Malhotra",
+      "email": "vikram.malhotra@yahoo.com",
+      "watchName": "Monaco Calibre 11",
+      "reason": "Incorrect color shipped (wanted green, got black)",
+      "type": "Replacement",
+      "status": "Completed",
+      "total": 180000
+    },
+    {
+      "id": "RET-676065",
+      "date": "2026-06-30T10:59:55.376Z",
+      "orderId": "CHX-143101",
+      "name": "Meera Reddy",
+      "email": "meera.reddy@gmail.com",
+      "watchName": "Prospex Alpinist",
+      "reason": "Changed mind, want to upgrade to Rolex instead",
+      "type": "Refund",
+      "status": "Rejected",
+      "total": 95000
+    },
+    {
+      "id": "RET-259103",
+      "date": "2026-06-28T10:59:55.376Z",
+      "orderId": "CHX-224921",
+      "name": "Aditya Sen",
+      "email": "aditya.sen@live.com",
+      "watchName": "Black Bay Fifty-Eight",
+      "reason": "Bracelet too small, need extra links",
+      "type": "Exchange",
+      "status": "Pending",
+      "total": 250000
+    },
+    {
+      "id": "RET-444503",
+      "date": "2026-06-26T10:59:55.376Z",
+      "orderId": "CHX-446252",
+      "name": "Nisha Patel",
+      "email": "nisha.patel@gmail.com",
+      "watchName": "Santos de Cartier",
+      "reason": "Gift recipient already owns similar model",
+      "type": "Refund",
+      "status": "Approved",
+      "total": 380000
+    },
+    {
+      "id": "RET-628018",
+      "date": "2026-06-24T10:59:55.376Z",
+      "orderId": "CHX-280524",
+      "name": "Rajesh Gupta",
+      "email": "rajesh.gupta@yahoo.com",
+      "watchName": "HydroConquest",
+      "reason": "Crown feels loose and hard to wind",
+      "type": "Replacement",
+      "status": "Pending",
+      "total": 120000
+    },
+    {
+      "id": "RET-227296",
+      "date": "2026-06-22T10:59:55.376Z",
+      "orderId": "CHX-912986",
+      "name": "Shreya Joshi",
+      "email": "shreya.joshi@gmail.com",
+      "watchName": "Datejust 41",
+      "reason": "Dial color looks different in daylight",
+      "type": "Refund",
+      "status": "Completed",
+      "total": 720000
+    },
+    {
+      "id": "RET-322740",
+      "date": "2026-06-20T10:59:55.377Z",
+      "orderId": "CHX-877160",
+      "name": "Karan Verma",
+      "email": "karan.verma@outlook.com",
+      "watchName": "Constellation",
+      "reason": "Minor scratch on clasp on arrival",
+      "type": "Replacement",
+      "status": "Approved",
+      "total": 210000
+    },
+    {
+      "id": "RET-465632",
+      "date": "2026-06-18T10:59:55.377Z",
+      "orderId": "CHX-543460",
+      "name": "Diya Kapoor",
+      "email": "diya.kapoor@gmail.com",
+      "watchName": "PRX Powermatic 80",
+      "reason": "Rotor makes rattling sound inside case",
+      "type": "Replacement",
+      "status": "Pending",
+      "total": 65000
+    }
+  ],
+  "chronex_recently_viewed": [
+    "rolex-submariner-01"
+  ],
+  "chronex_current_user": {
+    "name": "hetarthmehta6850",
+    "email": "hetarthmehta6850@gmail.com",
+    "role": "customer"
+  },
+  "chronex_points_kabir.sharma@gmail.com": 1300,
+  "chronex_points_admin@chronex.in": 10099,
+  "chronex_points_hetarthmehta6850@gmail.com": 2250,
+  "chronex_coupons": [
+    {
+      "code": "WELCOME10",
+      "type": "percentage",
+      "value": 10,
+      "minOrder": 0
+    },
+    {
+      "code": "CHRONEXVIP",
+      "type": "flat",
+      "value": 10000,
+      "minOrder": 100000
+    },
+    {
+      "code": "FESTIVE5",
+      "type": "percentage",
+      "value": 5,
+      "minOrder": 0
+    },
+    {
+      "code": "EXTRAA20",
+      "type": "flat",
+      "value": 20000,
+      "minOrder": 100000,
+      "active": true
+    }
+  ],
+  "chronex_cart": {},
+  "chronex_products": [
+    {
+      "id": "rolex-submariner-01",
+      "name": "Submariner Date \"Starbucks\"",
+      "brand": "Rolex",
+      "price": 1385000,
+      "category": "Men",
+      "style": "Luxury",
+      "movement": "Automatic",
+      "rating": 4.9,
+      "isFeatured": true,
+      "description": "The Rolex Submariner Date in Oystersteel with a green Cerachrom ceramic bezel and a black dial. An iconic divers' watch that has transcended its tool heritage to become a global symbol of achievement and luxury.",
+      "images": [
+        "https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&q=80&w=800",
+        "https://images.unsplash.com/photo-1622434641406-a158123450f9?auto=format&fit=crop&q=80&w=800"
+      ],
+      "specs": {
+        "movement": "Rolex Calibre 3235, Manufacture Mechanical",
+        "caseDiameter": "41 mm",
+        "caseMaterial": "Oystersteel (904L Stainless Steel)",
+        "strapMaterial": "Oystersteel Bracelet with Oysterlock Safety Clasp",
+        "waterResistance": "300 meters / 1000 feet",
+        "glass": "Scratch-resistant Sapphire, Cyclops lens over the date",
+        "warranty": "5 Years International Warranty",
+        "powerReserve": "Approx. 70 hours"
+      },
+      "reviews": [
+        {
+          "id": 1,
+          "author": "Vikram S.",
+          "rating": 5,
+          "comment": "Absolutely stunning. The green bezel pops in the sunlight.",
+          "date": "2026-05-12",
+          "status": "Approved"
+        },
+        {
+          "id": 2,
+          "author": "Rahul M.",
+          "rating": 5,
+          "comment": "A grail watch. Happy to finally have it in my collection.",
+          "date": "2026-04-20",
+          "status": "Approved"
+        },
+        {
+          "id": 3,
+          "author": "Aman K.",
+          "rating": 4,
+          "comment": "Waitlist was long but worth it.",
+          "date": "2026-03-15",
+          "status": "Approved"
+        }
+      ],
+      "imageUrl": "https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&q=80&w=800",
+      "stock": 7
+    },
+    {
+      "id": "omega-speedmaster-02",
+      "name": "Speedmaster Professional Moonwatch",
+      "brand": "Omega",
+      "price": 720000,
+      "category": "Men",
+      "style": "Luxury",
+      "movement": "Automatic",
+      "rating": 4.8,
+      "isFeatured": true,
+      "description": "The Omega Speedmaster Professional Moonwatch is one of the world's most iconic timepieces. Having played a part in all six lunar missions, the legendary chronograph is an impressive representation of the brand’s adventurous pioneering spirit.",
+      "images": [
+        "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&q=80&w=800",
+        "https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&q=80&w=800"
+      ],
+      "specs": {
+        "movement": "Omega Co-Axial Master Chronometer Calibre 3861",
+        "caseDiameter": "42 mm",
+        "caseMaterial": "Stainless Steel",
+        "strapMaterial": "Polished Stainless Steel Bracelet",
+        "waterResistance": "50 meters / 167 feet",
+        "glass": "Hesalite Crystal (traditional) or Domed Sapphire",
+        "warranty": "5 Years International Warranty",
+        "powerReserve": "Approx. 50 hours"
+      },
+      "reviews": [
+        {
+          "id": 1,
+          "author": "Karan D.",
+          "rating": 5,
+          "comment": "The history behind this watch is unmatched.",
+          "date": "2026-06-01",
+          "status": "Approved"
+        },
+        {
+          "id": 2,
+          "author": "Siddharth J.",
+          "rating": 4,
+          "comment": "Great watch but the bracelet could be slightly better.",
+          "date": "2026-05-28",
+          "status": "Approved"
+        }
+      ],
+      "imageUrl": "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&q=80&w=800",
+      "stock": 12
+    },
+    {
+      "id": "rado-centrix-03",
+      "name": "Centrix Automatic Open Heart",
+      "brand": "Rado",
+      "price": 215000,
+      "category": "Unisex",
+      "style": "Luxury",
+      "movement": "Automatic",
+      "rating": 4.7,
+      "isFeatured": true,
+      "description": "The popular Centrix Automatic Open Heart watch showcases the high-quality Swiss automatic movement inside through a beautifully cut-out dial. Crafted in signature high-tech ceramic and stainless steel for scratch-resistant luxury.",
+      "images": [
+        "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80&w=800",
+        "https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=800"
+      ],
+      "specs": {
+        "movement": "Swiss Automatic Movement, 80-hour power reserve",
+        "caseDiameter": "38 mm",
+        "caseMaterial": "Stainless Steel & Rose Gold PVD coating",
+        "strapMaterial": "High-Tech Ceramic and Stainless Steel Links",
+        "waterResistance": "30 meters / 100 feet",
+        "glass": "Curved Sapphire Crystal",
+        "warranty": "2 Years International Rado Warranty",
+        "powerReserve": "Approx. 80 hours"
+      },
+      "reviews": [
+        {
+          "id": 1,
+          "author": "Priya T.",
+          "rating": 5,
+          "comment": "Looks incredibly elegant on the wrist. Love the open heart.",
+          "date": "2026-06-10",
+          "status": "Approved"
+        }
+      ],
+      "imageUrl": "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80&w=800",
+      "stock": 13
+    },
+    {
+      "id": "tag-heuer-carrera-04",
+      "name": "Carrera Chronograph \"Glassbox\"",
+      "brand": "TAG Heuer",
+      "price": 545000,
+      "category": "Men",
+      "style": "Luxury",
+      "movement": "Automatic",
+      "rating": 4.8,
+      "isFeatured": true,
+      "description": "Designed for high-speed racing drivers, this TAG Heuer Carrera features a signature 'glassbox' dome sapphire crystal that curves elegantly over the tachymeter scale, wrapping around the edge of the case for maximum legibility.",
+      "images": [
+        "https://images.unsplash.com/photo-1639006570490-79c0c53f1080?auto=format&fit=crop&q=80&w=800",
+        "https://images.unsplash.com/photo-1604242692760-2f7b0c26856d?auto=format&fit=crop&q=80&w=800"
+      ],
+      "specs": {
+        "movement": "Calibre TH20-00 Automatic Chronograph",
+        "caseDiameter": "39 mm",
+        "caseMaterial": "Fine-brushed & Polished Stainless Steel",
+        "strapMaterial": "Black Perforated Calfskin Leather Strap",
+        "waterResistance": "100 meters / 330 feet",
+        "glass": "Domed Sapphire Crystal with double anti-reflective treatment",
+        "warranty": "2 Years International Warranty",
+        "powerReserve": "Approx. 80 hours"
+      },
+      "reviews": [
+        {
+          "id": 1,
+          "author": "Arjun P.",
+          "rating": 5,
+          "comment": "The glassbox design is a game changer for TAG.",
+          "date": "2026-05-05",
+          "status": "Approved"
+        }
+      ],
+      "imageUrl": "https://images.unsplash.com/photo-1639006570490-79c0c53f1080?auto=format&fit=crop&q=80&w=800",
+      "stock": 10
+    },
+    {
+      "id": "tissot-prx-05",
+      "name": "PRX Powermatic 80 Blue Dial",
+      "brand": "Tissot",
+      "price": 68500,
+      "category": "Men",
+      "style": "Luxury",
+      "movement": "Automatic",
+      "rating": 4.7,
+      "isFeatured": false,
+      "description": "An essential timepiece with an integrated bracelet and a distinctive waffle dial. The Tissot PRX Powermatic 80 is a modern rebirth of a classic 1978 design, powered by a state-of-the-art Swiss automatic movement.",
+      "images": [
+        "https://images.unsplash.com/photo-1619134778706-7015533a6150?auto=format&fit=crop&q=80&w=800",
+        "https://images.unsplash.com/photo-1539874754764-5a96559165b0?auto=format&fit=crop&q=80&w=800"
+      ],
+      "specs": {
+        "movement": "POWERMATIC 80.111 Swiss Automatic, Nivachron Hairspring",
+        "caseDiameter": "40 mm",
+        "caseMaterial": "316L Stainless Steel Case",
+        "strapMaterial": "Integrated Stainless Steel Single-link Bracelet",
+        "waterResistance": "100 meters / 330 feet",
+        "glass": "Scratch-resistant Sapphire Crystal with anti-reflective coating",
+        "warranty": "2 Years Tissot Warranty",
+        "powerReserve": "Up to 80 hours"
+      },
+      "reviews": [
+        {
+          "id": 1,
+          "author": "Rohan B.",
+          "rating": 5,
+          "comment": "Best value for money Swiss watch right now.",
+          "date": "2026-06-12",
+          "status": "Approved"
+        },
+        {
+          "id": 2,
+          "author": "Neeraj G.",
+          "rating": 4,
+          "comment": "Fits perfectly. The integrated bracelet is super comfortable.",
+          "date": "2026-06-08",
+          "status": "Approved"
+        }
+      ],
+      "imageUrl": "https://images.unsplash.com/photo-1619134778706-7015533a6150?auto=format&fit=crop&q=80&w=800",
+      "stock": 7
+    },
+    {
+      "id": "seiko-5-sports-06",
+      "name": "5 Sports GMT 'Blueberry'",
+      "brand": "Seiko",
+      "price": 35000,
+      "category": "Men",
+      "style": "Sport",
+      "movement": "Automatic",
+      "rating": 4.6,
+      "isFeatured": false,
+      "description": "The highly anticipated Seiko 5 Sports GMT series brings dual-time capabilities to an accessible price point. Features a striking blue dial, a two-tone blue and black rotating bezel, and a robust five-row steel bracelet.",
+      "images": [
+        "https://images.unsplash.com/photo-1623998021450-85c24c626a5a?auto=format&fit=crop&q=80&w=800"
+      ],
+      "specs": {
+        "movement": "Seiko Caliber 4R34 Automatic, Manual Winding Capable",
+        "caseDiameter": "42.5 mm",
+        "caseMaterial": "Stainless Steel",
+        "strapMaterial": "Stainless Steel Jubilee-style Bracelet",
+        "waterResistance": "100 meters / 330 feet",
+        "glass": "Hardlex Crystal with Date Magnifier",
+        "warranty": "2 Years Seiko India Warranty",
+        "powerReserve": "Approx. 41 hours"
+      },
+      "reviews": [],
+      "imageUrl": "https://images.unsplash.com/photo-1623998021450-85c24c626a5a?auto=format&fit=crop&q=80&w=800",
+      "stock": 11
+    },
+    {
+      "id": "citizen-ecodrive-07",
+      "name": "Eco-Drive Promaster Diver",
+      "brand": "Citizen",
+      "price": 29500,
+      "category": "Men",
+      "style": "Sport",
+      "movement": "Solar",
+      "rating": 4.5,
+      "isFeatured": false,
+      "description": "Powered by light, any light, this Citizen Promaster Diver never needs a battery. Built to ISO standards with a durable blue polyurethane strap, deep blue dial, and easy-to-read luminous hands and markers.",
+      "images": [
+        "https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&q=80&w=800"
+      ],
+      "specs": {
+        "movement": "Eco-Drive Caliber E168 (Solar Powered)",
+        "caseDiameter": "44 mm",
+        "caseMaterial": "Silver-Tone Stainless Steel, Promaster Crown",
+        "strapMaterial": "Durable Blue Polyurethane Strap",
+        "waterResistance": "200 meters / 660 feet (ISO certified)",
+        "glass": "Anti-Reflective Mineral Crystal",
+        "warranty": "3 Years Citizen India Warranty",
+        "powerReserve": "6 months on full charge in complete darkness"
+      },
+      "reviews": [],
+      "imageUrl": "https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&q=80&w=800",
+      "stock": 12
+    },
+    {
+      "id": "titan-edge-08",
+      "name": "Edge Ultra-Thin Ceramic",
+      "brand": "Titan",
+      "price": 24995,
+      "category": "Men",
+      "style": "Formal",
+      "movement": "Quartz",
+      "rating": 4.6,
+      "isFeatured": false,
+      "description": "One of the slimmest ceramic watches in the world, the Titan Edge series is a marvel of indigenous watch engineering. Measuring just 4.4 mm in thickness, it delivers sophisticated minimalist elegance.",
+      "images": [
+        "https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=800"
+      ],
+      "specs": {
+        "movement": "Titan Ultra-slim Quartz Movement (1.15 mm thick)",
+        "caseThickness": "4.4 mm",
+        "caseDiameter": "40 mm",
+        "caseMaterial": "Scratch-resistant High-Tech Ceramic",
+        "strapMaterial": "High-Tech Ceramic Bracelet",
+        "waterResistance": "30 meters / 100 feet",
+        "glass": "Sapphire Crystal",
+        "warranty": "2 Years Titan India Warranty",
+        "powerReserve": "Battery operated"
+      },
+      "reviews": [],
+      "imageUrl": "https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=800",
+      "stock": 13
+    },
+    {
+      "id": "timex-expedition-09",
+      "name": "Expedition North Field Post",
+      "brand": "Timex",
+      "price": 11995,
+      "category": "Men",
+      "style": "Casual",
+      "movement": "Solar",
+      "rating": 4.4,
+      "isFeatured": false,
+      "description": "A rugged solar-powered field watch designed for the outdoors. Features an eco-friendly fabric strap made from recycled plastics, a stainless steel case, and Timex's legendary adventure-ready durability.",
+      "images": [
+        "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&q=80&w=800"
+      ],
+      "specs": {
+        "movement": "Solar Quartz Movement",
+        "caseDiameter": "36 mm",
+        "caseMaterial": "Stainless Steel, Screw-down crown",
+        "strapMaterial": "Green Eco-friendly Fabric Strap",
+        "waterResistance": "100 meters / 330 feet",
+        "glass": "Sapphire Crystal",
+        "warranty": "1 Year Timex Warranty",
+        "powerReserve": "Up to 4 months on full charge"
+      },
+      "reviews": [],
+      "imageUrl": "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&q=80&w=800",
+      "stock": 7
+    },
+    {
+      "id": "fossil-townsman-10",
+      "name": "Townsman Mechanical Chronograph",
+      "brand": "Fossil",
+      "price": 18995,
+      "category": "Men",
+      "style": "Casual",
+      "movement": "Automatic",
+      "rating": 4.3,
+      "isFeatured": false,
+      "description": "Featuring an eye-catching skeleton dial that showcases the intricate automatic movement, the Townsman is a sophisticated design that adds style to both casual and formal outfits.",
+      "images": [
+        "https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?auto=format&fit=crop&q=80&w=800"
+      ],
+      "specs": {
+        "movement": "Automatic Self-Winding Skeleton Movement",
+        "caseDiameter": "44 mm",
+        "caseMaterial": "Stainless Steel Case, Rose Gold PVD",
+        "strapMaterial": "Genuine Brown Amber Leather Strap",
+        "waterResistance": "50 meters / 167 feet",
+        "glass": "Hardened Mineral Crystal",
+        "warranty": "2 Years Fossil India Warranty",
+        "powerReserve": "Approx. 40 hours"
+      },
+      "reviews": [],
+      "imageUrl": "https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?auto=format&fit=crop&q=80&w=800",
+      "stock": 4
+    },
+    {
+      "id": "fastrack-reflex-11",
+      "name": "Reflex Beat Smart Watch",
+      "brand": "Fastrack",
+      "price": 3495,
+      "category": "Unisex",
+      "style": "Sport",
+      "movement": "Quartz",
+      "rating": 4.2,
+      "isFeatured": false,
+      "description": "An active lifestyle smartwatch from Fastrack, featuring a vibrant touch display, heart rate monitor, sleep tracker, multiple sports modes, and up to 7 days of battery life.",
+      "images": [
+        "https://images.unsplash.com/photo-1622434641406-a158123450f9?auto=format&fit=crop&q=80&w=800"
+      ],
+      "specs": {
+        "movement": "Rechargeable Smart Module",
+        "display": "1.69\" Ultra Bright Touchscreen",
+        "caseMaterial": "Polycarbonate and Zinc Alloy",
+        "strapMaterial": "Interchangeable Silicone Strap",
+        "waterResistance": "IP68 Dust & Water Resistant",
+        "glass": "Curved 2.5D Mineral Glass",
+        "warranty": "1 Year Fastrack India Warranty",
+        "batteryLife": "Up to 7 Days"
+      },
+      "reviews": [],
+      "imageUrl": "https://images.unsplash.com/photo-1622434641406-a158123450f9?auto=format&fit=crop&q=80&w=800",
+      "stock": 12
+    },
+    {
+      "id": "gshock-mudmaster-12",
+      "name": "G-Shock Master of G Mudmaster",
+      "brand": "G-Shock",
+      "price": 27995,
+      "category": "Men",
+      "style": "Sport",
+      "movement": "Quartz",
+      "rating": 4.7,
+      "isFeatured": false,
+      "description": "The ultimate rugged timepiece. The Mudmaster is built to withstand the harshest environments with a mud-resistant structure, carbon-fiber reinforced core, compass, altimeter, and step counter.",
+      "images": [
+        "https://images.unsplash.com/photo-1604242692760-2f7b0c26856d?auto=format&fit=crop&q=80&w=800"
+      ],
+      "specs": {
+        "movement": "Tough Solar Multi-band Quartz Module",
+        "caseDiameter": "55 mm",
+        "caseMaterial": "Carbon / Resin Bezel, Mud-Resistant Buttons",
+        "strapMaterial": "Resin Band",
+        "waterResistance": "200 meters / 660 feet",
+        "glass": "Mineral Glass",
+        "warranty": "2 Years Casio India Warranty",
+        "sensors": "Altimeter, Barometer, Compass, Thermometer"
+      },
+      "reviews": [],
+      "imageUrl": "https://images.unsplash.com/photo-1604242692760-2f7b0c26856d?auto=format&fit=crop&q=80&w=800",
+      "stock": 11
+    },
+    {
+      "id": "titan-raga-13",
+      "name": "Raga Viva Rose Gold Edition",
+      "brand": "Titan",
+      "price": 6495,
+      "category": "Women",
+      "style": "Formal",
+      "movement": "Quartz",
+      "rating": 4.6,
+      "isFeatured": false,
+      "description": "Designed for the modern Indian woman, the Titan Raga Viva features an elegant rose-gold dial with jewel-encrusted markers and a beautifully crafted metal jewelry bracelet.",
+      "images": [
+        "https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?auto=format&fit=crop&q=80&w=800"
+      ],
+      "specs": {
+        "movement": "Precision Japanese Quartz",
+        "caseDiameter": "30 mm",
+        "caseMaterial": "Brass, Rose Gold Plating",
+        "strapMaterial": "Rose Gold Jewelry Style Bracelet",
+        "waterResistance": "30 meters / 100 feet",
+        "glass": "Mineral Glass",
+        "warranty": "2 Years Titan India Warranty"
+      },
+      "reviews": [],
+      "imageUrl": "https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?auto=format&fit=crop&q=80&w=800",
+      "stock": 11
+    },
+    {
+      "id": "gshock-vintage-14",
+      "name": "Classic DW-5600 Digital",
+      "brand": "G-Shock",
+      "price": 5995,
+      "category": "Unisex",
+      "style": "Casual",
+      "movement": "Quartz",
+      "rating": 4.8,
+      "isFeatured": false,
+      "description": "The original square G-Shock design that started it all. Highly shock-resistant, water-resistant, featuring a multi-function alarm, stopwatch, and EL backlight for total utility.",
+      "images": [
+        "https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&q=80&w=800"
+      ],
+      "specs": {
+        "movement": "Quartz Digital Module",
+        "caseDiameter": "43 mm",
+        "caseMaterial": "Resin Case and Bezel",
+        "strapMaterial": "Resin Band",
+        "waterResistance": "200 meters / 660 feet",
+        "glass": "Mineral Glass",
+        "warranty": "2 Years Casio India Warranty"
+      },
+      "reviews": [],
+      "imageUrl": "https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&q=80&w=800",
+      "stock": 11
+    },
+    {
+      "id": "omega-constellation-15",
+      "name": "Constellation Co-Axial 29mm",
+      "brand": "Omega",
+      "price": 485000,
+      "category": "Women",
+      "style": "Luxury",
+      "movement": "Automatic",
+      "rating": 4.8,
+      "isFeatured": false,
+      "description": "The dramatic and enduring design of the OMEGA Constellation is characterized by its famous half-moons, 'claws' on the case, and mono-rang bracelet. Features a mother-of-pearl dial with diamond hour markers.",
+      "images": [
+        "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80&w=800"
+      ],
+      "specs": {
+        "movement": "OMEGA Co-Axial Master Chronometer Calibre 8700",
+        "caseDiameter": "29 mm",
+        "caseMaterial": "Stainless Steel & 18K Yellow Gold",
+        "strapMaterial": "Stainless Steel and 18K Yellow Gold Bracelet",
+        "waterResistance": "50 meters / 167 feet",
+        "glass": "Domed scratch-resistant sapphire crystal with anti-reflective treatment on both sides",
+        "warranty": "5 Years International Warranty",
+        "powerReserve": "Approx. 50 hours"
+      },
+      "reviews": [],
+      "imageUrl": "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80&w=800",
+      "stock": 13
+    },
+    {
+      "id": "casio-vintage-16",
+      "name": "Vintage Digital Gold Dial",
+      "brand": "Casio",
+      "price": 3295,
+      "category": "Unisex",
+      "style": "Casual",
+      "movement": "Quartz",
+      "rating": 4.5,
+      "isFeatured": false,
+      "description": "A retro classic from Casio. Featuring a stainless steel band, gold-plated case, daily alarm, hourly time signal, and auto-calendar. Perfect for daily casual wear.",
+      "images": [
+        "https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=800"
+      ],
+      "specs": {
+        "movement": "Japanese Quartz",
+        "caseDiameter": "36 mm",
+        "caseMaterial": "Resin / Gold-toned chrome plating",
+        "strapMaterial": "Stainless Steel Adjustable Band",
+        "waterResistance": "Water resistant (splash proof)",
+        "glass": "Resin Glass",
+        "warranty": "2 Years Casio India Warranty"
+      },
+      "reviews": [],
+      "imageUrl": "https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=800",
+      "stock": 10
     }
   ]
 }

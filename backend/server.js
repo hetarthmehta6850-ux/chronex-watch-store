@@ -47,7 +47,17 @@ app.post('/api/data', (req, res) => {
   res.json({ success: true, timestamp: Date.now() });
 });
 
-const PORT = 3001;
+// --- Production: Serve Vite-built frontend ---
+const distPath = path.join(__dirname, '..', 'dist');
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  // SPA fallback: serve index.html for all non-API routes
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+}
+
+const PORT = process.env.PORT || 3001;
 // Listen on all network interfaces (0.0.0.0) so it's accessible over Wi-Fi
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`\n======================================`);

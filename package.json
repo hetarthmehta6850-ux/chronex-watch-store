@@ -4,14 +4,18 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "start": "concurrently --kill-others --names \"BACKEND,FRONTEND\" --prefix-colors \"cyan,magenta\" \"node backend/server.js\" \"vite\"",
     "dev": "vite",
-    "dev:secure": "vite --mode secure",
+    "backend": "node backend/server.js",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "render-build": "npm install && npm run build",
+    "render-start": "node backend/server.js"
   },
   "dependencies": {
     "html2canvas": "^1.4.1",
+    "html2canvas-pro": "^2.2.1",
     "jimp": "^1.6.1",
     "jspdf": "^4.2.1",
     "lucide-react": "^1.21.0",
@@ -28,9 +32,11 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-basic-ssl": "^2.3.0",
     "@vitejs/plugin-react": "^6.0.1",
+    "concurrently": "^10.0.3",
     "eslint": "^10.3.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
+    "eslint-plugin-unused-imports": "^4.4.1",
     "globals": "^17.6.0",
     "tailwindcss": "^4.3.1",
     "vite": "^8.0.12"

@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { ShopContext } from "../context/ShopContext";
-import { Sparkles, BrainCircuit, ArrowRight, RotateCcw, AlertCircle, CheckCircle } from "lucide-react";
+import { Sparkles, BrainCircuit, ArrowRight, RotateCcw, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const AICongierge = () => {

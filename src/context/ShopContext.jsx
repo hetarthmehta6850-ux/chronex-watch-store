@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 import { mockProducts } from "../data/mockProducts";
 export const ShopContext = createContext();
 
@@ -147,16 +147,15 @@ export const ShopProvider = ({ children }) => {
 
   const saveToDb = (key, data) => {
     localStorage.setItem(key, data);
-    const hostIp = window.location.hostname;
     try {
       const parsedData = JSON.parse(data);
-      fetch(`http://${hostIp}:3001/api/data`, {
+      fetch('/api/data', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ [key]: parsedData })
       }).catch(err => console.error("Sync failed:", err));
     } catch (e) {
-      fetch(`http://${hostIp}:3001/api/data`, {
+      fetch('/api/data', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ [key]: data })
@@ -164,32 +163,31 @@ export const ShopProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    const hostIp = window.location.hostname;
-    fetch(`http://${hostIp}:3001/api/data`)
-      .then(res => res.json())
-      .then(data => {
-        if (data && Object.keys(data).length > 0) {
-          let updated = false;
-          Object.keys(data).forEach(key => {
-            const value = data[key];
-            const strVal = typeof value === 'object' ? JSON.stringify(value) : String(value);
-            if (localStorage.getItem(key) !== strVal) {
-              localStorage.setItem(key, strVal);
-              updated = true;
-            }
-          });
-          
-          if (updated && !sessionStorage.getItem('synced_once')) {
-            sessionStorage.setItem('synced_once', 'true');
-            window.location.reload();
-          }
-        }
-      })
-      .catch(e => console.log("Backend not reachable", e));
-  }, []);
 
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(() => {
+    let list = [];
+    try {
+      const saved = localStorage.getItem("chronex_products");
+      if (saved) list = JSON.parse(saved);
+    } catch (e) {}
+    
+    if (!list || !Array.isArray(list) || list.length === 0) {
+      list = mockProducts;
+    }
+    
+    return list.map(p => {
+      const images = (p.images && Array.isArray(p.images) && p.images.length > 0)
+        ? p.images
+        : [p.imageUrl || p.image || "https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&q=80&w=800"];
+      return {
+        ...p,
+        images,
+        imageUrl: images[0],
+        stock: p.stock ?? Math.floor(Math.random() * 10) + 4,
+        reviews: (p.reviews || []).map(r => ({ ...r, status: r.status || "Approved" }))
+      };
+    });
+  });
   const [promoBanner, setPromoBanner] = useState(() => {
     const saved = localStorage.getItem("chronex_promo_banner");
     if (saved) return JSON.parse(saved);
@@ -207,32 +205,232 @@ export const ShopProvider = ({ children }) => {
       return updated;
     });
   };
-  const [wishlist, setWishlist] = useState([]);
-  const [cartItems, setCartItems] = useState({}); // Stores { productId: quantity }
-  const [orders, setOrders] = useState([]); // Stores completed order objects
-  const [serviceRequests, setServiceRequests] = useState([]); // Stores watch repair tickets
-  const [appointments, setAppointments] = useState([]); // Stores showroom bookings
-  const [recentlyViewed, setRecentlyViewed] = useState([]); // Stores recently viewed product IDs
-  const [compareList, setCompareList] = useState([]); // Stores up to 3 product IDs for comparison
+  const [wishlist, setWishlist] = useState(() => {
+    try {
+      const saved = localStorage.getItem("chronex_wishlist");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {}
+    return [];
+  });
+  const [cartItems, setCartItems] = useState(() => {
+    try {
+      const saved = localStorage.getItem("chronex_cart");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === "object") return parsed;
+      }
+    } catch (e) {}
+    return {};
+  }); // Stores { productId: quantity }
+  const [orders, setOrders] = useState(() => {
+    // Default list of mock orders to make the admin dashboard populate realistically
+    const defaults = [
+      {
+        id: "CHX-847291",
+        date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        customer: { name: "Ananya Iyer", email: "ananya.iyer@outlook.com", phone: "+91 98321 04850" },
+        items: [{ id: "p1", name: "Submariner Date", brand: "Rolex", price: 950000, quantity: 1, image: "" }],
+        total: 950000,
+        paymentMethod: "Credit Card",
+        paymentDetails: "Visa ending in 4829",
+        orderStatus: "Delivered"
+      },
+      {
+        id: "CHX-103849",
+        date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+        customer: { name: "Kabir Sharma", email: "kabir.sharma@gmail.com", phone: "+91 87492 01830" },
+        items: [{ id: "p2", name: "Speedmaster Professional", brand: "Omega", price: 450000, quantity: 1, image: "" }],
+        total: 450000,
+        paymentMethod: "Bank Transfer",
+        paymentDetails: "HDFC Transaction ID 84920",
+        orderStatus: "Shipped"
+      },
+      {
+        id: "CHX-928471",
+        date: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
+        customer: { name: "Vikram Malhotra", email: "vikram.malhotra@yahoo.com", phone: "+91 74892 04820" },
+        items: [{ id: "p3", name: "Monaco Calibre 11", brand: "TAG Heuer", price: 180000, quantity: 1, image: "" }],
+        total: 180000,
+        paymentMethod: "UPI",
+        paymentDetails: "Google Pay UPI Ref 7291038",
+        orderStatus: "Processing"
+      },
+      {
+        id: "CHX-374920",
+        date: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString(),
+        customer: { name: "Meera Reddy", email: "meera.reddy@gmail.com", phone: "+91 93820 18402" },
+        items: [{ id: "p4", name: "Prospex Alpinist", brand: "Seiko", price: 95000, quantity: 1, image: "" }],
+        total: 95000,
+        paymentMethod: "Cash on Delivery",
+        paymentDetails: "Verified COD Request",
+        orderStatus: "Delivered"
+      }
+    ];
+
+    let currentOrders = [];
+    try {
+      const saved = localStorage.getItem("chronex_orders");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          currentOrders = parsed.filter(order => order && order.customer && order.customer.name);
+        }
+      }
+    } catch (e) {}
+
+    // Merge default orders that are missing
+    let merged = [...currentOrders];
+    let updated = false;
+
+    defaults.forEach(def => {
+      if (!merged.some(o => o.id === def.id)) {
+        merged.push(def);
+        updated = true;
+      }
+    });
+
+    if (updated || currentOrders.length === 0) {
+      try {
+        localStorage.setItem("chronex_orders", JSON.stringify(merged));
+      } catch (e) {}
+    }
+    return merged;
+  }); // Stores completed order objects
+  const [serviceRequests, setServiceRequests] = useState(() => {
+    const defaults = [
+      { id: "TKT-829103", date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), name: "Kabir Sharma", phone: "+91 87492 01830", watchBrand: "Rolex", watchModel: "Submariner 116610", serviceType: "Complete Overhaul", issueDescription: "Gaining 15 seconds per day, needs regulation and movement lubrication.", status: "In Progress" },
+      { id: "TKT-492019", date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), name: "Ananya Iyer", phone: "+91 98321 04850", watchBrand: "Omega", watchModel: "Seamaster 300M", serviceType: "Water Resistance Restoral", issueDescription: "Condensation inside glass after swimming. Gaskets probably worn out.", status: "Awaiting Parts" },
+      { id: "TKT-103948", date: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(), name: "Vikram Malhotra", phone: "+91 74892 04820", watchBrand: "TAG Heuer", watchModel: "Carrera Calibre 16", serviceType: "Polishing & Refinishing", issueDescription: "Deep desk-diving scratches on the bracelet and case side.", status: "Delivered" },
+      { id: "TKT-374920", date: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(), name: "Meera Reddy", phone: "+91 93820 18402", watchBrand: "Seiko", watchModel: "Alpinist SPB121J1", serviceType: "Crystal Replacement", issueDescription: "Sapphire glass has a minor chip near the 2 o'clock position.", status: "Completed" },
+      { id: "TKT-928401", date: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(), name: "Aditya Sen", phone: "+91 88320 19302", watchBrand: "Tudor", watchModel: "Black Bay 58", serviceType: "Movement Calibration", issueDescription: "Bezel alignment is slightly off center. Movement runs fine.", status: "Ticket Created" },
+      { id: "TKT-610293", date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(), name: "Nisha Patel", phone: "+91 91234 56789", watchBrand: "Longines", watchModel: "Master Collection", serviceType: "Strap Customization", issueDescription: "Change steel bracelet to premium brown alligator leather strap.", status: "Delivered" },
+      { id: "TKT-883021", date: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString(), name: "Rajesh Gupta", phone: "+91 98765 01234", watchBrand: "Cartier", watchModel: "Santos Medium", serviceType: "Battery Replacement", issueDescription: "Quartz movement stopped running last week. Needs new battery.", status: "Delivered" },
+      { id: "TKT-773829", date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(), name: "Shreya Joshi", phone: "+91 99887 76655", watchBrand: "Tissot", watchModel: "PRX Quartz", serviceType: "Battery & Seal Service", issueDescription: "Replace battery and pressure test for water resistance.", status: "Completed" },
+      { id: "TKT-482019", date: new Date(Date.now() - 16 * 24 * 60 * 60 * 1000).toISOString(), name: "Karan Verma", phone: "+91 88776 65544", watchBrand: "Audemars Piguet", watchModel: "Royal Oak", serviceType: "Complete Restoration", issueDescription: "Vintage piece inherited, hasn't run in 10 years. Needs full service.", status: "Under Evaluation" },
+      { id: "TKT-293048", date: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(), name: "Diya Kapoor", phone: "+91 77665 54433", watchBrand: "Omega", watchModel: "Speedmaster Reduced", serviceType: "Chronograph Repair", issueDescription: "Top pusher is sticky and chronograph second hand doesn't reset to zero.", status: "Awaiting Customer Approval" }
+    ];
+
+    let current = [];
+    try {
+      const saved = localStorage.getItem("chronex_services");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) current = parsed;
+      }
+    } catch (e) {}
+
+    let merged = [...current];
+    let updated = false;
+    defaults.forEach(def => {
+      if (!merged.some(s => s.id === def.id)) {
+        merged.push(def);
+        updated = true;
+      }
+    });
+
+    if (updated || current.length === 0) {
+      try {
+        localStorage.setItem("chronex_services", JSON.stringify(merged));
+      } catch (e) {}
+    }
+    return merged;
+  }); // Stores watch repair tickets
+  const [appointments, setAppointments] = useState(() => {
+    const defaults = [
+      { id: "BK-902810", date: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString(), name: "Kabir Sharma", phone: "+91 87492 01830", email: "kabir.sharma@gmail.com", showroomId: "vadodara", time: "11:30 AM", notes: "Interested in trying out the Rolex Submariner Date.", status: "Confirmed" },
+      { id: "BK-482019", date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(), name: "Ananya Iyer", phone: "+91 98321 04850", email: "ananya.iyer@outlook.com", showroomId: "mumbai", time: "02:30 PM", notes: "Would like to view the Cartier Santos and Jaeger-LeCoultre Reverso.", status: "Confirmed" },
+      { id: "BK-103948", date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(), name: "Vikram Malhotra", phone: "+91 74892 04820", email: "vikram.malhotra@yahoo.com", showroomId: "delhi", time: "04:00 PM", notes: "Looking for a luxury sports chronograph. Please keep options ready.", status: "Confirmed" },
+      { id: "BK-374920", date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), name: "Meera Reddy", phone: "+91 93820 18402", email: "meera.reddy@gmail.com", showroomId: "bangalore", time: "05:30 PM", notes: "Gift shopping for husband. Omega or Tudor preferred.", status: "Completed" },
+      { id: "BK-928401", date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(), name: "Aditya Sen", phone: "+91 88320 19302", email: "aditya.sen@live.com", showroomId: "vadodara", time: "12:00 PM", notes: "First high-end watch purchase. Needs custom consulting.", status: "Pending Approval" },
+      { id: "BK-610293", date: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(), name: "Nisha Patel", phone: "+91 91234 56789", email: "nisha.patel@gmail.com", showroomId: "mumbai", time: "03:00 PM", notes: "Wants to view ladies Diamond collection.", status: "Completed" },
+      { id: "BK-883021", date: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000).toISOString(), name: "Rajesh Gupta", phone: "+91 98765 01234", email: "rajesh.gupta@yahoo.com", showroomId: "delhi", time: "01:30 PM", notes: "Corporate order presentation for 10 pieces.", status: "Confirmed" },
+      { id: "BK-773829", date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), name: "Shreya Joshi", phone: "+91 99887 76655", email: "shreya.joshi@gmail.com", showroomId: "bangalore", time: "06:00 PM", notes: "Sizing request for Cartier Tank.", status: "Cancelled" },
+      { id: "BK-482011", date: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000).toISOString(), name: "Karan Verma", phone: "+91 88776 65544", email: "karan.verma@outlook.com", showroomId: "mumbai", time: "04:30 PM", notes: "Trade-in evaluation in showroom.", status: "Confirmed" },
+      { id: "BK-293048", date: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000).toISOString(), name: "Diya Kapoor", phone: "+91 77665 54433", email: "diya.kapoor@gmail.com", showroomId: "delhi", time: "11:00 AM", notes: "Omega Speedmaster viewing.", status: "Completed" }
+    ];
+
+    let current = [];
+    try {
+      const saved = localStorage.getItem("chronex_appointments");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) current = parsed;
+      }
+    } catch (e) {}
+
+    let merged = [...current];
+    let updated = false;
+    defaults.forEach(def => {
+      if (!merged.some(a => a.id === def.id)) {
+        merged.push(def);
+        updated = true;
+      }
+    });
+
+    if (updated || current.length === 0) {
+      try {
+        localStorage.setItem("chronex_appointments", JSON.stringify(merged));
+      } catch (e) {}
+    }
+    return merged;
+  }); // Stores showroom bookings
+  const [recentlyViewed, setRecentlyViewed] = useState(() => {
+    try {
+      const saved = localStorage.getItem("chronex_recently_viewed");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {}
+    return [];
+  }); // Stores recently viewed product IDs
+  const [compareList, setCompareList] = useState(() => {
+    try {
+      const saved = localStorage.getItem("chronex_compare");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {}
+    return [];
+  }); // Stores up to 3 product IDs for comparison
   const [newsletterSubscribers, setNewsletterSubscribers] = useState([]); // Stores newsletter subscriber emails
   
   // New States for Phase 3
-  const [coupons, setCoupons] = useState([
-    { code: "WELCOME10", type: "percentage", value: 10, minOrder: 0 },
-    { code: "CHRONEXVIP", type: "flat", value: 10000, minOrder: 100000 },
-    { code: "FESTIVE5", type: "percentage", value: 5, minOrder: 0 }
-  ]);
+  const [coupons, setCoupons] = useState(() => {
+    try {
+      const saved = localStorage.getItem("chronex_coupons");
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return [
+      { code: "WELCOME10", type: "percentage", value: 10, minOrder: 0 },
+      { code: "CHRONEXVIP", type: "flat", value: 10000, minOrder: 100000 },
+      { code: "FESTIVE5", type: "percentage", value: 5, minOrder: 0 }
+    ];
+  });
   const [giftCards, setGiftCards] = useState([]);
   const [restockAlerts, setRestockAlerts] = useState([]);
   const [blogPosts, setBlogPosts] = useState(initialBlogPosts);
   
-  const [language, setLanguage] = useState("en");
-  const [theme, setTheme] = useState("dark");
-  const [fontSize, setFontSize] = useState("standard");
-  const [highContrast, setHighContrast] = useState("standard");
+  const [language, setLanguage] = useState(() => localStorage.getItem("chronex_language") || "en");
+  const [theme, setTheme] = useState(() => localStorage.getItem("chronex_theme") || "dark");
+  const [fontSize, setFontSize] = useState(() => localStorage.getItem("chronex_fontsize") || "standard");
+  const [highContrast, setHighContrast] = useState(() => localStorage.getItem("chronex_contrast") || "standard");
   
   // Phase 4 States
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem("chronex_current_user");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.email) return parsed;
+      }
+    } catch (e) {}
+    return null;
+  });
   const [loyaltyPoints, setLoyaltyPoints] = useState(0);
   const [walletBalance, setWalletBalance] = useState(0);
 
@@ -242,10 +440,48 @@ export const ShopProvider = ({ children }) => {
   const [referralEarnings, setReferralEarnings] = useState(0);
   const [subscription, setSubscription] = useState(null);
   const [corporateInquiries, setCorporateInquiries] = useState([]);
-  const [usersList, setUsersList] = useState([]);
-  const [tradeInRequests, setTradeInRequests] = useState([]);
-  const [returnRequests, setReturnRequests] = useState([]);
-  const [savedAddresses, setSavedAddresses] = useState([]);
+  const [usersList, setUsersList] = useState(() => {
+    try {
+      const saved = localStorage.getItem("chronex_users");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {}
+    return [];
+  });
+  const [tradeInRequests, setTradeInRequests] = useState(() => {
+    try {
+      const saved = localStorage.getItem("chronex_tradeins");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {}
+    return [];
+  });
+  const [returnRequests, setReturnRequests] = useState(() => {
+    try {
+      const saved = localStorage.getItem("chronex_returns");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {}
+    return [];
+  });
+  const [savedAddresses, setSavedAddresses] = useState(() => {
+    try {
+      const saved = localStorage.getItem("chronex_saved_addresses");
+      return saved ? JSON.parse(saved) : [
+        { id: "addr_1", name: "Home", receiverName: "Aarav Mehta", phone: "+91 98765 43210", address: "42, Shanti Kunj Society, Near Bright School, Vasna Road", cityState: "Vadodara, Gujarat", pincode: "390007", isDefault: true }
+      ];
+    } catch (e) {
+      return [
+        { id: "addr_1", name: "Home", receiverName: "Aarav Mehta", phone: "+91 98765 43210", address: "42, Shanti Kunj Society, Near Bright School, Vasna Road", cityState: "Vadodara, Gujarat", pincode: "390007", isDefault: true }
+      ];
+    }
+  });
   const [currency, setCurrency] = useState("INR"); // Currency state
   const [showrooms, setShowrooms] = useState(() => {
     try {
@@ -255,6 +491,54 @@ export const ShopProvider = ({ children }) => {
       return defaultShowrooms;
     }
   });
+  useEffect(() => {
+    fetch('/api/data')
+      .then(res => res.json())
+      .then(data => {
+        if (data && Object.keys(data).length > 0) {
+          // Synchronize localStorage cache
+          Object.keys(data).forEach(key => {
+            const value = data[key];
+            const strVal = typeof value === 'object' ? JSON.stringify(value) : String(value);
+            localStorage.setItem(key, strVal);
+          });
+
+          // Hydrate React States in-memory
+          if (data.chronex_products) {
+            const normalized = data.chronex_products.map(p => {
+              const images = (p.images && Array.isArray(p.images) && p.images.length > 0)
+                ? p.images
+                : [p.imageUrl || p.image || "https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&q=80&w=800"];
+              return {
+                ...p,
+                images,
+                imageUrl: images[0],
+                stock: p.stock ?? Math.floor(Math.random() * 10) + 4,
+                reviews: (p.reviews || []).map(r => ({ ...r, status: r.status || "Approved" }))
+              };
+            });
+            setProducts(normalized);
+          }
+          if (data.chronex_promo_banner) setPromoBanner(data.chronex_promo_banner);
+          if (data.chronex_wishlist) setWishlist(data.chronex_wishlist);
+          if (data.chronex_cart) setCartItems(data.chronex_cart);
+          if (data.chronex_orders) setOrders(data.chronex_orders);
+          if (data.chronex_services) setServiceRequests(data.chronex_services);
+          if (data.chronex_appointments) setAppointments(data.chronex_appointments);
+          if (data.chronex_recently_viewed) setRecentlyViewed(data.chronex_recently_viewed);
+          if (data.chronex_compare) setCompareList(data.chronex_compare);
+          if (data.chronex_coupons) setCoupons(data.chronex_coupons);
+          if (data.chronex_users) setUsersList(data.chronex_users);
+          if (data.chronex_tradeins) setTradeInRequests(data.chronex_tradeins);
+          if (data.chronex_returns) setReturnRequests(data.chronex_returns);
+          if (data.chronex_addresses) setSavedAddresses(data.chronex_addresses);
+          if (data.chronex_showrooms) setShowrooms(data.chronex_showrooms);
+          if (data.chronex_current_user) setCurrentUser(data.chronex_current_user);
+        }
+      })
+      .catch(e => console.log("Backend not reachable", e));
+  }, []);
+
 
   // Currency Formatting Helper
   const formatPrice = (priceInINR) => {
@@ -267,34 +551,250 @@ export const ShopProvider = ({ children }) => {
     }
   };
 
+  const seedDatabase = () => {
+    if (localStorage.getItem("chronex_seeded_v5") === "true") return;
+
+    console.log("🌱 Seeding database with dynamic user-side entries...");
+
+    const usersToRegister = [
+      { name: "Kabir Sharma", email: "kabir.sharma@gmail.com", phone: "+91 87492 01830" },
+      { name: "Ananya Iyer", email: "ananya.iyer@outlook.com", phone: "+91 98321 04850" },
+      { name: "Vikram Malhotra", email: "vikram.malhotra@yahoo.com", phone: "+91 74892 04820" },
+      { name: "Meera Reddy", email: "meera.reddy@gmail.com", phone: "+91 93820 18402" },
+      { name: "Aditya Sen", email: "aditya.sen@live.com", phone: "+91 88320 19302" },
+      { name: "Nisha Patel", email: "nisha.patel@gmail.com", phone: "+91 91234 56789" },
+      { name: "Rajesh Gupta", email: "rajesh.gupta@yahoo.com", phone: "+91 98765 01234" },
+      { name: "Shreya Joshi", email: "shreya.joshi@gmail.com", phone: "+91 99887 76655" },
+      { name: "Karan Verma", email: "karan.verma@outlook.com", phone: "+91 88776 65544" },
+      { name: "Diya Kapoor", email: "diya.kapoor@gmail.com", phone: "+91 77665 54433" }
+    ];
+
+    const usersListTemp = [];
+    const ordersTemp = [];
+    const appointmentsTemp = [];
+    const servicesTemp = [];
+    const tradeinsTemp = [];
+    const returnsTemp = [];
+
+    // Load any existing users to prevent overwriting Hetarthmehta6850
+    const savedUsers = localStorage.getItem("chronex_users");
+    if (savedUsers) {
+      try {
+        const parsed = JSON.parse(savedUsers);
+        if (Array.isArray(parsed)) usersListTemp.push(...parsed);
+      } catch (e) {}
+    }
+
+    usersToRegister.forEach((u, index) => {
+      // 1. Add User
+      if (!usersListTemp.some(existing => existing.email.toLowerCase() === u.email.toLowerCase())) {
+        usersListTemp.push({ name: u.name, email: u.email, role: "customer", phone: u.phone });
+      }
+
+      // Pre-set loyalty points and wallet balances in localStorage
+      const points = [1200, 2800, 650, 350, 150, 500, 900, 450, 1500, 800][index];
+      const wallet = [15000, 45000, 5000, 2500, 1000, 12000, 8500, 4000, 30000, 9000][index];
+      localStorage.setItem(`chronex_points_${u.email}`, String(points));
+      localStorage.setItem(`chronex_wallet_${u.email}`, String(wallet));
+
+      // 2. Orders (Simulate placing order)
+      const watchName = ["Submariner Date", "Speedmaster Professional", "Monaco Calibre 11", "Prospex Alpinist", "Black Bay Fifty-Eight", "Santos de Cartier", "HydroConquest", "Datejust 41", "Constellation", "PRX Powermatic 80"][index];
+      const watchBrand = ["Rolex", "Omega", "TAG Heuer", "Seiko", "Tudor", "Cartier", "Longines", "Rolex", "Omega", "Tissot"][index];
+      const price = [950000, 450000, 180000, 95000, 250000, 380000, 120000, 720000, 210000, 65000][index];
+      const paymentMethod = ["Credit Card", "Bank Transfer", "UPI", "Cash on Delivery", "Credit Card", "UPI", "Debit Card", "Bank Transfer", "UPI", "Cash on Delivery"][index];
+      const paymentDetails = ["Visa ending in 4829", "HDFC Transaction ID 84920", "Google Pay UPI Ref 7291038", "Verified COD Request", "Mastercard ending in 9012", "Paytm UPI Ref 9283018", "Visa Debit ending in 7731", "ICICI Transaction ID 93021", "PhonePe UPI Ref 8301928", "COD Request"][index];
+      const status = ["Delivered", "Shipped", "Processing", "Delivered", "Delivered", "Processing", "Shipped", "Processing", "Delivered", "Processing"][index];
+
+      const orderId = `CHX-${Math.floor(100000 + Math.random() * 900000)}`;
+      ordersTemp.push({
+        id: orderId,
+        date: new Date(Date.now() - index * 3 * 24 * 60 * 60 * 1000).toISOString(),
+        customer: { name: u.name, email: u.email, phone: u.phone },
+        items: [{ id: `p_${index}`, name: watchName, brand: watchBrand, price: price, quantity: 1, image: "" }],
+        total: price,
+        paymentMethod,
+        paymentDetails,
+        orderStatus: status
+      });
+
+      // 3. Appointments (Simulate booking showroom visit)
+      const showroom = ["vadodara", "mumbai", "delhi", "bangalore"][index % 4];
+      const time = ["11:30 AM", "02:30 PM", "04:00 PM", "05:30 PM", "12:00 PM", "03:00 PM", "01:30 PM", "06:00 PM", "04:30 PM", "11:00 AM"][index];
+      const appStatus = ["Confirmed", "Confirmed", "Confirmed", "Completed", "Pending Approval", "Completed", "Confirmed", "Cancelled", "Confirmed", "Completed"][index];
+      const notes = [
+        "Interested in trying out the Rolex Submariner Date.",
+        "Would like to view the Cartier Santos and Jaeger-LeCoultre Reverso.",
+        "Looking for a luxury sports chronograph. Please keep options ready.",
+        "Gift shopping for husband. Omega or Tudor preferred.",
+        "First high-end watch purchase. Needs custom consulting.",
+        "Wants to view ladies Diamond collection.",
+        "Corporate order presentation for 10 pieces.",
+        "Sizing request for Cartier Tank.",
+        "Trade-in evaluation in showroom.",
+        "Omega Speedmaster viewing."
+      ][index];
+
+      appointmentsTemp.push({
+        id: `BK-${Math.floor(100000 + Math.random() * 900000)}`,
+        date: new Date(Date.now() + (index % 2 === 0 ? 1 : -1) * index * 24 * 60 * 60 * 1000).toISOString(),
+        name: u.name,
+        phone: u.phone,
+        email: u.email,
+        showroomId: showroom,
+        time,
+        purpose: notes,
+        status: appStatus
+      });
+
+      // 4. Service Requests (Simulate submitting repair request)
+      const serviceType = ["Complete Overhaul", "Water Resistance Restoral", "Polishing & Refinishing", "Crystal Replacement", "Movement Calibration", "Strap Customization", "Battery Replacement", "Battery & Seal Service", "Complete Restoration", "Chronograph Repair"][index];
+      const serviceStatus = ["In Progress", "Awaiting Parts", "Delivered", "Completed", "Ticket Created", "Delivered", "Delivered", "Completed", "Under Evaluation", "Awaiting Customer Approval"][index];
+      const issue = [
+        "Gaining 15 seconds per day, needs regulation and movement lubrication.",
+        "Condensation inside glass after swimming. Gaskets probably worn out.",
+        "Deep desk-diving scratches on the bracelet and case side.",
+        "Sapphire glass has a minor chip near the 2 o'clock position.",
+        "Bezel alignment is slightly off center. Movement runs fine.",
+        "Change steel bracelet to premium brown alligator leather strap.",
+        "Quartz movement stopped running last week. Needs new battery.",
+        "Replace battery and pressure test for water resistance.",
+        "Vintage piece inherited, hasn't run in 10 years. Needs full service.",
+        "Top pusher is sticky and chronograph second hand doesn't reset to zero."
+      ][index];
+
+      servicesTemp.push({
+        id: `TKT-${Math.floor(100000 + Math.random() * 900000)}`,
+        date: new Date(Date.now() - index * 2 * 24 * 60 * 60 * 1000).toISOString(),
+        name: u.name,
+        phone: u.phone,
+        watchBrand,
+        watchModel: watchName,
+        serviceType,
+        issueDescription: issue,
+        status: serviceStatus
+      });
+
+      // 5. Trade-Ins (Simulate submitting trade-in evaluation)
+      const condition = ["Good", "Excellent", "Very Good", "Excellent", "Fair", "Good", "Excellent", "Good", "Excellent", "Very Good"][index];
+      const papers = ["Both", "Both", "Box Only", "Both", "None", "Papers Only", "Both", "Both", "Both", "Both"][index];
+      const expectedVal = ["₹25,000", "₹3,50,000", "₹1,80,000", "₹35,000", "₹40,000", "₹60,000", "₹30,000", "₹85,000", "₹1,50,000", "₹1,10,000"][index];
+      const tradeStatus = ["Pending", "Accepted", "Pending", "Accepted", "Rejected", "Accepted", "Pending", "Pending", "Accepted", "Pending"][index];
+
+      tradeinsTemp.push({
+        id: `TRD-${Math.floor(100000 + Math.random() * 900000)}`,
+        date: new Date(Date.now() - index * 2 * 24 * 60 * 60 * 1000).toISOString(),
+        name: u.name,
+        email: u.email,
+        phone: u.phone,
+        brand: watchBrand === "Rolex" ? "Omega" : "Rolex",
+        model: watchName === "Submariner Date" ? "Speedmaster" : "Seamaster",
+        purchaseYear: String(2015 + (index % 8)),
+        condition,
+        boxPapers: papers,
+        estimatedRange: [
+          "₹22,000 - ₹28,000",
+          "₹3,20,000 - ₹3,80,000",
+          "₹1,60,000 - ₹2,00,000",
+          "₹30,000 - ₹40,000",
+          "₹35,000 - ₹45,000",
+          "₹55,000 - ₹65,000",
+          "₹25,000 - ₹35,000",
+          "₹75,000 - ₹95,000",
+          "₹1,30,000 - ₹1,70,000",
+          "₹95,000 - ₹1,25,000"
+        ][index],
+        image: "",
+        status: tradeStatus
+      });
+
+      // 6. Returns (Simulate return requests)
+      const returnType = ["Exchange", "Replacement", "Replacement", "Refund", "Exchange", "Refund", "Replacement", "Refund", "Replacement", "Replacement"][index];
+      const returnStatus = ["Pending", "Approved", "Completed", "Rejected", "Pending", "Approved", "Pending", "Completed", "Approved", "Pending"][index];
+      const returnReason = [
+        "Sizing issue / watch too large for wrist",
+        "Found minor defect on bezel alignment",
+        "Incorrect color shipped (wanted green, got black)",
+        "Changed mind, want to upgrade to Rolex instead",
+        "Bracelet too small, need extra links",
+        "Gift recipient already owns similar model",
+        "Crown feels loose and hard to wind",
+        "Dial color looks different in daylight",
+        "Minor scratch on clasp on arrival",
+        "Rotor makes rattling sound inside case"
+      ][index];
+
+      returnsTemp.push({
+        id: `RET-${Math.floor(100000 + Math.random() * 900000)}`,
+        date: new Date(Date.now() - index * 2 * 24 * 60 * 60 * 1000).toISOString(),
+        orderId: orderId,
+        name: u.name,
+        email: u.email,
+        watchName,
+        reason: returnReason,
+        type: returnType,
+        status: returnStatus,
+        total: price
+      });
+    });
+
+    // Also register Admin User
+    if (!usersListTemp.some(existing => existing.email.toLowerCase() === "admin@chronex.in")) {
+      usersListTemp.push({ name: "Admin User", email: "admin@chronex.in", role: "admin", phone: "+91 83206 06850" });
+    }
+    localStorage.setItem("chronex_points_admin@chronex.in", "9999");
+    localStorage.setItem("chronex_wallet_admin@chronex.in", "1000000");
+
+    // Save to states
+    setUsersList(usersListTemp);
+    setOrders(ordersTemp);
+    setAppointments(appointmentsTemp);
+    setServiceRequests(servicesTemp);
+    setTradeInRequests(tradeinsTemp);
+    setReturnRequests(returnsTemp);
+
+    // Save to Database
+    saveToDb("chronex_users", JSON.stringify(usersListTemp));
+    saveToDb("chronex_orders", JSON.stringify(ordersTemp));
+    saveToDb("chronex_appointments", JSON.stringify(appointmentsTemp));
+    saveToDb("chronex_services", JSON.stringify(servicesTemp));
+    saveToDb("chronex_tradeins", JSON.stringify(tradeinsTemp));
+    saveToDb("chronex_returns", JSON.stringify(returnsTemp));
+
+    localStorage.setItem("chronex_seeded_v5", "true");
+    console.log("🌱 Database seeded successfully!");
+  };
+
   // Load database from localStorage on mount
   useEffect(() => {
-    // Load currentUser
+    // Load currentUser settings if present
     const savedUser = localStorage.getItem("chronex_current_user");
     if (savedUser) {
       try {
         const user = JSON.parse(savedUser);
-        setCurrentUser(user);
-        // Load loyalty points
-        const savedPoints = localStorage.getItem(`chronex_points_${user.email}`) || "250"; // default mock points
-        setLoyaltyPoints(Number(savedPoints));
-        const savedWallet = localStorage.getItem(`chronex_wallet_${user.email}`) || "0";
-        setWalletBalance(Number(savedWallet));
-        
-        // Load referral data
-        const savedRefCode = localStorage.getItem(`chronex_ref_code_${user.email}`);
-        if (savedRefCode) setReferralCode(savedRefCode);
-        
-        const savedReferrals = localStorage.getItem(`chronex_referrals_${user.email}`);
-        if (savedReferrals) setReferrals(JSON.parse(savedReferrals));
-        
-        const savedEarnings = localStorage.getItem(`chronex_ref_earnings_${user.email}`);
-        if (savedEarnings) setReferralEarnings(Number(savedEarnings));
-        
-        // Load subscription
-        const savedSub = localStorage.getItem(`chronex_sub_${user.email}`);
-        if (savedSub) setSubscription(JSON.parse(savedSub));
-        
+        if (user && user.email) {
+          setCurrentUser(user);
+          // Load loyalty points
+          const savedPoints = localStorage.getItem(`chronex_points_${user.email}`) || "250"; // default mock points
+          setLoyaltyPoints(Number(savedPoints));
+          const savedWallet = localStorage.getItem(`chronex_wallet_${user.email}`) || "0";
+          setWalletBalance(Number(savedWallet));
+          
+          // Load referral data
+          const savedRefCode = localStorage.getItem(`chronex_ref_code_${user.email}`);
+          if (savedRefCode) setReferralCode(savedRefCode);
+          
+          const savedReferrals = localStorage.getItem(`chronex_referrals_${user.email}`);
+          if (savedReferrals) setReferrals(JSON.parse(savedReferrals));
+          
+          const savedEarnings = localStorage.getItem(`chronex_ref_earnings_${user.email}`);
+          if (savedEarnings) setReferralEarnings(Number(savedEarnings));
+          
+          // Load subscription
+          const savedSub = localStorage.getItem(`chronex_sub_${user.email}`);
+          if (savedSub) setSubscription(JSON.parse(savedSub));
+        } else {
+          setCurrentUser(null);
+        }
       } catch (e) {}
     }
     
@@ -305,139 +805,9 @@ export const ShopProvider = ({ children }) => {
         setCorporateInquiries(JSON.parse(savedInquiries));
       } catch (e) {}
     }
-    // 1. Load Products (Initialize with mockProducts if empty)
-    const savedProducts = localStorage.getItem("chronex_products");
-    if (savedProducts) {
-      try {
-        setProducts(JSON.parse(savedProducts));
-      } catch (e) {
-        console.error("Error parsing products", e);
-        const initialized = mockProducts.map(p => ({
-          ...p,
-          stock: p.stock ?? Math.floor(Math.random() * 10) + 4,
-          reviews: (p.reviews || []).map(r => ({ ...r, status: r.status || "Approved" }))
-        }));
-        setProducts(initialized);
-      }
-    } else {
-      const initialized = mockProducts.map(p => ({
-        ...p,
-        stock: p.stock ?? Math.floor(Math.random() * 10) + 4,
-        reviews: (p.reviews || []).map(r => ({ ...r, status: r.status || "Approved" }))
-      }));
-      setProducts(initialized);
-      saveToDb("chronex_products", JSON.stringify(initialized));
-    }
 
-    // 2. Load Wishlist
-    const savedWishlist = localStorage.getItem("chronex_wishlist");
-    if (savedWishlist) {
-      try {
-        setWishlist(JSON.parse(savedWishlist));
-      } catch (e) {
-        console.error("Error parsing wishlist", e);
-      }
-    }
-
-    // 3. Load Cart
-    const savedCart = localStorage.getItem("chronex_cart");
-    if (savedCart) {
-      try {
-        setCartItems(JSON.parse(savedCart));
-      } catch (e) {
-        console.error("Error parsing cart", e);
-      }
-    }
-
-    // 4. Load Orders
-    const savedOrders = localStorage.getItem("chronex_orders");
-    if (savedOrders) {
-      try {
-        const parsedOrders = JSON.parse(savedOrders);
-        // Clean up legacy/dummy orders that don't have proper customer data
-        const validOrders = parsedOrders.filter(order => order.customer && order.customer.name);
-        setOrders(validOrders);
-        if (validOrders.length !== parsedOrders.length) {
-          saveToDb("chronex_orders", JSON.stringify(validOrders));
-        }
-      } catch (e) {
-        console.error("Error parsing orders", e);
-      }
-    }
-
-    // 5. Load Service Requests
-    const savedServices = localStorage.getItem("chronex_services");
-    if (savedServices) {
-      try {
-        setServiceRequests(JSON.parse(savedServices));
-      } catch (e) {
-        console.error("Error parsing service requests", e);
-      }
-    }
-
-    // 6. Load Appointments
-    const savedAppointments = localStorage.getItem("chronex_appointments");
-    if (savedAppointments) {
-      try {
-        setAppointments(JSON.parse(savedAppointments));
-      } catch (e) {
-        console.error("Error parsing appointments", e);
-      }
-    }
-
-    // 7. Load Recently Viewed
-    const savedRecentlyViewed = localStorage.getItem("chronex_recently_viewed");
-    if (savedRecentlyViewed) {
-      try {
-        setRecentlyViewed(JSON.parse(savedRecentlyViewed));
-      } catch (e) {
-        console.error("Error parsing recently viewed", e);
-      }
-    }
-
-    // 8. Load Compare List
-    const savedCompare = localStorage.getItem("chronex_compare");
-    if (savedCompare) {
-      try {
-        setCompareList(JSON.parse(savedCompare));
-      } catch (e) {}
-    }
-
-    const savedAddrs = localStorage.getItem("chronex_saved_addresses");
-    if (savedAddrs) {
-      try {
-        setSavedAddresses(JSON.parse(savedAddrs));
-      } catch (e) {}
-    } else {
-      setSavedAddresses([
-        { id: "addr_1", name: "Home", receiverName: "Aarav Mehta", phone: "+91 98765 43210", address: "42, Shanti Kunj Society, Near Bright School, Vasna Road", cityState: "Vadodara, Gujarat", pincode: "390007", isDefault: true }
-      ]);
-    }
-
-    // 15. Load Trade In Requests
-    const savedTradeIns = localStorage.getItem("chronex_tradeins");
-    if (savedTradeIns) {
-      try { setTradeInRequests(JSON.parse(savedTradeIns)); } catch (e) {}
-    }
-
-    // 17. Load Returns
-    const savedReturns = localStorage.getItem("chronex_returns");
-    if (savedReturns) {
-      try { setReturnRequests(JSON.parse(savedReturns)); } catch (e) {}
-    }
-
-    // 19. Load Showrooms
-    const savedShowrooms = localStorage.getItem("chronex_showrooms");
-    if (savedShowrooms) {
-      try {
-        setShowrooms(JSON.parse(savedShowrooms));
-      } catch (e) {
-        setShowrooms(defaultShowrooms);
-      }
-    } else {
-      setShowrooms(defaultShowrooms);
-      saveToDb("chronex_showrooms", JSON.stringify(defaultShowrooms));
-    }
+    // Run database seeder if not seeded yet
+    seedDatabase();
   }, []);
 
 
@@ -527,6 +897,15 @@ export const ShopProvider = ({ children }) => {
     return count;
   };
 
+  const getCartTotal = () => {
+    let total = 0;
+    for (const key in cartItems) {
+      const product = products.find(p => String(p.id) === String(key));
+      if (product) total += product.price * cartItems[key];
+    }
+    return total;
+  };
+
   const clearCompare = () => {
     setCompareList([]);
     localStorage.removeItem("chronex_compare");
@@ -541,11 +920,12 @@ export const ShopProvider = ({ children }) => {
   };
 
   const placeOrder = (customerDetails, paymentMethod, paymentDetails) => {
+    // eslint-disable-next-line react-hooks/purity
     const orderId = `CHX-${Math.floor(100000 + Math.random() * 900000)}`;
     
     const orderedItems = [];
     for (const productId in cartItems) {
-      const product = products.find((p) => p.id === productId);
+      const product = products.find((p) => String(p.id) === String(productId));
       if (product) {
         orderedItems.push({
           id: product.id,
@@ -553,7 +933,7 @@ export const ShopProvider = ({ children }) => {
           brand: product.brand,
           price: product.price,
           quantity: cartItems[productId],
-          image: product.images[0]
+          image: (product.images && product.images.length > 0) ? product.images[0] : (product.imageUrl || product.image || "https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&q=80&w=800")
         });
       }
     }
@@ -575,9 +955,14 @@ export const ShopProvider = ({ children }) => {
     return orderId;
   };
 
+  const saveOrdersToStorage = (updatedOrders) => {
+    setOrders(updatedOrders);
+    saveToDb("chronex_orders", JSON.stringify(updatedOrders));
+  };
+
   const updateOrderStatus = (orderId, newStatus) => {
     const updatedOrders = orders.map((order) => 
-      order.id === orderId ? { ...order, status: newStatus } : order
+      order.id === orderId ? { ...order, orderStatus: newStatus, status: newStatus } : order
     );
     setOrders(updatedOrders);
     saveToDb("chronex_orders", JSON.stringify(updatedOrders));
@@ -589,12 +974,29 @@ export const ShopProvider = ({ children }) => {
   };
 
   const addProduct = (product) => {
-    const newProducts = [...products, { ...product, id: Date.now().toString() }];
+    const images = (product.images && Array.isArray(product.images) && product.images.length > 0)
+      ? product.images
+      : [product.imageUrl || product.image || "https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&q=80&w=800"];
+    const normalizedProduct = {
+      ...product,
+      images,
+      imageUrl: images[0],
+      id: Date.now().toString()
+    };
+    const newProducts = [...products, normalizedProduct];
     saveProductsToStorage(newProducts);
   };
 
   const editProduct = (productId, updatedProduct) => {
-    const newProducts = products.map((p) => (p.id === productId ? updatedProduct : p));
+    const images = (updatedProduct.images && Array.isArray(updatedProduct.images) && updatedProduct.images.length > 0)
+      ? updatedProduct.images
+      : [updatedProduct.imageUrl || updatedProduct.image || "https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&q=80&w=800"];
+    const normalizedProduct = {
+      ...updatedProduct,
+      images,
+      imageUrl: images[0]
+    };
+    const newProducts = products.map((p) => (p.id === productId ? { ...p, ...normalizedProduct } : p));
     saveProductsToStorage(newProducts);
   };
 
@@ -733,6 +1135,7 @@ export const ShopProvider = ({ children }) => {
   };
 
   const addAppointment = (appointmentData) => {
+    // eslint-disable-next-line react-hooks/purity
     const bookingId = `BKG-${Math.floor(100000 + Math.random() * 900000)}`;
     const newBooking = {
       id: bookingId,
@@ -743,10 +1146,18 @@ export const ShopProvider = ({ children }) => {
     saveAppointmentsToStorage(updatedBookings);
   };
 
-  const updateTradeInStatus = (tradeId, newStatus) => {
+  const saveAppointmentsToStorage = (updatedBookings) => {
+    setAppointments(updatedBookings);
+    saveToDb("chronex_appointments", JSON.stringify(updatedBookings));
+  };
+
+  const updateTradeInStatus = (tradeId, newStatus, counterOfferVal) => {
     const updated = tradeInRequests.map((t) => {
       if (t.id === tradeId) {
         const res = { ...t, status: newStatus };
+        if (counterOfferVal !== undefined) {
+          res.counterOffer = counterOfferVal;
+        }
         if (newStatus === "Accepted") {
           const userEmail = t.email;
           const currentPoints = Number(localStorage.getItem(`chronex_points_${userEmail}`) || "250");
@@ -769,6 +1180,28 @@ export const ShopProvider = ({ children }) => {
 
   const cancelServiceRequest = (ticketId) => {
     updateServiceStatus(ticketId, "Cancelled");
+  };
+
+  const addServiceRequest = (requestData) => {
+    const ticketId = `TKT-${Math.floor(100000 + Math.random() * 900000)}`;
+    const newRequest = {
+      id: ticketId,
+      date: new Date().toISOString(),
+      status: "Ticket Created",
+      ...requestData
+    };
+    const updated = [newRequest, ...serviceRequests];
+    setServiceRequests(updated);
+    saveToDb("chronex_services", JSON.stringify(updated));
+    return ticketId;
+  };
+
+  const updateServiceStatus = (ticketId, newStatus) => {
+    const updated = serviceRequests.map((s) => 
+      s.id === ticketId ? { ...s, status: newStatus } : s
+    );
+    setServiceRequests(updated);
+    saveToDb("chronex_services", JSON.stringify(updated));
   };
 
   const addSavedAddress = (address) => {
@@ -823,6 +1256,33 @@ Please let me know how to proceed.`;
     const updated = showrooms.filter(s => s.id !== id);
     setShowrooms(updated);
     saveToDb("chronex_showrooms", JSON.stringify(updated));
+  };
+
+  const resetShowrooms = () => {
+    setShowrooms(defaultShowrooms);
+    saveToDb("chronex_showrooms", JSON.stringify(defaultShowrooms));
+  };
+
+  const updateUserLoyaltyPoints = (email, newPoints) => {
+    saveToDb(`chronex_points_${email}`, String(newPoints));
+    if (currentUser && currentUser.email === email) {
+      setLoyaltyPoints(newPoints);
+    }
+    setUsersList(prev => [...prev]);
+  };
+
+  const cancelUserSubscription = (email) => {
+    if (currentUser && currentUser.email === email) {
+      setSubscription(prev => prev ? { ...prev, status: 'Cancelled' } : null);
+    }
+    localStorage.setItem(`chronex_sub_${email}`, JSON.stringify({ status: 'Cancelled' }));
+    setUsersList(prev => [...prev]);
+  };
+
+  const processRefund = (returnId) => {
+    const updated = returnRequests.map(r => r.id === returnId ? { ...r, status: "Completed" } : r);
+    setReturnRequests(updated);
+    saveToDb("chronex_returns", JSON.stringify(updated));
   };
 
   const logout = () => {
@@ -914,12 +1374,18 @@ Please let me know how to proceed.`;
         updateTradeInStatus,
         cancelAppointment,
         cancelServiceRequest,
+        addServiceRequest,
+        updateServiceStatus,
         addSavedAddress,
         deleteSavedAddress,
         getWhatsAppLink,
         addShowroom,
         updateShowroom,
         deleteShowroom,
+        resetShowrooms,
+        updateUserLoyaltyPoints,
+        cancelUserSubscription,
+        processRefund,
         logout,
         addLoyaltyPoints,
         login,
@@ -961,16 +1427,16 @@ Please let me know how to proceed.`;
         formatPrice,
         t: (key) => locales[language]?.[key] || locales.en[key] || key,
         setCurrency,
-        getCartTotal: () => {
-          let total = 0;
-          for (const key in cartItems) {
-            const product = products.find(p => p.id === key);
-            if (product) total += product.price * cartItems[key];
-          }
-          return total;
-        },
+        getCartTotal,
         addCoupon: (coupon) => {
-          const updated = [...coupons, coupon];
+          const updated = [...coupons, { ...coupon, active: true }];
+          setCoupons(updated);
+          saveToDb("chronex_coupons", JSON.stringify(updated));
+        },
+        deleteCoupon: (code) => {
+          const updated = coupons.filter(c => c.code !== code);
+          setCoupons(updated);
+          saveToDb("chronex_coupons", JSON.stringify(updated));
         },
         addBlogPost: (post) => {
           const updated = [post, ...blogPosts];

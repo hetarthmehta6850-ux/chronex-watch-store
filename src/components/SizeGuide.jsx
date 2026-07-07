@@ -1,4 +1,4 @@
-import { X, Check } from "lucide-react";
+import { X } from "lucide-react";
 
 const SizeGuide = ({ isOpen, onClose }) => {
   if (!isOpen) return null;

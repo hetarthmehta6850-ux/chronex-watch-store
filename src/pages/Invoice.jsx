@@ -1,24 +1,81 @@
-import { useState, useEffect, useContext, useRef } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useState, useContext, useRef, useMemo } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { MapPin, Mail, Globe, Phone, QrCode, Truck, User, ShieldCheck, Download, Printer, ArrowLeft } from "lucide-react";
-import html2canvas from "html2canvas";
+import html2canvas from "html2canvas-pro";
 import { jsPDF } from "jspdf";
 import { numberToWords } from "../utils/numberToWords";
 
 const Invoice = () => {
   const { orderId } = useParams();
   const { orders } = useContext(ShopContext);
-  const [order, setOrder] = useState(null);
+  const navigate = useNavigate();
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const invoiceRef = useRef(null);
 
-  useEffect(() => {
-    const foundOrder = orders.find((o) => o.id === orderId);
-    if (foundOrder) {
-      setOrder(foundOrder);
-    }
+  const order = useMemo(() => {
+    return orders.find((o) => o.id === orderId);
   }, [orderId, orders]);
+
+  const { subtotal, couponDiscount, gst, grandTotal, amountInWords } = useMemo(() => {
+    if (!order) return { subtotal: 0, couponDiscount: 0, gst: 0, grandTotal: 0, amountInWords: "" };
+    const sub = order.items?.reduce((sum, item) => sum + (item.price * item.quantity), 0) || order.total;
+    const discount = sub - order.total;
+    const base = order.total;
+    const tax = Math.round(base * 0.18);
+    const total = base + tax;
+    const words = numberToWords(total);
+    return { subtotal: sub, couponDiscount: discount, baseAmount: base, gst: tax, grandTotal: total, amountInWords: words };
+  }, [order]);
+
+  const cbTimestamp = "chronex-cors-bypass";
+
+  const { paymentMethod, paymentId, transactionId, trackingId, formattedDelivery } = useMemo(() => {
+    if (!order) {
+      return {
+        paymentMethod: "",
+        paymentId: "",
+        transactionId: "",
+        trackingId: "",
+        formattedDelivery: ""
+      };
+    }
+    const method = order.paymentMethod || "UPI (Demo Payment)";
+    let hash = 0;
+    for (let i = 0; i < order.id.length; i++) {
+      hash = order.id.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const seed = Math.abs(hash);
+    const payId = order.paymentDetails?.paymentId || `CHXPAY${100000000 + (seed % 900000000)}`;
+    const txId = order.paymentDetails?.transactionId || `CHXTXN${100000000 + ((seed * 7) % 900000000)}`;
+    const trackId = `123456${100000 + ((seed * 13) % 900000)}`;
+    const orderDate = new Date(order.date);
+    const estDate = new Date(orderDate);
+    estDate.setDate(estDate.getDate() + 4);
+    const formatted = estDate.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+    return {
+      paymentMethod: method,
+      paymentId: payId,
+      transactionId: txId,
+      trackingId: trackId,
+      formattedDelivery: formatted
+    };
+  }, [order]);
+
+  const orderDate = useMemo(() => {
+    return order ? new Date(order.date) : new Date();
+  }, [order]);
+
+  const formattedDate = useMemo(() => {
+    return orderDate.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+  }, [orderDate]);
+
+  const getSafeImageUrl = (url) => {
+    if (!url) return "";
+    if (url.startsWith("data:")) return url;
+    const separator = url.includes("?") ? "&" : "?";
+    return `${url}${separator}cb=chronex-cors-${cbTimestamp}`;
+  };
 
   if (!order) {
     return (
@@ -28,29 +85,6 @@ const Invoice = () => {
       </div>
     );
   }
-
-  // Derived calculations based on Indian system context
-  // Force dynamic calculation from item prices to avoid corrupted localStorage values
-  const subtotal = order.items?.reduce((sum, item) => sum + (item.price * item.quantity), 0) || order.total;
-  const couponDiscount = subtotal - order.total;
-  
-  const baseAmount = order.total;
-  const gst = Math.round(baseAmount * 0.18);
-  const grandTotal = baseAmount + gst;
-  const amountInWords = numberToWords(grandTotal);
-  
-  const paymentMethod = order.paymentMethod || "UPI (Demo Payment)";
-  const paymentId = order.paymentDetails?.paymentId || `CHXPAY${Math.floor(100000000 + Math.random() * 900000000)}`;
-  const transactionId = order.paymentDetails?.transactionId || `CHXTXN${Math.floor(100000000 + Math.random() * 900000000)}`;
-
-  const orderDate = new Date(order.date);
-  const formattedDate = orderDate.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
-  
-  // Fake tracking for demo
-  const trackingId = `123456${Math.floor(100000 + Math.random() * 900000)}`;
-  const estDeliveryDate = new Date(orderDate);
-  estDeliveryDate.setDate(estDeliveryDate.getDate() + 4);
-  const formattedDelivery = estDeliveryDate.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
 
   const handleDownloadPDF = async () => {
     if (!invoiceRef.current) return;
@@ -62,36 +96,66 @@ const Invoice = () => {
       const canvas = await html2canvas(element, {
         scale: 2,
         useCORS: true,
-        allowTaint: true,
+        allowTaint: false,
         logging: false,
         backgroundColor: "#ffffff",
+        windowWidth: element.scrollWidth,
+        windowHeight: element.scrollHeight,
       });
       
       const imgData = canvas.toDataURL("image/jpeg", 1.0);
       
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "mm",
-        format: "a4",
-      });
-      
-      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfWidth = 210; // Standard A4 width in mm
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      const pdf = new jsPDF({
+        orientation: pdfHeight > pdfWidth ? "portrait" : "landscape",
+        unit: "mm",
+        format: [pdfWidth, pdfHeight],
+      });
       
       pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
       pdf.save(`Chronex_Invoice_${order.id}.pdf`);
       
     } catch (error) {
       console.error("Failed to generate PDF", error);
-      alert("Failed to generate PDF. You can also try using Ctrl+P to print.");
+      alert("Failed to generate PDF: " + (error.message || error) + ". You can also try using Ctrl+P to print.");
     } finally {
       setIsGeneratingPDF(false);
+    }
+  };
+
+  const handleBack = () => {
+    const isAdmin = localStorage.getItem("chronex_admin_auth") === "true";
+    if (isAdmin) {
+      navigate("/admin");
+    } else {
+      navigate(`/order-success/${order.id}`);
     }
   };
 
   return (
     <div className="bg-neutral-900 min-h-screen pb-24 print:pb-0 print:bg-white font-sans text-neutral-900 selection:bg-amber-500/30">
       <style>{`
+        .invoice-print-container,
+        .invoice-print-container * {
+          --color-neutral-50: #fafafa !important;
+          --color-neutral-100: #f5f5f5 !important;
+          --color-neutral-200: #e5e5e5 !important;
+          --color-neutral-300: #d4d4d4 !important;
+          --color-neutral-400: #a3a3a3 !important;
+          --color-neutral-500: #737373 !important;
+          --color-neutral-600: #525252 !important;
+          --color-neutral-700: #404040 !important;
+          --color-neutral-800: #262626 !important;
+          --color-neutral-900: #171717 !important;
+          --color-neutral-950: #0a0a0a !important;
+          --color-emerald-500: #10b981 !important;
+          --color-emerald-600: #059669 !important;
+          --color-amber-500: #f59e0b !important;
+          --color-amber-600: #d97706 !important;
+        }
+
         @media print {
           @page {
             margin: 0;
@@ -114,9 +178,9 @@ const Invoice = () => {
       {/* Top Action Bar (Hidden in Print) */}
       <div className="bg-neutral-950 border-b border-neutral-800 p-4 sticky top-0 z-50 print:hidden flex justify-between items-center shadow-lg">
         <div className="max-w-7xl mx-auto w-full flex justify-between items-center px-4">
-          <Link to={`/order-success/${order.id}`} className="text-neutral-400 hover:text-amber-500 transition-colors flex items-center gap-2 text-sm font-semibold uppercase tracking-widest">
-            <ArrowLeft size={16} /> Back to Order
-          </Link>
+          <button onClick={handleBack} className="text-neutral-400 hover:text-amber-500 transition-colors flex items-center gap-2 text-sm font-semibold uppercase tracking-widest cursor-pointer border-none bg-transparent p-0">
+            <ArrowLeft size={16} /> Back to Page
+          </button>
           <div className="flex gap-4">
             <button 
               onClick={() => window.print()}
@@ -355,7 +419,11 @@ const Invoice = () => {
                     <td className="py-4 px-2">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 shrink-0 bg-neutral-100 rounded flex items-center justify-center p-1 border border-neutral-200 mix-blend-multiply">
-                           <img src={item.image} alt={item.name} crossOrigin="anonymous" className="max-w-full max-h-full object-contain drop-shadow-sm" />
+                           {item.image ? (
+                             <img src={getSafeImageUrl(item.image)} alt={item.name} crossOrigin="anonymous" className="max-w-full max-h-full object-contain drop-shadow-sm" />
+                           ) : (
+                             <span className="text-lg">⌚</span>
+                           )}
                         </div>
                         <div className="flex flex-col gap-0.5">
                           <span className="font-bold text-neutral-900 leading-tight">{item.brand} {item.name.split(" ")[0]} {item.name.split(" ")[1] || ""}</span>
@@ -499,9 +567,12 @@ const Invoice = () => {
               <div className="mt-auto pt-6 flex flex-col items-center">
                 {/* Simulated Barcode */}
                 <div className="flex items-end h-8 gap-[1px] opacity-80 w-full justify-center">
-                  {[...Array(40)].map((_, i) => (
-                    <div key={i} className="bg-black" style={{ width: Math.random() > 0.5 ? '2px' : '1px', height: Math.random() > 0.2 ? '100%' : '80%' }}></div>
-                  ))}
+                  {[...Array(40)].map((_, i) => {
+                    const hash = (i * 3 + (order.id.charCodeAt(i % order.id.length) || 0)) % 10;
+                    return (
+                      <div key={i} className="bg-black" style={{ width: hash > 5 ? '2px' : '1px', height: hash > 2 ? '100%' : '80%' }}></div>
+                    );
+                  })}
                 </div>
                 <span className="text-[8px] font-mono mt-1 font-bold tracking-wider">{order.id}</span>
               </div>

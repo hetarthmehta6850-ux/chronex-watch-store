@@ -1,4 +1,3 @@
-import React from "react";
 
 const AnalyticsChart = ({ data, height = 250, labelColor = "#a3a3a3", barColor = "#f59e0b" }) => {
   // data should be an array of objects: { label: "Jan", value: 1200000 }

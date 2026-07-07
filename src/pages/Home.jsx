@@ -5,6 +5,7 @@ import { ArrowRight, Shield, Award, Sparkles, MapPin, Heart, Wrench, Truck, Shie
 import useScrollReveal from "../hooks/useScrollReveal";
 import QuickView from "../components/QuickView";
 import InstagramFeed from "../components/InstagramFeed";
+import { useSEO } from "../hooks/useSEO";
 
 // Animated Counter Component
 const AnimatedCounter = ({ end, duration = 2000, suffix = "" }) => {
@@ -30,6 +31,11 @@ const AnimatedCounter = ({ end, duration = 2000, suffix = "" }) => {
 
 const Home = () => {
   useScrollReveal(); // Initialize scroll reveal hook
+  useSEO({
+    title: "Exclusive Luxury Horology",
+    description: "Discover Chronex, the ultimate destination for luxury Swiss and Japanese timepieces. Shop certified authentic watches from Rolex, Omega, Seiko, and more.",
+    keywords: "luxury watches, chronex, buy rolex, buy omega, swiss watches, certified authentic watches",
+  });
   const { products, toggleWishlist, wishlist, toggleCompare, compareList } = useContext(ShopContext);
   const navigate = useNavigate();
   const [quickViewProduct, setQuickViewProduct] = useState(null);
@@ -540,6 +546,8 @@ const Home = () => {
 
       {/* Instagram Feed mockup */}
       <InstagramFeed />
+
+      <QuickView product={quickViewProduct} onClose={() => setQuickViewProduct(null)} />
     </div>
   );
 };

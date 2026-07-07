@@ -48,7 +48,6 @@ const GiftFinder = () => {
       } else if (budget === "mid") {
         budgetMatch = product.price > 15000 && product.price <= 60000;
       } else if (budget === "premium") {
-        budgetMatch = product.price > 60000 && product.price <= 25000; // Wait, let's look at numbers: 60k to 2.5 Lakhs
         budgetMatch = product.price > 60000 && product.price <= 250000;
       } else if (budget === "luxury") {
         budgetMatch = product.price > 250000;
