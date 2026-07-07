@@ -668,6 +668,7 @@ const WarrantyPortal = () => {
               </div>
 
             </div>
+          </div>
  
             {/* Actions */}
             <button 

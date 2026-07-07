@@ -690,6 +690,7 @@ const Invoice = () => {
         </div>
       </div>
     </div>
+  </div>
   );
 };
 
