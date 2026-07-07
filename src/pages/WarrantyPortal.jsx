@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { ShieldCheck, QrCode, Search, Award, Download, CheckCircle2, AlertTriangle, Calendar, Globe, Mail, Phone } from "lucide-react";
 import { ShopContext } from "../context/ShopContext";
 
@@ -62,6 +62,33 @@ const WarrantyPortal = () => {
   const [serial, setSerial] = useState("");
   const [status, setStatus] = useState("idle"); // idle, searching, found, notfound
   const [certData, setCertData] = useState(null);
+
+  const [scale, setScale] = useState(1);
+  const [certHeight, setCertHeight] = useState(0);
+  const certRef = useRef(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (certRef.current) {
+        setCertHeight(certRef.current.offsetHeight);
+      }
+      if (window.innerWidth < 840) {
+        const newScale = (window.innerWidth - 32) / 800; // 16px padding on both sides
+        setScale(newScale > 0.1 ? newScale : 0.1);
+      } else {
+        setScale(1);
+      }
+    };
+    
+    if (status === "found") {
+      const timer = setTimeout(handleResize, 150);
+      window.addEventListener("resize", handleResize);
+      return () => {
+        window.removeEventListener("resize", handleResize);
+        clearTimeout(timer);
+      };
+    }
+  }, [status]);
 
   const handleVerify = (e) => {
     e.preventDefault();
@@ -408,9 +435,25 @@ const WarrantyPortal = () => {
 
         {/* Status: Found Certificate Card */}
         {status === "found" && certData && (
-          <div className="flex flex-col items-center gap-6 max-w-4xl mx-auto w-full animate-fade-in print:p-0 certificate-wrapper">
+          <div className="flex flex-col items-center gap-6 max-w-4xl mx-auto w-full animate-fade-in print:p-0 certificate-wrapper px-4">
             {/* The Luxury Certificate */}
-            <div className="w-full max-w-[800px] border border-amber-500/20 shadow-2xl rounded-2xl overflow-hidden print:shadow-none print:border-none print:m-0 bg-[#fdfbf7] text-neutral-900 font-serif select-none p-10 flex flex-col gap-8 relative text-left" id="certificate-print">
+            <div
+              style={scale < 1 ? {
+                width: `${800 * scale}px`,
+                height: `${certHeight * scale}px`,
+                overflow: "hidden"
+              } : {}}
+              className="relative transition-all"
+            >
+              <div 
+                ref={certRef}
+                style={scale < 1 ? {
+                  transform: `scale(${scale})`,
+                  transformOrigin: "top left"
+                } : {}}
+                className="w-[800px] min-w-[800px] border border-amber-500/20 shadow-2xl rounded-2xl overflow-hidden print:shadow-none print:border-none print:m-0 bg-[#fdfbf7] text-neutral-900 font-serif select-none p-10 flex flex-col gap-8 relative text-left" 
+                id="certificate-print"
+              >
               
               {/* Double line gold borders */}
               <div className="absolute inset-4 border border-[#c8a27b] pointer-events-none opacity-40"></div>
@@ -625,7 +668,7 @@ const WarrantyPortal = () => {
               </div>
 
             </div>
-
+ 
             {/* Actions */}
             <button 
               onClick={handleDownload}
