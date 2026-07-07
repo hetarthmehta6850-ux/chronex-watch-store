@@ -533,7 +533,7 @@ export const ShopProvider = ({ children }) => {
           if (data.chronex_returns) setReturnRequests(data.chronex_returns);
           if (data.chronex_addresses) setSavedAddresses(data.chronex_addresses);
           if (data.chronex_showrooms) setShowrooms(data.chronex_showrooms);
-          if (data.chronex_current_user) setCurrentUser(data.chronex_current_user);
+
         }
       })
       .catch(e => console.log("Backend not reachable", e));
@@ -1315,7 +1315,7 @@ Please let me know how to proceed.`;
     }
     
     setCurrentUser(user);
-    saveToDb("chronex_current_user", JSON.stringify(user));
+    localStorage.setItem("chronex_current_user", JSON.stringify(user));
     
     // Load points
     const savedPoints = localStorage.getItem(`chronex_points_${email}`) || "250";
@@ -1334,7 +1334,7 @@ Please let me know how to proceed.`;
     setUsersList(users);
     
     setCurrentUser(user);
-    saveToDb("chronex_current_user", JSON.stringify(user));
+    localStorage.setItem("chronex_current_user", JSON.stringify(user));
     setLoyaltyPoints(250); // Welcome bonus points
     return { success: true, user };
   };
@@ -1414,6 +1414,7 @@ Please let me know how to proceed.`;
         referralCode,
         referrals,
         referralEarnings,
+        applyReferral,
         subscription,
         corporateInquiries,
         usersList,
@@ -1466,6 +1467,19 @@ Please let me know how to proceed.`;
         },
         generateReferralCode: () => {
           if (!currentUser) return;
+          const code = `CHX-${currentUser.name.substring(0, 4).toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
+          setReferralCode(code);
+          localStorage.setItem(`chronex_ref_code_${currentUser.email}`, code);
+        },
+        applyReferral: (friendEmail) => {
+          if (!currentUser || !referralCode) return;
+          const newReferrals = [...referrals, { email: friendEmail, date: new Date().toLocaleDateString("en-IN"), status: "Completed" }];
+          setReferrals(newReferrals);
+          localStorage.setItem(`chronex_referrals_${currentUser.email}`, JSON.stringify(newReferrals));
+          
+          const newEarnings = referralEarnings + 500;
+          setReferralEarnings(newEarnings);
+          localStorage.setItem(`chronex_ref_earnings_${currentUser.email}`, String(newEarnings));
         },
         cancelSubscription: () => {
           if (!currentUser || !subscription) return;

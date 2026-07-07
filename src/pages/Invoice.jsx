@@ -200,10 +200,10 @@ const Invoice = () => {
       </div>
 
       {/* Invoice Container */}
-      <div className="flex justify-center pt-8 print:pt-0">
+      <div className="flex justify-center pt-8 print:pt-0 w-full overflow-x-auto">
         <div 
           ref={invoiceRef}
-          className="bg-white w-[800px] max-w-full shadow-2xl overflow-hidden print:shadow-none print:w-full print:max-w-full relative shrink-0 text-[11px] font-sans invoice-print-container"
+          className="bg-white w-[800px] min-w-[800px] shadow-2xl overflow-hidden print:shadow-none print:w-full print:max-w-full relative shrink-0 text-[11px] font-sans invoice-print-container"
         >
           {/* 1. Header (Black) */}
           <div className="bg-[#0a0a0a] text-white p-6 print:p-4 flex justify-between items-center relative overflow-hidden">
