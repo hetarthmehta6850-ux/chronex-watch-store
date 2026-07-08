@@ -473,13 +473,9 @@ export const ShopProvider = ({ children }) => {
   const [savedAddresses, setSavedAddresses] = useState(() => {
     try {
       const saved = localStorage.getItem("chronex_saved_addresses");
-      return saved ? JSON.parse(saved) : [
-        { id: "addr_1", name: "Home", receiverName: "Aarav Mehta", phone: "+91 98765 43210", address: "42, Shanti Kunj Society, Near Bright School, Vasna Road", cityState: "Vadodara, Gujarat", pincode: "390007", isDefault: true }
-      ];
+      return saved ? JSON.parse(saved) : [];
     } catch (e) {
-      return [
-        { id: "addr_1", name: "Home", receiverName: "Aarav Mehta", phone: "+91 98765 43210", address: "42, Shanti Kunj Society, Near Bright School, Vasna Road", cityState: "Vadodara, Gujarat", pincode: "390007", isDefault: true }
-      ];
+      return [];
     }
   });
   const [currency, setCurrency] = useState("INR"); // Currency state
