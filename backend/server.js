@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const mongoose = require('mongoose');
 
 const app = express();
 
@@ -13,38 +14,115 @@ app.use(express.json({ limit: '50mb' }));
 
 const dbPath = path.join(__dirname, 'db.json');
 
-// Helper to read DB
-const readDb = () => {
+// Parse local .env file manually if it exists to retrieve MONGODB_URI
+try {
+  const envPath = path.join(__dirname, '.env');
+  if (fs.existsSync(envPath)) {
+    const envConfig = fs.readFileSync(envPath, 'utf8');
+    envConfig.split('\n').forEach(line => {
+      const parts = line.split('=');
+      if (parts.length >= 2) {
+        const key = parts[0].trim();
+        const val = parts.slice(1).join('=').trim();
+        if (key && val && !process.env[key]) {
+          process.env[key] = val;
+        }
+      }
+    });
+  }
+} catch (e) {
+  console.warn("No local .env file parsed:", e.message);
+}
+
+const mongoUri = process.env.MONGODB_URI;
+let dbConnected = false;
+
+if (mongoUri) {
+  console.log("Connecting to MongoDB Atlas...");
+  mongoose.connect(mongoUri)
+    .then(() => {
+      console.log("🚀 Connected to MongoDB Atlas successfully!");
+      dbConnected = true;
+    })
+    .catch(err => {
+      console.error("❌ MongoDB connection error:", err.message);
+    });
+} else {
+  console.log("ℹ️ MONGODB_URI not found in process environment or .env. Running in local file-based database mode (db.json).");
+}
+
+// Database Schema definition for key-value records
+const StoreRecordSchema = new mongoose.Schema({
+  key: { type: String, required: true, unique: true },
+  value: { type: mongoose.Schema.Types.Mixed, required: true }
+}, { timestamps: true });
+
+const StoreRecord = mongoose.model('StoreRecord', StoreRecordSchema);
+
+// GET full database
+app.get('/api/data', async (req, res) => {
+  if (mongoUri && (dbConnected || mongoose.connection.readyState === 1 || mongoose.connection.readyState === 2)) {
+    try {
+      const records = await StoreRecord.find({});
+      const db = {};
+      records.forEach(rec => {
+        db[rec.key] = rec.value;
+      });
+      return res.json(db);
+    } catch (e) {
+      console.error("Error reading from MongoDB, falling back to local file:", e);
+    }
+  }
+
+  // Fallback to local db.json
   if (fs.existsSync(dbPath)) {
     try {
       const data = fs.readFileSync(dbPath, 'utf8');
-      return JSON.parse(data);
+      return res.json(JSON.parse(data));
     } catch (e) {
       console.error("Error reading db.json", e);
-      return {};
+      return res.status(500).json({ error: "Error reading db.json" });
     }
   }
-  return {};
-};
-
-// GET full database
-app.get('/api/data', (req, res) => {
-  const db = readDb();
-  res.json(db);
+  res.json({});
 });
 
 // POST to update database (Merge strategy)
-app.post('/api/data', (req, res) => {
-  const db = readDb();
+app.post('/api/data', async (req, res) => {
   const newData = req.body;
-  
-  // Merge the new state into the existing database
-  const updatedDb = { ...db, ...newData };
-  
-  // Save to disk
-  fs.writeFileSync(dbPath, JSON.stringify(updatedDb, null, 2));
-  
-  res.json({ success: true, timestamp: Date.now() });
+
+  if (mongoUri && (dbConnected || mongoose.connection.readyState === 1 || mongoose.connection.readyState === 2)) {
+    try {
+      const keys = Object.keys(newData);
+      const promises = keys.map(key => {
+        return StoreRecord.findOneAndUpdate(
+          { key: key },
+          { key: key, value: newData[key] },
+          { upsert: true, new: true }
+        );
+      });
+      await Promise.all(promises);
+      return res.json({ success: true, dbType: "mongodb", timestamp: Date.now() });
+    } catch (e) {
+      console.error("Error writing to MongoDB, falling back to local file:", e);
+    }
+  }
+
+  // Fallback to local db.json
+  try {
+    let db = {};
+    if (fs.existsSync(dbPath)) {
+      try {
+        db = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+      } catch (e) {}
+    }
+    const updatedDb = { ...db, ...newData };
+    fs.writeFileSync(dbPath, JSON.stringify(updatedDb, null, 2));
+    res.json({ success: true, dbType: "file", timestamp: Date.now() });
+  } catch (e) {
+    console.error("Error writing to db.json", e);
+    res.status(500).json({ error: "Error writing to database" });
+  }
 });
 
 // --- Production: Serve Vite-built frontend ---
