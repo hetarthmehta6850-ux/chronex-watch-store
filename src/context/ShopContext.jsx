@@ -162,6 +162,18 @@ export const ShopProvider = ({ children }) => {
       }).catch(err => console.error("Sync failed:", err));
     }
   };
+  const saveMultipleToDb = (payload) => {
+    Object.keys(payload).forEach(key => {
+      const value = payload[key];
+      const strVal = typeof value === 'object' ? JSON.stringify(value) : String(value);
+      localStorage.setItem(key, strVal);
+    });
+    fetch('/api/data', {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).catch(err => console.error("Batch sync failed:", err));
+  };
 
 
   const [products, setProducts] = useState(() => {
@@ -492,6 +504,77 @@ export const ShopProvider = ({ children }) => {
       .then(res => res.json())
       .then(data => {
         if (data && Object.keys(data).length > 0) {
+          // Self-healing check: if local user is active, check if their points/details need syncing back to the server
+          const savedUser = localStorage.getItem("chronex_current_user");
+          if (savedUser) {
+            try {
+              const localUser = JSON.parse(savedUser);
+              if (localUser && localUser.email) {
+                const uEmail = localUser.email;
+                const syncPayload = {};
+                let needsSync = false;
+
+                // 1. Check points
+                const localPoints = localStorage.getItem(`chronex_points_${uEmail}`);
+                const serverPoints = data[`chronex_points_${uEmail}`];
+                if (localPoints && (!serverPoints || Number(localPoints) > Number(serverPoints))) {
+                  syncPayload[`chronex_points_${uEmail}`] = localPoints;
+                  data[`chronex_points_${uEmail}`] = localPoints; // merge locally in-memory
+                  needsSync = true;
+                }
+
+                // 2. Check wallet
+                const localWallet = localStorage.getItem(`chronex_wallet_${uEmail}`);
+                const serverWallet = data[`chronex_wallet_${uEmail}`];
+                if (localWallet && (!serverWallet || Number(localWallet) !== Number(serverWallet))) {
+                  syncPayload[`chronex_wallet_${uEmail}`] = localWallet;
+                  data[`chronex_wallet_${uEmail}`] = localWallet;
+                  needsSync = true;
+                }
+
+                // 3. Check subscription
+                const localSub = localStorage.getItem(`chronex_sub_${uEmail}`);
+                const serverSub = data[`chronex_sub_${uEmail}`];
+                if (localSub && !serverSub) {
+                  syncPayload[`chronex_sub_${uEmail}`] = localSub;
+                  data[`chronex_sub_${uEmail}`] = localSub;
+                  needsSync = true;
+                }
+
+                // 4. Check referral code
+                const localRef = localStorage.getItem(`chronex_ref_code_${uEmail}`);
+                const serverRef = data[`chronex_ref_code_${uEmail}`];
+                if (localRef && !serverRef) {
+                  syncPayload[`chronex_ref_code_${uEmail}`] = localRef;
+                  data[`chronex_ref_code_${uEmail}`] = localRef;
+                  needsSync = true;
+                }
+
+                // 5. Check referrals list
+                const localRefs = localStorage.getItem(`chronex_referrals_${uEmail}`);
+                const serverRefs = data[`chronex_referrals_${uEmail}`];
+                if (localRefs && !serverRefs) {
+                  syncPayload[`chronex_referrals_${uEmail}`] = localRefs;
+                  data[`chronex_referrals_${uEmail}`] = localRefs;
+                  needsSync = true;
+                }
+
+                // 6. Check referral earnings
+                const localEarnings = localStorage.getItem(`chronex_ref_earnings_${uEmail}`);
+                const serverEarnings = data[`chronex_ref_earnings_${uEmail}`];
+                if (localEarnings && (!serverEarnings || Number(localEarnings) > Number(serverEarnings))) {
+                  syncPayload[`chronex_ref_earnings_${uEmail}`] = localEarnings;
+                  data[`chronex_ref_earnings_${uEmail}`] = localEarnings;
+                  needsSync = true;
+                }
+
+                if (needsSync) {
+                  saveMultipleToDb(syncPayload);
+                }
+              }
+            } catch (e) {}
+          }
+
           // Synchronize localStorage cache
           Object.keys(data).forEach(key => {
             const value = data[key];
