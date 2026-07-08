@@ -239,48 +239,7 @@ export const ShopProvider = ({ children }) => {
   }); // Stores { productId: quantity }
   const [orders, setOrders] = useState(() => {
     // Default list of mock orders to make the admin dashboard populate realistically
-    const defaults = [
-      {
-        id: "CHX-847291",
-        date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-        customer: { name: "Ananya Iyer", email: "ananya.iyer@outlook.com", phone: "+91 98321 04850" },
-        items: [{ id: "p1", name: "Submariner Date", brand: "Rolex", price: 950000, quantity: 1, image: "" }],
-        total: 950000,
-        paymentMethod: "Credit Card",
-        paymentDetails: "Visa ending in 4829",
-        orderStatus: "Delivered"
-      },
-      {
-        id: "CHX-103849",
-        date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-        customer: { name: "Kabir Sharma", email: "kabir.sharma@gmail.com", phone: "+91 87492 01830" },
-        items: [{ id: "p2", name: "Speedmaster Professional", brand: "Omega", price: 450000, quantity: 1, image: "" }],
-        total: 450000,
-        paymentMethod: "Bank Transfer",
-        paymentDetails: "HDFC Transaction ID 84920",
-        orderStatus: "Shipped"
-      },
-      {
-        id: "CHX-928471",
-        date: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
-        customer: { name: "Vikram Malhotra", email: "vikram.malhotra@yahoo.com", phone: "+91 74892 04820" },
-        items: [{ id: "p3", name: "Monaco Calibre 11", brand: "TAG Heuer", price: 180000, quantity: 1, image: "" }],
-        total: 180000,
-        paymentMethod: "UPI",
-        paymentDetails: "Google Pay UPI Ref 7291038",
-        orderStatus: "Processing"
-      },
-      {
-        id: "CHX-374920",
-        date: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString(),
-        customer: { name: "Meera Reddy", email: "meera.reddy@gmail.com", phone: "+91 93820 18402" },
-        items: [{ id: "p4", name: "Prospex Alpinist", brand: "Seiko", price: 95000, quantity: 1, image: "" }],
-        total: 95000,
-        paymentMethod: "Cash on Delivery",
-        paymentDetails: "Verified COD Request",
-        orderStatus: "Delivered"
-      }
-    ];
+    const defaults = [];
 
     let currentOrders = [];
     try {
@@ -312,18 +271,7 @@ export const ShopProvider = ({ children }) => {
     return merged;
   }); // Stores completed order objects
   const [serviceRequests, setServiceRequests] = useState(() => {
-    const defaults = [
-      { id: "TKT-829103", date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), name: "Kabir Sharma", phone: "+91 87492 01830", watchBrand: "Rolex", watchModel: "Submariner 116610", serviceType: "Complete Overhaul", issueDescription: "Gaining 15 seconds per day, needs regulation and movement lubrication.", status: "In Progress" },
-      { id: "TKT-492019", date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), name: "Ananya Iyer", phone: "+91 98321 04850", watchBrand: "Omega", watchModel: "Seamaster 300M", serviceType: "Water Resistance Restoral", issueDescription: "Condensation inside glass after swimming. Gaskets probably worn out.", status: "Awaiting Parts" },
-      { id: "TKT-103948", date: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(), name: "Vikram Malhotra", phone: "+91 74892 04820", watchBrand: "TAG Heuer", watchModel: "Carrera Calibre 16", serviceType: "Polishing & Refinishing", issueDescription: "Deep desk-diving scratches on the bracelet and case side.", status: "Delivered" },
-      { id: "TKT-374920", date: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(), name: "Meera Reddy", phone: "+91 93820 18402", watchBrand: "Seiko", watchModel: "Alpinist SPB121J1", serviceType: "Crystal Replacement", issueDescription: "Sapphire glass has a minor chip near the 2 o'clock position.", status: "Completed" },
-      { id: "TKT-928401", date: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(), name: "Aditya Sen", phone: "+91 88320 19302", watchBrand: "Tudor", watchModel: "Black Bay 58", serviceType: "Movement Calibration", issueDescription: "Bezel alignment is slightly off center. Movement runs fine.", status: "Ticket Created" },
-      { id: "TKT-610293", date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(), name: "Nisha Patel", phone: "+91 91234 56789", watchBrand: "Longines", watchModel: "Master Collection", serviceType: "Strap Customization", issueDescription: "Change steel bracelet to premium brown alligator leather strap.", status: "Delivered" },
-      { id: "TKT-883021", date: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString(), name: "Rajesh Gupta", phone: "+91 98765 01234", watchBrand: "Cartier", watchModel: "Santos Medium", serviceType: "Battery Replacement", issueDescription: "Quartz movement stopped running last week. Needs new battery.", status: "Delivered" },
-      { id: "TKT-773829", date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(), name: "Shreya Joshi", phone: "+91 99887 76655", watchBrand: "Tissot", watchModel: "PRX Quartz", serviceType: "Battery & Seal Service", issueDescription: "Replace battery and pressure test for water resistance.", status: "Completed" },
-      { id: "TKT-482019", date: new Date(Date.now() - 16 * 24 * 60 * 60 * 1000).toISOString(), name: "Karan Verma", phone: "+91 88776 65544", watchBrand: "Audemars Piguet", watchModel: "Royal Oak", serviceType: "Complete Restoration", issueDescription: "Vintage piece inherited, hasn't run in 10 years. Needs full service.", status: "Under Evaluation" },
-      { id: "TKT-293048", date: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(), name: "Diya Kapoor", phone: "+91 77665 54433", watchBrand: "Omega", watchModel: "Speedmaster Reduced", serviceType: "Chronograph Repair", issueDescription: "Top pusher is sticky and chronograph second hand doesn't reset to zero.", status: "Awaiting Customer Approval" }
-    ];
+    const defaults = [];
 
     let current = [];
     try {
@@ -351,18 +299,7 @@ export const ShopProvider = ({ children }) => {
     return merged;
   }); // Stores watch repair tickets
   const [appointments, setAppointments] = useState(() => {
-    const defaults = [
-      { id: "BK-902810", date: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString(), name: "Kabir Sharma", phone: "+91 87492 01830", email: "kabir.sharma@gmail.com", showroomId: "vadodara", time: "11:30 AM", notes: "Interested in trying out the Rolex Submariner Date.", status: "Confirmed" },
-      { id: "BK-482019", date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(), name: "Ananya Iyer", phone: "+91 98321 04850", email: "ananya.iyer@outlook.com", showroomId: "mumbai", time: "02:30 PM", notes: "Would like to view the Cartier Santos and Jaeger-LeCoultre Reverso.", status: "Confirmed" },
-      { id: "BK-103948", date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(), name: "Vikram Malhotra", phone: "+91 74892 04820", email: "vikram.malhotra@yahoo.com", showroomId: "delhi", time: "04:00 PM", notes: "Looking for a luxury sports chronograph. Please keep options ready.", status: "Confirmed" },
-      { id: "BK-374920", date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), name: "Meera Reddy", phone: "+91 93820 18402", email: "meera.reddy@gmail.com", showroomId: "bangalore", time: "05:30 PM", notes: "Gift shopping for husband. Omega or Tudor preferred.", status: "Completed" },
-      { id: "BK-928401", date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(), name: "Aditya Sen", phone: "+91 88320 19302", email: "aditya.sen@live.com", showroomId: "vadodara", time: "12:00 PM", notes: "First high-end watch purchase. Needs custom consulting.", status: "Pending Approval" },
-      { id: "BK-610293", date: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(), name: "Nisha Patel", phone: "+91 91234 56789", email: "nisha.patel@gmail.com", showroomId: "mumbai", time: "03:00 PM", notes: "Wants to view ladies Diamond collection.", status: "Completed" },
-      { id: "BK-883021", date: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000).toISOString(), name: "Rajesh Gupta", phone: "+91 98765 01234", email: "rajesh.gupta@yahoo.com", showroomId: "delhi", time: "01:30 PM", notes: "Corporate order presentation for 10 pieces.", status: "Confirmed" },
-      { id: "BK-773829", date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), name: "Shreya Joshi", phone: "+91 99887 76655", email: "shreya.joshi@gmail.com", showroomId: "bangalore", time: "06:00 PM", notes: "Sizing request for Cartier Tank.", status: "Cancelled" },
-      { id: "BK-482011", date: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000).toISOString(), name: "Karan Verma", phone: "+91 88776 65544", email: "karan.verma@outlook.com", showroomId: "mumbai", time: "04:30 PM", notes: "Trade-in evaluation in showroom.", status: "Confirmed" },
-      { id: "BK-293048", date: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000).toISOString(), name: "Diya Kapoor", phone: "+91 77665 54433", email: "diya.kapoor@gmail.com", showroomId: "delhi", time: "11:00 AM", notes: "Omega Speedmaster viewing.", status: "Completed" }
-    ];
+    const defaults = [];
 
     let current = [];
     try {
@@ -504,17 +441,18 @@ export const ShopProvider = ({ children }) => {
       .then(res => res.json())
       .then(data => {
         if (data && Object.keys(data).length > 0) {
-          // Self-healing check: if local user is active, check if their points/details need syncing back to the server
+          const syncPayload = {};
+          let needsSync = false;
+
+          // 1. User Profile Self-healing
           const savedUser = localStorage.getItem("chronex_current_user");
           if (savedUser) {
             try {
               const localUser = JSON.parse(savedUser);
               if (localUser && localUser.email) {
                 const uEmail = localUser.email;
-                const syncPayload = {};
-                let needsSync = false;
 
-                // 1. Check points
+                // Check points
                 const localPoints = localStorage.getItem(`chronex_points_${uEmail}`);
                 const serverPoints = data[`chronex_points_${uEmail}`];
                 if (localPoints && (!serverPoints || Number(localPoints) > Number(serverPoints))) {
@@ -523,7 +461,7 @@ export const ShopProvider = ({ children }) => {
                   needsSync = true;
                 }
 
-                // 2. Check wallet
+                // Check wallet
                 const localWallet = localStorage.getItem(`chronex_wallet_${uEmail}`);
                 const serverWallet = data[`chronex_wallet_${uEmail}`];
                 if (localWallet && (!serverWallet || Number(localWallet) !== Number(serverWallet))) {
@@ -532,7 +470,7 @@ export const ShopProvider = ({ children }) => {
                   needsSync = true;
                 }
 
-                // 3. Check subscription
+                // Check subscription
                 const localSub = localStorage.getItem(`chronex_sub_${uEmail}`);
                 const serverSub = data[`chronex_sub_${uEmail}`];
                 if (localSub && !serverSub) {
@@ -541,7 +479,7 @@ export const ShopProvider = ({ children }) => {
                   needsSync = true;
                 }
 
-                // 4. Check referral code
+                // Check referral code
                 const localRef = localStorage.getItem(`chronex_ref_code_${uEmail}`);
                 const serverRef = data[`chronex_ref_code_${uEmail}`];
                 if (localRef && !serverRef) {
@@ -550,7 +488,7 @@ export const ShopProvider = ({ children }) => {
                   needsSync = true;
                 }
 
-                // 5. Check referrals list
+                // Check referrals list
                 const localRefs = localStorage.getItem(`chronex_referrals_${uEmail}`);
                 const serverRefs = data[`chronex_referrals_${uEmail}`];
                 if (localRefs && !serverRefs) {
@@ -559,7 +497,7 @@ export const ShopProvider = ({ children }) => {
                   needsSync = true;
                 }
 
-                // 6. Check referral earnings
+                // Check referral earnings
                 const localEarnings = localStorage.getItem(`chronex_ref_earnings_${uEmail}`);
                 const serverEarnings = data[`chronex_ref_earnings_${uEmail}`];
                 if (localEarnings && (!serverEarnings || Number(localEarnings) > Number(serverEarnings))) {
@@ -567,12 +505,122 @@ export const ShopProvider = ({ children }) => {
                   data[`chronex_ref_earnings_${uEmail}`] = localEarnings;
                   needsSync = true;
                 }
+              }
+            } catch (e) {}
+          }
 
-                if (needsSync) {
-                  saveMultipleToDb(syncPayload);
+          // 2. Collections Self-healing (Orders, Appointments, Services, Tradeins, Returns, Corporate Inquiries)
+          
+          // Orders
+          const localOrdersStr = localStorage.getItem("chronex_orders");
+          if (localOrdersStr) {
+            try {
+              const localOrders = JSON.parse(localOrdersStr);
+              const serverOrders = data.chronex_orders || [];
+              if (Array.isArray(localOrders) && localOrders.length > 0) {
+                const missing = localOrders.filter(lo => lo && lo.id && !serverOrders.some(so => so.id === lo.id));
+                if (missing.length > 0) {
+                  const merged = [...serverOrders, ...missing];
+                  syncPayload["chronex_orders"] = merged;
+                  data.chronex_orders = merged;
+                  needsSync = true;
                 }
               }
             } catch (e) {}
+          }
+
+          // Appointments
+          const localApptsStr = localStorage.getItem("chronex_appointments");
+          if (localApptsStr) {
+            try {
+              const localAppts = JSON.parse(localApptsStr);
+              const serverAppts = data.chronex_appointments || [];
+              if (Array.isArray(localAppts) && localAppts.length > 0) {
+                const missing = localAppts.filter(la => la && la.id && !serverAppts.some(sa => sa.id === la.id));
+                if (missing.length > 0) {
+                  const merged = [...serverAppts, ...missing];
+                  syncPayload["chronex_appointments"] = merged;
+                  data.chronex_appointments = merged;
+                  needsSync = true;
+                }
+              }
+            } catch (e) {}
+          }
+
+          // Services
+          const localServStr = localStorage.getItem("chronex_services");
+          if (localServStr) {
+            try {
+              const localServ = JSON.parse(localServStr);
+              const serverServ = data.chronex_services || [];
+              if (Array.isArray(localServ) && localServ.length > 0) {
+                const missing = localServ.filter(ls => ls && ls.id && !serverServ.some(ss => ss.id === ls.id));
+                if (missing.length > 0) {
+                  const merged = [...serverServ, ...missing];
+                  syncPayload["chronex_services"] = merged;
+                  data.chronex_services = merged;
+                  needsSync = true;
+                }
+              }
+            } catch (e) {}
+          }
+
+          // Trade-Ins
+          const localTradeStr = localStorage.getItem("chronex_tradeins");
+          if (localTradeStr) {
+            try {
+              const localTrade = JSON.parse(localTradeStr);
+              const serverTrade = data.chronex_tradeins || [];
+              if (Array.isArray(localTrade) && localTrade.length > 0) {
+                const missing = localTrade.filter(lt => lt && lt.id && !serverTrade.some(st => st.id === lt.id));
+                if (missing.length > 0) {
+                  const merged = [...serverTrade, ...missing];
+                  syncPayload["chronex_tradeins"] = merged;
+                  data.chronex_tradeins = merged;
+                  needsSync = true;
+                }
+              }
+            } catch (e) {}
+          }
+
+          // Returns
+          const localReturnStr = localStorage.getItem("chronex_returns");
+          if (localReturnStr) {
+            try {
+              const localReturn = JSON.parse(localReturnStr);
+              const serverReturn = data.chronex_returns || [];
+              if (Array.isArray(localReturn) && localReturn.length > 0) {
+                const missing = localReturn.filter(lr => lr && lr.id && !serverReturn.some(sr => sr.id === lr.id));
+                if (missing.length > 0) {
+                  const merged = [...serverReturn, ...missing];
+                  syncPayload["chronex_returns"] = merged;
+                  data.chronex_returns = merged;
+                  needsSync = true;
+                }
+              }
+            } catch (e) {}
+          }
+
+          // Corporate Inquiries
+          const localCorpStr = localStorage.getItem("chronex_corporate_inquiries");
+          if (localCorpStr) {
+            try {
+              const localCorp = JSON.parse(localCorpStr);
+              const serverCorp = data.chronex_corporate_inquiries || [];
+              if (Array.isArray(localCorp) && localCorp.length > 0) {
+                const missing = localCorp.filter(lc => lc && lc.id && !serverCorp.some(sc => sc.id === lc.id));
+                if (missing.length > 0) {
+                  const merged = [...serverCorp, ...missing];
+                  syncPayload["chronex_corporate_inquiries"] = merged;
+                  data.chronex_corporate_inquiries = merged;
+                  needsSync = true;
+                }
+              }
+            } catch (e) {}
+          }
+
+          if (needsSync) {
+            saveMultipleToDb(syncPayload);
           }
 
           // Synchronize localStorage cache
