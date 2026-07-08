@@ -528,7 +528,24 @@ export const ShopProvider = ({ children }) => {
           if (data.chronex_recently_viewed) setRecentlyViewed(data.chronex_recently_viewed);
           if (data.chronex_compare) setCompareList(data.chronex_compare);
           if (data.chronex_coupons) setCoupons(data.chronex_coupons);
-          if (data.chronex_users) setUsersList(data.chronex_users);
+          if (data.chronex_users) {
+            setUsersList(data.chronex_users);
+            // Self-healing: if the user is logged in locally in browser but missing on the server db (e.g. after a redeploy/restart), automatically re-register them
+            const savedUser = localStorage.getItem("chronex_current_user");
+            if (savedUser) {
+              try {
+                const localUser = JSON.parse(savedUser);
+                if (localUser && localUser.email) {
+                  const exists = data.chronex_users.some(u => u.email === localUser.email);
+                  if (!exists) {
+                    const updatedUsers = [...data.chronex_users, localUser];
+                    setUsersList(updatedUsers);
+                    saveToDb("chronex_users", JSON.stringify(updatedUsers));
+                  }
+                }
+              } catch (e) {}
+            }
+          }
           if (data.chronex_tradeins) setTradeInRequests(data.chronex_tradeins);
           if (data.chronex_returns) setReturnRequests(data.chronex_returns);
           if (data.chronex_addresses) setSavedAddresses(data.chronex_addresses);

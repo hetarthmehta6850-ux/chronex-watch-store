@@ -217,7 +217,9 @@ const Profile = () => {
   const activeTier = getLoyaltyTier(loyaltyPoints);
 
   // Filter user's specific items
-  const userOrders = orders; // Context stores order for currently logged in demo session
+  const userOrders = orders.filter(
+    (o) => o.customer?.email === currentUser.email || o.customerDetails?.email === currentUser.email
+  );
   const userServices = serviceRequests.filter(s => s.phone === currentUser.phone || s.name?.toLowerCase() === currentUser.name?.toLowerCase());
   const userAppointments = appointments.filter(a => a.phone === currentUser.phone || a.name?.toLowerCase() === currentUser.name?.toLowerCase());
   const userValuations = tradeInRequests.filter(t => t.email === currentUser.email);
