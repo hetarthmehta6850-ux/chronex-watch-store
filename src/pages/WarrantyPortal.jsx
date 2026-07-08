@@ -254,6 +254,7 @@ const WarrantyPortal = () => {
             height: 297mm !important;
             max-width: 210mm !important;
             max-height: 297mm !important;
+            min-width: 210mm !important;
             margin: 0 !important;
             padding: 10mm 12mm !important; /* Balanced inner padding */
             box-sizing: border-box !important;
@@ -266,6 +267,19 @@ const WarrantyPortal = () => {
             gap: 12px !important;
             page-break-after: avoid !important;
             page-break-inside: avoid !important;
+            transform: none !important;
+            transform-origin: unset !important;
+          }
+
+          /* Strip mobile scaling wrapper during print */
+          #certificate-print-wrapper,
+          .certificate-wrapper,
+          .certificate-wrapper > div {
+            width: auto !important;
+            height: auto !important;
+            overflow: visible !important;
+            transform: none !important;
+            transform-origin: unset !important;
           }
           
           /* Force details grid to render as 3 side-by-side columns on print */

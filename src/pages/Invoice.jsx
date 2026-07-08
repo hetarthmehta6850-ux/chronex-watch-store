@@ -117,16 +117,39 @@ const Invoice = () => {
     
     try {
       const element = invoiceRef.current;
-      
+      const parentWrapper = element.parentElement; // the scaling wrapper div
+
+      // Save current mobile transform styles
+      const savedTransform = element.style.transform;
+      const savedTransformOrigin = element.style.transformOrigin;
+      const savedParentWidth = parentWrapper.style.width;
+      const savedParentHeight = parentWrapper.style.height;
+      const savedParentOverflow = parentWrapper.style.overflow;
+
+      // Temporarily reset to full 800px desktop layout for capture
+      element.style.transform = 'none';
+      element.style.transformOrigin = '';
+      parentWrapper.style.width = 'auto';
+      parentWrapper.style.height = 'auto';
+      parentWrapper.style.overflow = 'visible';
+
       const canvas = await html2canvas(element, {
         scale: 2,
         useCORS: true,
         allowTaint: false,
         logging: false,
         backgroundColor: "#ffffff",
-        windowWidth: element.scrollWidth,
+        width: 800,
+        windowWidth: 800,
         windowHeight: element.scrollHeight,
       });
+
+      // Restore mobile transform styles
+      element.style.transform = savedTransform;
+      element.style.transformOrigin = savedTransformOrigin;
+      parentWrapper.style.width = savedParentWidth;
+      parentWrapper.style.height = savedParentHeight;
+      parentWrapper.style.overflow = savedParentOverflow;
       
       const imgData = canvas.toDataURL("image/jpeg", 1.0);
       
@@ -201,7 +224,19 @@ const Invoice = () => {
             zoom: 0.72;
             width: 100% !important;
             max-width: 100% !important;
+            min-width: 800px !important;
             box-shadow: none !important;
+            transform: none !important;
+            transform-origin: unset !important;
+          }
+          /* Strip mobile scaling wrapper during print */
+          .invoice-print-container-wrapper,
+          .invoice-print-container-wrapper > div {
+            width: auto !important;
+            height: auto !important;
+            overflow: visible !important;
+            transform: none !important;
+            transform-origin: unset !important;
           }
         }
       `}</style>
@@ -238,7 +273,7 @@ const Invoice = () => {
             height: `${invoiceHeight * scale}px`,
             overflow: "hidden"
           } : {}}
-          className="relative transition-all"
+          className="relative transition-all invoice-print-container-wrapper"
         >
           <div 
             ref={invoiceRef}
