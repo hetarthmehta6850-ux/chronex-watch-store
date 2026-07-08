@@ -217,9 +217,11 @@ const Profile = () => {
   const activeTier = getLoyaltyTier(loyaltyPoints);
 
   // Filter user's specific items
-  const userOrders = orders.filter(
-    (o) => o.customer?.email === currentUser.email || o.customerDetails?.email === currentUser.email
-  );
+  const userOrders = orders.filter((o) => {
+    const customerEmail = (o.customer?.email || o.customerDetails?.email || "").toLowerCase().trim();
+    const currentUserEmail = (currentUser?.email || "").toLowerCase().trim();
+    return customerEmail === currentUserEmail && currentUserEmail !== "";
+  });
   const userServices = serviceRequests.filter(s => s.phone === currentUser.phone || s.name?.toLowerCase() === currentUser.name?.toLowerCase());
   const userAppointments = appointments.filter(a => a.phone === currentUser.phone || a.name?.toLowerCase() === currentUser.name?.toLowerCase());
   const userValuations = tradeInRequests.filter(t => t.email === currentUser.email);

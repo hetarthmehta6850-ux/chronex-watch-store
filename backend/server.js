@@ -50,12 +50,19 @@ app.post('/api/data', (req, res) => {
 // --- Production: Serve Vite-built frontend ---
 const distPath = path.join(__dirname, '..', 'dist');
 if (fs.existsSync(distPath)) {
-  app.use(express.static(distPath));
+  app.use(express.static(distPath, {
+    setHeaders: (res, filepath) => {
+      if (path.basename(filepath) === 'index.html') {
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
+      }
+    }
+  }));
   // SPA fallback: serve index.html for all non-API routes, but return 404 for missing asset files
   app.get('*', (req, res) => {
     if (path.extname(req.path)) {
       res.status(404).send('Not Found');
     } else {
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
       res.sendFile(path.join(distPath, 'index.html'));
     }
   });

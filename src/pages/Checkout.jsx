@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { ShoppingBag, Truck, ShieldCheck, CheckCircle2, ArrowLeft, Loader2, Landmark, Tag } from "lucide-react";
@@ -55,6 +55,14 @@ const Checkout = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingStep, setProcessingStep] = useState("loading"); // 'loading' | 'success'
   const [generatedReceipt, setGeneratedReceipt] = useState(null);
+
+  useEffect(() => {
+    if (currentUser) {
+      if (currentUser.name && !name) setName(currentUser.name);
+      if (currentUser.phone && !phone) setPhone(currentUser.phone);
+      if (currentUser.email && !email) setEmail(currentUser.email);
+    }
+  }, [currentUser, name, phone, email]);
 
   const cartTotal = getCartTotal();
 
