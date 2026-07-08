@@ -821,9 +821,6 @@ export const ShopProvider = ({ children }) => {
         setCorporateInquiries(JSON.parse(savedInquiries));
       } catch (e) {}
     }
-
-    // Run database seeder if not seeded yet
-    seedDatabase();
   }, []);
 
 
