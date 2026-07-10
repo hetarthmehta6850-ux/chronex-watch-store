@@ -56,7 +56,7 @@ const ReferralProgram = () => {
   }
 
   return (
-    <div className="pt-24 pb-20 px-6 max-w-6xl mx-auto">
+    <div className="pt-24 pb-20 px-4 sm:px-6 max-w-6xl mx-auto">
       <Link to="/profile" className="inline-flex items-center text-xs font-bold uppercase tracking-widest text-neutral-500 hover:text-amber-500 transition-colors mb-8">
         <ArrowLeft size={16} className="mr-2" />
         Back to Profile
@@ -76,7 +76,7 @@ const ReferralProgram = () => {
 
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Main Action Card */}
-        <div className={`lg:col-span-2 p-8 md:p-12 rounded-3xl border ${theme === "light" ? "bg-white border-neutral-200" : "bg-neutral-900 border-neutral-800"}`}>
+        <div className={`lg:col-span-2 p-5 sm:p-8 md:p-12 rounded-3xl border ${theme === "light" ? "bg-white border-neutral-200" : "bg-neutral-900 border-neutral-800"}`}>
           <h2 className="text-2xl font-serif text-amber-500 mb-2">Your Referral Link</h2>
           <p className="text-neutral-400 mb-8">Share this unique link to start earning rewards.</p>
 
@@ -92,13 +92,13 @@ const ReferralProgram = () => {
             </div>
           ) : (
             <div className="space-y-6">
-              <div className={`flex items-center p-4 rounded-xl border ${theme === 'light' ? 'bg-neutral-50 border-neutral-200' : 'bg-neutral-950 border-neutral-800'}`}>
-                <div className="flex-grow truncate text-neutral-300 font-mono text-sm px-4">
+              <div className={`flex flex-col sm:flex-row sm:items-center p-3 sm:p-4 rounded-xl border gap-3 ${theme === 'light' ? 'bg-neutral-50 border-neutral-200' : 'bg-neutral-950 border-neutral-800'}`}>
+                <div className="flex-grow truncate text-neutral-300 font-mono text-sm px-4 py-2 sm:py-0 text-center sm:text-left bg-neutral-900/20 sm:bg-transparent rounded-lg">
                   ref={referralCode}
                 </div>
                 <button
                   onClick={handleCopy}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-lg font-bold text-xs transition-colors shrink-0 ${
+                  className={`flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-bold text-xs transition-colors w-full sm:w-auto shrink-0 ${
                     copied ? "bg-emerald-500/20 text-emerald-400" : "bg-neutral-800 text-neutral-300 hover:text-amber-500"
                   }`}
                 >
@@ -120,7 +120,7 @@ const ReferralProgram = () => {
         </div>
 
         {/* Stats Card */}
-        <div className={`p-8 rounded-3xl border flex flex-col gap-6 ${theme === "light" ? "bg-white border-neutral-200" : "bg-neutral-900 border-neutral-800"}`}>
+        <div className={`p-5 sm:p-8 rounded-3xl border flex flex-col gap-6 ${theme === "light" ? "bg-white border-neutral-200" : "bg-neutral-900 border-neutral-800"}`}>
           <div>
             <h2 className="text-xl font-serif text-amber-500 mb-6">Your Earnings</h2>
             <div className="flex items-baseline gap-2 mb-2">
@@ -176,21 +176,21 @@ const ReferralProgram = () => {
 
       {/* Developer Tool: Simulate Referral */}
       {referralCode && (
-        <div className="mt-20 p-6 border border-neutral-800 rounded-2xl bg-neutral-900/50 max-w-md mx-auto">
+        <div className="mt-20 p-4 sm:p-6 border border-neutral-800 rounded-2xl bg-neutral-900/50 max-w-md mx-auto">
           <h3 className="text-sm font-bold text-amber-500 mb-4 flex items-center gap-2">
             <span className="bg-amber-500 text-neutral-950 text-[10px] px-2 py-0.5 rounded-sm">DEMO</span>
             Simulate a Referral
           </h3>
-          <form onSubmit={handleMockReferral} className="flex gap-2">
+          <form onSubmit={handleMockReferral} className="flex flex-col sm:flex-row gap-2">
             <input 
               type="text" 
               placeholder="Friend's Email or Referral Code" 
               value={mockEmail}
               onChange={(e) => setMockEmail(e.target.value)}
-              className="flex-grow bg-neutral-950 border border-neutral-800 rounded-lg px-4 py-2 text-sm text-neutral-100 focus:border-amber-500 outline-none"
+              className="flex-grow bg-neutral-950 border border-neutral-800 rounded-lg px-4 py-2 text-sm text-neutral-100 focus:border-amber-500 outline-none w-full sm:w-auto"
               required
             />
-            <button type="submit" className="bg-neutral-800 hover:bg-neutral-700 text-amber-500 px-4 py-2 rounded-lg text-sm font-bold transition-colors">
+            <button type="submit" className="bg-neutral-800 hover:bg-neutral-700 text-amber-500 px-4 py-2.5 rounded-lg text-sm font-bold transition-colors w-full sm:w-auto shrink-0">
               Simulate
             </button>
           </form>
