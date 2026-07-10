@@ -586,8 +586,8 @@ const Profile = () => {
                     <div className="p-4 bg-amber-500/5 border border-amber-500/20 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-2">
                       <div>
                         <span className="text-[10px] text-amber-500 font-bold uppercase tracking-wider block">Official Chronex Offer</span>
-                        <strong className="text-lg text-neutral-100 font-sans">₹{val.counterOffer.toLocaleString("en-IN")}</strong>
-                        <p className="text-[9px] text-neutral-500 leading-normal mt-0.5">Accepting will grant a ₹{val.counterOffer.toLocaleString("en-IN")} discount code + 1000 Loyalty points credit.</p>
+                        <strong className="text-lg text-neutral-100 font-sans">₹{(val.counterOffer || 0).toLocaleString("en-IN")}</strong>
+                        <p className="text-[9px] text-neutral-500 leading-normal mt-0.5">Accepting will grant a ₹{(val.counterOffer || 0).toLocaleString("en-IN")} discount code + 1000 Loyalty points credit.</p>
                       </div>
                       <div className="flex gap-2 w-full sm:w-auto">
                         <button

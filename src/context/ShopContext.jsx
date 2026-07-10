@@ -604,36 +604,100 @@ export const ShopProvider = ({ children }) => {
             } catch (e) {}
           }
 
-          // Trade-Ins
+          // Trade-Ins status-aware merging
           const localTradeStr = localStorage.getItem("chronex_tradeins");
           if (localTradeStr) {
             try {
               const localTrade = JSON.parse(localTradeStr);
               const serverTrade = data.chronex_tradeins || [];
-              if (Array.isArray(localTrade) && localTrade.length > 0) {
-                const missing = localTrade.filter(lt => lt && lt.id && !serverTrade.some(st => st.id === lt.id));
-                if (missing.length > 0) {
-                  const merged = [...serverTrade, ...missing];
-                  syncPayload["chronex_tradeins"] = merged;
-                  data.chronex_tradeins = merged;
+              if (Array.isArray(localTrade)) {
+                let mergedTrade = [...serverTrade];
+                let tradeUpdated = false;
+
+                const statusPriority = {
+                  "Pending": 1,
+                  "Counter-Offered": 2,
+                  "Accepted": 3,
+                  "Rejected": 3,
+                  "Cancelled": 3
+                };
+
+                localTrade.forEach(lt => {
+                  if (!lt || !lt.id) return;
+                  const idx = mergedTrade.findIndex(st => st.id === lt.id);
+                  if (idx === -1) {
+                    mergedTrade.push(lt);
+                    tradeUpdated = true;
+                  } else {
+                    const st = mergedTrade[idx];
+                    const localPri = statusPriority[lt.status] || 1;
+                    const serverPri = statusPriority[st.status] || 1;
+                    
+                    if (localPri > serverPri) {
+                      mergedTrade[idx] = { ...st, ...lt };
+                      tradeUpdated = true;
+                    } else if (serverPri > localPri) {
+                      data.chronex_tradeins[idx] = { ...lt, ...st };
+                    } else {
+                      // If statuses are equal, check if local has a counterOffer but server doesn't
+                      if (lt.counterOffer !== undefined && st.counterOffer === undefined) {
+                        mergedTrade[idx].counterOffer = lt.counterOffer;
+                        tradeUpdated = true;
+                      }
+                    }
+                  }
+                });
+
+                if (tradeUpdated) {
+                  syncPayload["chronex_tradeins"] = mergedTrade;
+                  data.chronex_tradeins = mergedTrade;
                   needsSync = true;
                 }
               }
             } catch (e) {}
           }
 
-          // Returns
+          // Returns status-aware merging
           const localReturnStr = localStorage.getItem("chronex_returns");
           if (localReturnStr) {
             try {
               const localReturn = JSON.parse(localReturnStr);
               const serverReturn = data.chronex_returns || [];
-              if (Array.isArray(localReturn) && localReturn.length > 0) {
-                const missing = localReturn.filter(lr => lr && lr.id && !serverReturn.some(sr => sr.id === lr.id));
-                if (missing.length > 0) {
-                  const merged = [...serverReturn, ...missing];
-                  syncPayload["chronex_returns"] = merged;
-                  data.chronex_returns = merged;
+              if (Array.isArray(localReturn)) {
+                let mergedReturn = [...serverReturn];
+                let returnUpdated = false;
+
+                const statusPriority = {
+                  "Pending": 1,
+                  "Approved": 2,
+                  "Rejected": 2,
+                  "Completed": 3,
+                  "Refunded": 3
+                };
+
+                localReturn.forEach(lr => {
+                  if (!lr || !lr.id) return;
+                  const idx = mergedReturn.findIndex(sr => sr.id === lr.id);
+                  if (idx === -1) {
+                    mergedReturn.push(lr);
+                    returnUpdated = true;
+                  } else {
+                    const sr = mergedReturn[idx];
+                    const localPri = statusPriority[lr.status] || 1;
+                    const serverPri = statusPriority[sr.status] || 1;
+                    
+                    if (localPri > serverPri) {
+                      mergedReturn[idx] = { ...sr, ...lr };
+                      returnUpdated = true;
+                    } else if (serverPri > localPri) {
+                      data.chronex_returns[idx] = { ...lr, ...sr };
+                    }
+                  }
+                });
+
+                if (returnUpdated) {
+                  syncPayload["chronex_returns"] = mergedReturn;
+                  data.chronex_returns = mergedReturn;
                   needsSync = true;
                 }
               }
