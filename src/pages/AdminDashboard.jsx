@@ -2855,10 +2855,15 @@ const AdminDashboard = () => {
                                       <button
                                         onClick={() => {
                                           const offer = window.prompt(`Enter buyback counter-offer price (in ₹) for ${req.brand} ${req.model}:`);
-                                          if (offer && !isNaN(offer)) {
-                                            updateTradeInStatus(req.id, "Counter-Offered", Number(offer));
-                                            logAdminAction(`Sent counter-offer of ₹${Number(offer).toLocaleString("en-IN")} on appraisal #${req.id}`);
-                                            triggerToast("Appraisal counter-offer logged successfully!");
+                                          if (offer) {
+                                            const cleanedOffer = offer.replace(/[^\d]/g, "");
+                                            if (cleanedOffer && !isNaN(cleanedOffer)) {
+                                              updateTradeInStatus(req.id, "Counter-Offered", Number(cleanedOffer));
+                                              logAdminAction(`Sent counter-offer of ₹${Number(cleanedOffer).toLocaleString("en-IN")} on appraisal #${req.id}`);
+                                              triggerToast("Appraisal counter-offer logged successfully!");
+                                            } else {
+                                              triggerToast("Invalid price entered. Please use numbers only.");
+                                            }
                                           }
                                         }}
                                         className="px-2 py-1 bg-amber-500 hover:bg-amber-400 text-neutral-950 text-[9px] font-bold uppercase rounded"
