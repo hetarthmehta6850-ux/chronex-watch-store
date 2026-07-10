@@ -461,10 +461,10 @@ export const ShopProvider = ({ children }) => {
                   needsSync = true;
                 }
 
-                // Check wallet
+                // Check wallet (only local higher value overwrites server)
                 const localWallet = localStorage.getItem(`chronex_wallet_${uEmail}`);
                 const serverWallet = data[`chronex_wallet_${uEmail}`];
-                if (localWallet && (!serverWallet || Number(localWallet) !== Number(serverWallet))) {
+                if (localWallet && (!serverWallet || Number(localWallet) > Number(serverWallet))) {
                   syncPayload[`chronex_wallet_${uEmail}`] = localWallet;
                   data[`chronex_wallet_${uEmail}`] = localWallet;
                   needsSync = true;
@@ -488,13 +488,25 @@ export const ShopProvider = ({ children }) => {
                   needsSync = true;
                 }
 
-                // Check referrals list
+                // Check referrals list (merge local mock and server-registered referrals)
                 const localRefs = localStorage.getItem(`chronex_referrals_${uEmail}`);
                 const serverRefs = data[`chronex_referrals_${uEmail}`];
-                if (localRefs && !serverRefs) {
-                  syncPayload[`chronex_referrals_${uEmail}`] = localRefs;
-                  data[`chronex_referrals_${uEmail}`] = localRefs;
-                  needsSync = true;
+                if (localRefs) {
+                  try {
+                    const parsedLocal = JSON.parse(localRefs);
+                    const parsedServer = typeof serverRefs === "string" ? JSON.parse(serverRefs) : (serverRefs || []);
+                    if (Array.isArray(parsedLocal) && Array.isArray(parsedServer)) {
+                      const missingInServer = parsedLocal.filter(lr => !parsedServer.some(sr => sr.email === lr.email));
+                      if (missingInServer.length > 0) {
+                        const merged = [...parsedServer, ...missingInServer];
+                        syncPayload[`chronex_referrals_${uEmail}`] = merged;
+                        data[`chronex_referrals_${uEmail}`] = merged;
+                        needsSync = true;
+                      }
+                    }
+                  } catch (e) {}
+                } else if (serverRefs) {
+                  data[`chronex_referrals_${uEmail}`] = serverRefs;
                 }
 
                 // Check referral earnings
@@ -953,9 +965,14 @@ export const ShopProvider = ({ children }) => {
           const savedWallet = localStorage.getItem(`chronex_wallet_${user.email}`) || "0";
           setWalletBalance(Number(savedWallet));
           
-          // Load referral data
-          const savedRefCode = localStorage.getItem(`chronex_ref_code_${user.email}`);
-          if (savedRefCode) setReferralCode(savedRefCode);
+          // Load referral data from the users database list or local storage
+          const usersListLocal = JSON.parse(localStorage.getItem("chronex_users") || "[]");
+          const dbUser = usersListLocal.find(u => u.email === user.email);
+          const savedRefCode = dbUser?.referralCode || localStorage.getItem(`chronex_ref_code_${user.email}`);
+          if (savedRefCode) {
+            setReferralCode(savedRefCode);
+            localStorage.setItem(`chronex_ref_code_${user.email}`, savedRefCode);
+          }
           
           const savedReferrals = localStorage.getItem(`chronex_referrals_${user.email}`);
           if (savedReferrals) setReferrals(JSON.parse(savedReferrals));
@@ -1492,6 +1509,16 @@ Please let me know how to proceed.`;
     // Load points
     const savedPoints = localStorage.getItem(`chronex_points_${email}`) || "250";
     setLoyaltyPoints(Number(savedPoints));
+
+    // Load referral code from user object or local storage
+    if (user.referralCode) {
+      setReferralCode(user.referralCode);
+      localStorage.setItem(`chronex_ref_code_${email}`, user.referralCode);
+    } else {
+      const savedRefCode = localStorage.getItem(`chronex_ref_code_${email}`);
+      if (savedRefCode) setReferralCode(savedRefCode);
+      else setReferralCode(null);
+    }
     return { success: true, user };
   };
 
@@ -1688,6 +1715,14 @@ Please let me know how to proceed.`;
           const code = `CHX-${currentUser.name.substring(0, 4).toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
           setReferralCode(code);
           localStorage.setItem(`chronex_ref_code_${currentUser.email}`, code);
+
+          // Update the global users database so the referral code is available to other clients
+          const users = JSON.parse(localStorage.getItem("chronex_users") || "[]");
+          const updatedUsers = users.map(u => 
+            u.email === currentUser.email ? { ...u, referralCode: code } : u
+          );
+          setUsersList(updatedUsers);
+          saveToDb("chronex_users", JSON.stringify(updatedUsers));
         },
         applyReferral: (friendEmail) => {
           if (!currentUser || !referralCode) return;
