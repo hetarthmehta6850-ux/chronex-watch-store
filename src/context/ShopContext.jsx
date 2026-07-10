@@ -505,6 +505,33 @@ export const ShopProvider = ({ children }) => {
                   data[`chronex_ref_earnings_${uEmail}`] = localEarnings;
                   needsSync = true;
                 }
+
+                // Hydrate React states with the latest synced profile details in-memory
+                const finalPoints = data[`chronex_points_${uEmail}`] || localPoints || "250";
+                setLoyaltyPoints(Number(finalPoints));
+
+                const finalWallet = data[`chronex_wallet_${uEmail}`] || localWallet || "0";
+                setWalletBalance(Number(finalWallet));
+
+                const finalRefCode = data[`chronex_ref_code_${uEmail}`] || localStorage.getItem(`chronex_ref_code_${uEmail}`);
+                if (finalRefCode) setReferralCode(finalRefCode);
+
+                const finalReferrals = data[`chronex_referrals_${uEmail}`] || localStorage.getItem(`chronex_referrals_${uEmail}`);
+                if (finalReferrals) {
+                  try {
+                    setReferrals(typeof finalReferrals === "string" ? JSON.parse(finalReferrals) : finalReferrals);
+                  } catch (e) {}
+                }
+
+                const finalEarnings = data[`chronex_ref_earnings_${uEmail}`] || localEarnings || "0";
+                setReferralEarnings(Number(finalEarnings));
+
+                const finalSub = data[`chronex_sub_${uEmail}`] || localStorage.getItem(`chronex_sub_${uEmail}`);
+                if (finalSub) {
+                  try {
+                    setSubscription(typeof finalSub === "string" ? JSON.parse(finalSub) : finalSub);
+                  } catch (e) {}
+                }
               }
             } catch (e) {}
           }
@@ -1443,8 +1470,9 @@ Please let me know how to proceed.`;
   };
 
   const login = (email, password) => {
-    // Basic verification simulation. Any valid-looking email is accepted for demo
-    if (!email.includes("@")) return { success: false, message: "Invalid email" };
+    // Validate email format strictly (e.g., must contain a domain extension like .com)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) return { success: false, message: "Please enter a valid email address (e.g. name@example.com)" };
     
     // Check if users database exists in storage
     const users = JSON.parse(localStorage.getItem("chronex_users") || "[]");
@@ -1467,8 +1495,10 @@ Please let me know how to proceed.`;
     return { success: true, user };
   };
 
-  const register = (name, email, password) => {
-    if (!email.includes("@") || !name) return { success: false, message: "Invalid fields" };
+  const register = (name, email, password, appliedRefCode) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email) || !name) return { success: false, message: "Invalid fields or email format" };
+    
     const users = JSON.parse(localStorage.getItem("chronex_users") || "[]");
     if (users.find(u => u.email === email)) return { success: false, message: "Email already exists" };
 
@@ -1480,6 +1510,50 @@ Please let me know how to proceed.`;
     setCurrentUser(user);
     localStorage.setItem("chronex_current_user", JSON.stringify(user));
     setLoyaltyPoints(250); // Welcome bonus points
+    localStorage.setItem(`chronex_points_${email}`, "250");
+    localStorage.setItem(`chronex_wallet_${email}`, "0");
+
+    // Process referral code if entered
+    if (appliedRefCode) {
+      let parsedRefCode = appliedRefCode.trim();
+      if (parsedRefCode.includes("ref=")) {
+        const parts = parsedRefCode.split("ref=");
+        parsedRefCode = parts[parts.length - 1];
+      }
+
+      // Find user who owns this referral code
+      const referrer = users.find(u => {
+        const uCode = localStorage.getItem(`chronex_ref_code_${u.email}`);
+        return uCode === parsedRefCode;
+      });
+
+      if (referrer) {
+        // Add new user to referrer's list of referrals
+        const refKey = `chronex_referrals_${referrer.email}`;
+        const currentRefs = JSON.parse(localStorage.getItem(refKey) || "[]");
+        if (!currentRefs.some(r => r.email === email)) {
+          const updatedRefs = [...currentRefs, { email: email, date: new Date().toLocaleDateString("en-IN"), status: "Completed" }];
+          
+          // Increment referrer's earnings
+          const earnKey = `chronex_ref_earnings_${referrer.email}`;
+          const currentEarnings = Number(localStorage.getItem(earnKey) || "0");
+          const newEarnings = currentEarnings + 500;
+
+          // Increment referrer's wallet balance
+          const walletKey = `chronex_wallet_${referrer.email}`;
+          const currentWallet = Number(localStorage.getItem(walletKey) || "0");
+          const newWallet = currentWallet + 500;
+
+          // Sync payload to db
+          const payload = {};
+          payload[refKey] = updatedRefs;
+          payload[earnKey] = String(newEarnings);
+          payload[walletKey] = String(newWallet);
+          saveMultipleToDb(payload);
+        }
+      }
+    }
+
     return { success: true, user };
   };
 
@@ -1619,11 +1693,19 @@ Please let me know how to proceed.`;
           if (!currentUser || !referralCode) return;
           const newReferrals = [...referrals, { email: friendEmail, date: new Date().toLocaleDateString("en-IN"), status: "Completed" }];
           setReferrals(newReferrals);
-          localStorage.setItem(`chronex_referrals_${currentUser.email}`, JSON.stringify(newReferrals));
           
           const newEarnings = referralEarnings + 500;
           setReferralEarnings(newEarnings);
-          localStorage.setItem(`chronex_ref_earnings_${currentUser.email}`, String(newEarnings));
+
+          const newWalletBalance = walletBalance + 500;
+          setWalletBalance(newWalletBalance);
+
+          // Save updates to local storage and sync to the backend database
+          const payload = {};
+          payload[`chronex_referrals_${currentUser.email}`] = newReferrals;
+          payload[`chronex_ref_earnings_${currentUser.email}`] = String(newEarnings);
+          payload[`chronex_wallet_${currentUser.email}`] = String(newWalletBalance);
+          saveMultipleToDb(payload);
         },
         cancelSubscription: () => {
           if (!currentUser || !subscription) return;

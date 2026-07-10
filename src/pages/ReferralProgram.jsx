@@ -12,7 +12,7 @@ const ReferralProgram = () => {
 
   const handleCopy = () => {
     if (referralCode) {
-      navigator.clipboard.writeText(`https://chronex.in/register?ref=${referralCode}`);
+      navigator.clipboard.writeText(`ref=${referralCode}`);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -21,7 +21,20 @@ const ReferralProgram = () => {
   const handleMockReferral = (e) => {
     e.preventDefault();
     if (mockEmail) {
-      applyReferral(mockEmail);
+      // Parse the input to be flexible (supporting full link, ref=code, or just code)
+      let parsedValue = mockEmail.trim();
+      if (parsedValue.includes("ref=")) {
+        const parts = parsedValue.split("ref=");
+        parsedValue = parts[parts.length - 1];
+      }
+      
+      // If the user inputs their own code, automatically generate a mock friend registration
+      if (parsedValue === referralCode) {
+        const randomFriend = `friend.${Math.floor(1000 + Math.random() * 9000)}@gmail.com`;
+        applyReferral(randomFriend);
+      } else {
+        applyReferral(parsedValue);
+      }
       setMockEmail("");
     }
   };
@@ -81,7 +94,7 @@ const ReferralProgram = () => {
             <div className="space-y-6">
               <div className={`flex items-center p-4 rounded-xl border ${theme === 'light' ? 'bg-neutral-50 border-neutral-200' : 'bg-neutral-950 border-neutral-800'}`}>
                 <div className="flex-grow truncate text-neutral-300 font-mono text-sm px-4">
-                  https://chronex.in/register?ref={referralCode}
+                  ref={referralCode}
                 </div>
                 <button
                   onClick={handleCopy}
@@ -170,8 +183,8 @@ const ReferralProgram = () => {
           </h3>
           <form onSubmit={handleMockReferral} className="flex gap-2">
             <input 
-              type="email" 
-              placeholder="Friend's Email" 
+              type="text" 
+              placeholder="Friend's Email or Referral Code" 
               value={mockEmail}
               onChange={(e) => setMockEmail(e.target.value)}
               className="flex-grow bg-neutral-950 border border-neutral-800 rounded-lg px-4 py-2 text-sm text-neutral-100 focus:border-amber-500 outline-none"
@@ -182,7 +195,7 @@ const ReferralProgram = () => {
             </button>
           </form>
           <p className="text-[10px] text-neutral-500 mt-3 leading-relaxed">
-            Use this to test the referral flow. Enter any email and click Simulate. You'll instantly receive ₹500 credit and it will appear in your stats.
+            Use this to test the referral flow. Enter any email or paste a referral code (like `ref=CHX-XXXX-XXXX`) and click Simulate. You'll instantly receive ₹500 credit in your stats and wallet.
           </p>
         </div>
       )}

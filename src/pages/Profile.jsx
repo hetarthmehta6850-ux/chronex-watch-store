@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { Clock, Box, CreditCard, ChevronRight, User, Award, LogOut, Key, Gift, Package, Calendar, RefreshCw, Landmark, QrCode } from "lucide-react";
@@ -62,6 +62,7 @@ const Profile = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [referralCodeInput, setReferralCodeInput] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
   // Tab State
@@ -83,6 +84,16 @@ const Profile = () => {
   const [addrPincode, setAddrPincode] = useState("");
   const [showAddressForm, setShowAddressForm] = useState(false);
 
+  // Check URL query parameters for referral link (e.g., ?ref=CHX-XXXX-XXXX)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const refParam = params.get("ref");
+    if (refParam) {
+      setReferralCodeInput(refParam.startsWith("ref=") ? refParam : `ref=${refParam}`);
+      setAuthMode("register");
+    }
+  }, []);
+
   const getStatusColor = (status) => {
     if (status === "Delivered" || status === "Approved" || status === "Completed" || status === "Accepted") return "text-emerald-400 bg-emerald-950/25 border-emerald-900/30";
     if (status === "Shipped" || status === "Out for Delivery" || status === "In Repair" || status === "Diagnosing") return "text-blue-400 bg-blue-950/25 border-blue-900/30";
@@ -100,11 +111,19 @@ const Profile = () => {
   const handleAuthSubmit = (e) => {
     e.preventDefault();
     setErrorMsg("");
+
+    // Validate email format strictly (e.g., must contain a domain extension like .com)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setErrorMsg("Please enter a valid email address (e.g. name@example.com)");
+      return;
+    }
+
     if (authMode === "login") {
       const res = login(email, password);
       if (!res.success) setErrorMsg(res.message);
     } else {
-      const res = register(name, email, password);
+      const res = register(name, email, password, referralCodeInput);
       if (!res.success) setErrorMsg(res.message);
     }
   };
@@ -187,6 +206,16 @@ const Profile = () => {
                   className="w-full px-4 py-3 bg-neutral-955 border border-neutral-800 rounded-xl text-xs text-neutral-200 placeholder-neutral-700 outline-none focus:border-amber-500 transition-colors"
                 />
               </div>
+              {authMode === "register" && (
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] text-neutral-500 uppercase tracking-widest font-bold">Referral Code (Optional)</label>
+                  <input
+                    type="text" value={referralCodeInput} onChange={(e) => setReferralCodeInput(e.target.value)}
+                    placeholder="e.g. ref=CHX-GAUR-2932"
+                    className="w-full px-4 py-3 bg-neutral-955 border border-neutral-800 rounded-xl text-xs text-neutral-200 placeholder-neutral-700 outline-none focus:border-amber-500 transition-colors"
+                  />
+                </div>
+              )}
 
               <button
                 type="submit"

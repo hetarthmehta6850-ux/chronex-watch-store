@@ -27,7 +27,7 @@ const AdminDashboard = () => {
   // 1. Simulated Auth States
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return localStorage.getItem('chronex_admin_auth') === 'true';
+    return sessionStorage.getItem('chronex_admin_auth') === 'true';
   });
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -166,7 +166,7 @@ const AdminDashboard = () => {
     e.preventDefault();
     if (loginEmail === "admin@chronex.com" && loginPassword === "admin123") {
       setIsAuthenticated(true);
-      localStorage.setItem('chronex_admin_auth', 'true');
+      sessionStorage.setItem('chronex_admin_auth', 'true');
       setLoginError(false);
     } else {
       setLoginError(true);
@@ -556,7 +556,7 @@ const AdminDashboard = () => {
             <button
               onClick={() => {
                 setIsAuthenticated(false);
-                localStorage.removeItem('chronex_admin_auth');
+                sessionStorage.removeItem('chronex_admin_auth');
               }}
               className="px-4 py-2 bg-rose-950/15 hover:bg-rose-950/30 border border-rose-900/40 text-rose-400 text-xs font-bold uppercase tracking-wider rounded-xl transition-all"
             >
