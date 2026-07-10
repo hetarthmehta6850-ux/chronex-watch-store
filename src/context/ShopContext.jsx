@@ -436,6 +436,71 @@ export const ShopProvider = ({ children }) => {
       return defaultShowrooms;
     }
   });
+
+  const [warrantyLedger, setWarrantyLedger] = useState(() => {
+    try {
+      const saved = localStorage.getItem("chronex_warranty_ledger");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {}
+    return [
+      { id: 1, serial: "CHX-DEMO-789", model: "Submariner Date 41", clientName: "Aarav Mehta", expiryDate: "2031-03-12", dateMinted: "2026-06-25" },
+      { id: 2, serial: "CHX-DEMO-123", model: "Speedmaster Professional", clientName: "Diya Sharma", expiryDate: "2031-05-18", dateMinted: "2026-06-26" }
+    ];
+  });
+
+  const [warrantyValidDict, setWarrantyValidDict] = useState(() => {
+    try {
+      const saved = localStorage.getItem("chronex_warranty_valid_dict");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object') return parsed;
+      }
+    } catch (e) {}
+    return {};
+  });
+
+  const mintWarrantyCertificate = (serialNum, watchModel, clientName, expiryDate, brand, purchasedOn) => {
+    const serial = serialNum.toUpperCase().trim();
+    
+    // 1. Add to warranty ledger if not already there
+    const currentLedger = [...warrantyLedger];
+    const existsInLedger = currentLedger.some(w => w.serial.toUpperCase() === serial);
+    
+    let updatedLedger = currentLedger;
+    if (!existsInLedger) {
+      const newCert = {
+        id: `WARR-${Math.floor(100000 + Math.random() * 900000)}`,
+        serial: serial,
+        model: watchModel,
+        clientName: clientName,
+        expiresOn: expiryDate,
+        dateMinted: new Date().toISOString().split('T')[0]
+      };
+      updatedLedger = [newCert, ...currentLedger];
+      setWarrantyLedger(updatedLedger);
+      saveToDb("chronex_warranty_ledger", JSON.stringify(updatedLedger));
+    }
+    
+    // 2. Add to warranty valid dictionary if not already there
+    const currentDict = { ...warrantyValidDict };
+    if (!currentDict[serial]) {
+      currentDict[serial] = {
+        model: watchModel,
+        brand: brand || "Chronex",
+        purchasedOn: purchasedOn || new Date().toISOString().split('T')[0],
+        expiresOn: expiryDate,
+        clientName: clientName,
+        status: "Authentic & Insured",
+        certId: `CERT-${(brand || "CHX").substring(0,3).toUpperCase()}-${Math.floor(10000 + Math.random() * 90000)}`
+      };
+      setWarrantyValidDict(currentDict);
+      saveToDb("chronex_warranty_valid_dict", JSON.stringify(currentDict));
+    }
+  };
+
   const refreshDbData = () => {
     return fetch('/api/data')
       .then(res => res.json())
@@ -722,6 +787,61 @@ export const ShopProvider = ({ children }) => {
             } catch (e) {}
           }
 
+          // Warranty Ledger merging
+          const localLedgerStr = localStorage.getItem("chronex_warranty_ledger");
+          if (localLedgerStr) {
+            try {
+              const localLedger = JSON.parse(localLedgerStr);
+              const serverLedger = data.chronex_warranty_ledger || [];
+              if (Array.isArray(localLedger)) {
+                let mergedLedger = [...serverLedger];
+                let ledgerUpdated = false;
+
+                localLedger.forEach(ll => {
+                  if (!ll || !ll.serial) return;
+                  const idx = mergedLedger.findIndex(sl => sl.serial.toUpperCase() === ll.serial.toUpperCase());
+                  if (idx === -1) {
+                    mergedLedger.push(ll);
+                    ledgerUpdated = true;
+                  }
+                });
+
+                if (ledgerUpdated) {
+                  syncPayload["chronex_warranty_ledger"] = mergedLedger;
+                  data.chronex_warranty_ledger = mergedLedger;
+                  needsSync = true;
+                }
+              }
+            } catch (e) {}
+          }
+
+          // Warranty Valid Dictionary merging
+          const localDictStr = localStorage.getItem("chronex_warranty_valid_dict");
+          if (localDictStr) {
+            try {
+              const localDict = JSON.parse(localDictStr);
+              const serverDict = data.chronex_warranty_valid_dict || {};
+              if (localDict && typeof localDict === 'object') {
+                let mergedDict = { ...serverDict };
+                let dictUpdated = false;
+
+                Object.keys(localDict).forEach(k => {
+                  const key = k.toUpperCase().trim();
+                  if (!mergedDict[key]) {
+                    mergedDict[key] = localDict[k];
+                    dictUpdated = true;
+                  }
+                });
+
+                if (dictUpdated) {
+                  syncPayload["chronex_warranty_valid_dict"] = mergedDict;
+                  data.chronex_warranty_valid_dict = mergedDict;
+                  needsSync = true;
+                }
+              }
+            } catch (e) {}
+          }
+
           if (needsSync) {
             saveMultipleToDb(syncPayload);
           }
@@ -758,6 +878,8 @@ export const ShopProvider = ({ children }) => {
           if (data.chronex_recently_viewed) setRecentlyViewed(data.chronex_recently_viewed);
           if (data.chronex_compare) setCompareList(data.chronex_compare);
           if (data.chronex_coupons) setCoupons(data.chronex_coupons);
+          if (data.chronex_warranty_ledger) setWarrantyLedger(data.chronex_warranty_ledger);
+          if (data.chronex_warranty_valid_dict) setWarrantyValidDict(data.chronex_warranty_valid_dict);
           if (data.chronex_users) {
             setUsersList(data.chronex_users);
             // Self-healing: if the user is logged in locally in browser but missing on the server db (e.g. after a redeploy/restart), automatically re-register them
@@ -1164,8 +1286,10 @@ export const ShopProvider = ({ children }) => {
   };
 
   const addNewsletterSubscriber = (email) => {
-    if (!newsletterSubscribers.includes(email)) {
-      const updated = [...newsletterSubscribers, { email, date: new Date().toISOString() }];
+    const trimmedEmail = email?.trim().toLowerCase();
+    if (!trimmedEmail) return;
+    if (!newsletterSubscribers.some(s => s.email.toLowerCase() === trimmedEmail)) {
+      const updated = [...newsletterSubscribers, { email: trimmedEmail, date: new Date().toISOString() }];
       setNewsletterSubscribers(updated);
       saveToDb("chronex_newsletter", JSON.stringify(updated));
     }
@@ -1731,6 +1855,9 @@ Please let me know how to proceed.`;
         savedAddresses,
         currency,
         showrooms,
+        warrantyLedger,
+        warrantyValidDict,
+        mintWarrantyCertificate,
         setCurrentUser,
         updatePromoBanner,
         formatPrice,

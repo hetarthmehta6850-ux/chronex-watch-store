@@ -1,8 +1,22 @@
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { Phone, MapPin, Clock, ShieldCheck, Award, ArrowRight } from "lucide-react";
+import { ShopContext } from "../context/ShopContext";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { addNewsletterSubscriber } = useContext(ShopContext);
+  const [emailInput, setEmailInput] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (!emailInput || !emailInput.includes("@")) return;
+    addNewsletterSubscriber(emailInput);
+    setEmailInput("");
+    setSubscribed(true);
+    setTimeout(() => setSubscribed(false), 3000);
+  };
 
   return (
     <footer className="bg-[#0a0a0a] text-neutral-400 border-t border-amber-900/30 pt-16 pb-8 relative overflow-hidden">
@@ -90,16 +104,24 @@ const Footer = () => {
             <span className="w-4 h-[1px] bg-amber-500"></span> Newsletter
           </h3>
           <p className="text-xs text-neutral-400 mb-4 leading-relaxed">Subscribe to receive updates on limited editions and exclusive showroom events.</p>
-          <div className="relative group">
+          <form onSubmit={handleSubscribe} className="relative group">
             <input 
               type="email" 
-              placeholder="Your email address" 
-              className="w-full bg-neutral-900 border border-neutral-800 text-sm px-4 py-3 rounded-md outline-none focus:border-amber-500/50 transition-colors group-hover:border-neutral-700 text-white placeholder-neutral-600"
+              placeholder={subscribed ? "Subscribed Successfully!" : "Your email address"} 
+              value={emailInput}
+              onChange={(e) => setEmailInput(e.target.value)}
+              disabled={subscribed}
+              className="w-full bg-neutral-900 border border-neutral-800 text-sm px-4 py-3 pr-12 rounded-md outline-none focus:border-amber-500/50 transition-colors group-hover:border-neutral-700 text-white placeholder-neutral-600 disabled:text-emerald-400 disabled:border-emerald-500/20"
+              required
             />
-            <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-amber-500 hover:bg-amber-400 text-black p-1.5 rounded transition-colors">
+            <button 
+              type="submit" 
+              disabled={subscribed}
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-amber-500 hover:bg-amber-400 disabled:bg-emerald-500/10 disabled:text-emerald-500/30 text-black p-1.5 rounded transition-colors"
+            >
               <ArrowRight size={16} />
             </button>
-          </div>
+          </form>
 
           <div className="mt-8">
             <h3 className="text-xs font-bold tracking-[0.2em] text-neutral-100 uppercase mb-4 font-sans">Socials</h3>

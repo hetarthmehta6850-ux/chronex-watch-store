@@ -21,6 +21,7 @@ const AdminDashboard = () => {
     usersList, updateUserLoyaltyPoints, cancelUserSubscription, removeNewsletterSubscriber,
     tradeInRequests, updateTradeInStatus, returnRequests, updateReturnStatus, processRefund, approveReview, rejectReview, updateProductStock,
     showrooms, addShowroom, updateShowroom, deleteShowroom, resetShowrooms,
+    warrantyLedger, mintWarrantyCertificate,
     refreshDbData
   } = useContext(ShopContext);
 
@@ -120,13 +121,6 @@ const AdminDashboard = () => {
   const [waRecipient, setWaRecipient] = useState("");
   const [waTemplate, setWaTemplate] = useState("order_confirmation");
 
-  const [warrantyLedger, setWarrantyLedger] = useState(() => {
-    const saved = localStorage.getItem("chronex_warranty_ledger");
-    return saved ? JSON.parse(saved) : [
-      { serial: "CHX-DEMO-789", model: "Submariner Date 41", clientName: "Aarav Mehta", expiresOn: "2031-03-12" },
-      { serial: "CHX-DEMO-123", model: "Speedmaster Professional", clientName: "Diya Sharma", expiresOn: "2031-05-18" }
-    ];
-  });
   const [newSerial, setNewSerial] = useState("");
   const [newModel, setNewModel] = useState("");
   const [newClient, setNewClient] = useState("");
@@ -1622,28 +1616,16 @@ const AdminDashboard = () => {
                     onSubmit={(e) => {
                       e.preventDefault();
                       if (!newSerial || !newModel || !newClient) return;
-                      const newCert = {
-                        serial: newSerial.toUpperCase().trim(),
-                        model: newModel,
-                        clientName: newClient,
-                        expiresOn: new Date(Date.now() + 5 * 365 * 24 * 60 * 60 * 1000).toISOString().split("T")[0] // 5 years expiry
-                      };
-                      const updated = [newCert, ...warrantyLedger];
-                      setWarrantyLedger(updated);
-                      localStorage.setItem("chronex_warranty_ledger", JSON.stringify(updated));
+                      const expiryDate = new Date(Date.now() + 5 * 365 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]; // 5 years expiry
                       
-                      // Also inject into general validation dict so customer verification is responsive
-                      const validSerials = JSON.parse(localStorage.getItem("chronex_warranty_valid_dict") || "{}");
-                      validSerials[newSerial.toUpperCase().trim()] = {
-                        model: newModel,
-                        brand: "Chronex Minted",
-                        purchasedOn: new Date().toISOString().split("T")[0],
-                        expiresOn: newCert.expiresOn,
-                        clientName: newClient,
-                        status: "Authentic & Active",
-                        certId: `CERT-MNT-${Math.floor(100000 + Math.random() * 900000)}`
-                      };
-                      localStorage.setItem("chronex_warranty_valid_dict", JSON.stringify(validSerials));
+                      mintWarrantyCertificate(
+                        newSerial.toUpperCase().trim(),
+                        newModel,
+                        newClient,
+                        expiryDate,
+                        "Chronex Minted",
+                        new Date().toISOString().split("T")[0]
+                      );
                       
                       triggerToast("Serial successfully minted into ledger!");
                       setNewSerial("");

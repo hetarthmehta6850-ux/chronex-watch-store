@@ -58,7 +58,7 @@ const getWatchSpecs = (brandName, watchName) => {
 };
 
 const WarrantyPortal = () => {
-  const { orders, currentUser, products } = useContext(ShopContext);
+  const { orders, currentUser, products, mintWarrantyCertificate } = useContext(ShopContext);
   const [serial, setSerial] = useState("");
   const [status, setStatus] = useState("idle"); // idle, searching, found, notfound
   const [certData, setCertData] = useState(null);
@@ -192,6 +192,17 @@ const WarrantyPortal = () => {
           serial: serial.toUpperCase().trim()
         };
         
+        if (mintWarrantyCertificate) {
+          mintWarrantyCertificate(
+            serial.toUpperCase().trim(),
+            match.model,
+            match.clientName || "Valued Chronex Client",
+            match.expiresOn,
+            match.brand,
+            match.purchasedOn
+          );
+        }
+
         setCertData(formattedData);
         setStatus("found");
       } else {
