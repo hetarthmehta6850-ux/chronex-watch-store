@@ -251,8 +251,34 @@ const Profile = () => {
     const currentUserEmail = (currentUser?.email || "").toLowerCase().trim();
     return customerEmail === currentUserEmail && currentUserEmail !== "";
   });
-  const userServices = serviceRequests.filter(s => (currentUser && s.email === currentUser.email) || s.phone === currentUser.phone || s.name?.toLowerCase() === currentUser.name?.toLowerCase());
-  const userAppointments = appointments.filter(a => (currentUser && a.email === currentUser.email) || a.phone === currentUser.phone || a.name?.toLowerCase() === currentUser.name?.toLowerCase());
+  const userServices = serviceRequests.filter(s => {
+    if (!currentUser) return false;
+    if (s.email && s.email.toLowerCase().trim() === currentUser.email.toLowerCase().trim()) return true;
+    if (s.phone && currentUser.phone && s.phone.replace(/[^\d]/g, "") === currentUser.phone.replace(/[^\d]/g, "")) return true;
+    if (s.name && currentUser.name) {
+      const sName = s.name.toLowerCase().trim();
+      const uName = currentUser.name.toLowerCase().trim();
+      const sFirstWord = sName.split(/\s+/)[0];
+      const uFirstWord = uName.split(/\s+/)[0];
+      if (sName === uName) return true;
+      if (sFirstWord.length >= 3 && (uName.includes(sFirstWord) || sName.includes(uFirstWord))) return true;
+    }
+    return false;
+  });
+  const userAppointments = appointments.filter(a => {
+    if (!currentUser) return false;
+    if (a.email && a.email.toLowerCase().trim() === currentUser.email.toLowerCase().trim()) return true;
+    if (a.phone && currentUser.phone && a.phone.replace(/[^\d]/g, "") === currentUser.phone.replace(/[^\d]/g, "")) return true;
+    if (a.name && currentUser.name) {
+      const aName = a.name.toLowerCase().trim();
+      const uName = currentUser.name.toLowerCase().trim();
+      const aFirstWord = aName.split(/\s+/)[0];
+      const uFirstWord = uName.split(/\s+/)[0];
+      if (aName === uName) return true;
+      if (aFirstWord.length >= 3 && (uName.includes(aFirstWord) || aName.includes(uFirstWord))) return true;
+    }
+    return false;
+  });
   const userValuations = tradeInRequests.filter(t => t.email === currentUser.email);
   const userReturns = returnRequests.filter(r => r.email === currentUser.email);
 
