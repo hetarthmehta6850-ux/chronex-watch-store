@@ -4,16 +4,23 @@ import { ShopContext } from "../context/ShopContext";
 import { Wrench, Battery, ShieldAlert, Sparkles, CheckCircle2, MessageSquare } from "lucide-react";
 
 const ServiceCenter = () => {
-  const { addServiceRequest, serviceRequests } = useContext(ShopContext);
+  const { addServiceRequest, serviceRequests, currentUser } = useContext(ShopContext);
 
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [name, setName] = useState(currentUser?.name || "");
+  const [phone, setPhone] = useState(currentUser?.phone || "");
   const [watchBrand, setWatchBrand] = useState("");
   const [watchModel, setWatchModel] = useState("");
   const [serviceType, setServiceType] = useState("Battery Replacement");
   const [issueDescription, setIssueDescription] = useState("");
   const [formSuccess, setFormSuccess] = useState(false);
   const [ticketId, setTicketId] = useState("");
+
+  useEffect(() => {
+    if (currentUser) {
+      if (!name) setName(currentUser.name || "");
+      if (!phone) setPhone(currentUser.phone || "");
+    }
+  }, [currentUser]);
   
   // Guest tracker state
   const [searchTicketId, setSearchTicketId] = useState("");
@@ -56,7 +63,8 @@ const ServiceCenter = () => {
       watchBrand,
       watchModel,
       serviceType,
-      issueDescription
+      issueDescription,
+      email: currentUser?.email || ""
     };
 
     const tId = addServiceRequest(requestData);
@@ -115,9 +123,9 @@ const ServiceCenter = () => {
           
           <form onSubmit={handleTrackTicket} className="flex flex-col sm:flex-row gap-3">
             <input 
-              type="text" required placeholder="Enter ticket number (e.g. SRV-123456)"
+              type="text" required placeholder="Enter ticket number (e.g. TKT-123456)"
               value={searchTicketId} onChange={(e) => setSearchTicketId(e.target.value)}
-              className="flex-grow bg-neutral-950 border border-neutral-850 focus:border-amber-500/60 rounded-xl py-3 px-4 text-xs text-neutral-100 placeholder-neutral-600 focus:outline-none"
+              className="flex-grow bg-neutral-955 border border-neutral-850 focus:border-amber-500/60 rounded-xl py-3 px-4 text-xs text-neutral-100 placeholder-neutral-600 focus:outline-none"
             />
             <button
               type="submit"

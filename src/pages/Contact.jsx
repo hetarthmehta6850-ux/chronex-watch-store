@@ -1,17 +1,24 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { ShopContext } from "../context/ShopContext";
 import { MapPin, Phone, Mail, Clock, CheckCircle2, MessageSquare, Calendar } from "lucide-react";
 
 const Contact = () => {
-  const { addAppointment } = useContext(ShopContext);
+  const { addAppointment, currentUser } = useContext(ShopContext);
 
   // Booking Form State
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [name, setName] = useState(currentUser?.name || "");
+  const [phone, setPhone] = useState(currentUser?.phone || "");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("11:00");
   const [purpose, setPurpose] = useState("Bespoke Buying Consultation");
   const [bookingSuccess, setBookingSuccess] = useState(false);
+
+  useEffect(() => {
+    if (currentUser) {
+      if (!name) setName(currentUser.name || "");
+      if (!phone) setPhone(currentUser.phone || "");
+    }
+  }, [currentUser]);
 
   // General Contact Form State
   const [contactName, setContactName] = useState("");
@@ -27,7 +34,8 @@ const Contact = () => {
       phone,
       date,
       time,
-      purpose
+      purpose,
+      email: currentUser?.email || ""
     };
 
     // 1. Log booking to local database (ShopContext)

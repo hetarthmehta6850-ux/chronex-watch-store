@@ -251,8 +251,8 @@ const Profile = () => {
     const currentUserEmail = (currentUser?.email || "").toLowerCase().trim();
     return customerEmail === currentUserEmail && currentUserEmail !== "";
   });
-  const userServices = serviceRequests.filter(s => s.phone === currentUser.phone || s.name?.toLowerCase() === currentUser.name?.toLowerCase());
-  const userAppointments = appointments.filter(a => a.phone === currentUser.phone || a.name?.toLowerCase() === currentUser.name?.toLowerCase());
+  const userServices = serviceRequests.filter(s => (currentUser && s.email === currentUser.email) || s.phone === currentUser.phone || s.name?.toLowerCase() === currentUser.name?.toLowerCase());
+  const userAppointments = appointments.filter(a => (currentUser && a.email === currentUser.email) || a.phone === currentUser.phone || a.name?.toLowerCase() === currentUser.name?.toLowerCase());
   const userValuations = tradeInRequests.filter(t => t.email === currentUser.email);
   const userReturns = returnRequests.filter(r => r.email === currentUser.email);
 

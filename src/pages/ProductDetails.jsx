@@ -8,7 +8,7 @@ import ThreeViewer from "../components/ThreeViewer";
 
 const ProductDetails = () => {
   const { id } = useParams();
-  const { products, toggleWishlist, wishlist, getWhatsAppLink, addToCart, addAppointment, recentlyViewed, addRecentlyViewed, addReview, toggleCompare, compareList, addRestockAlert, formatPrice } = useContext(ShopContext);
+  const { products, toggleWishlist, wishlist, getWhatsAppLink, addToCart, addAppointment, recentlyViewed, addRecentlyViewed, addReview, toggleCompare, compareList, addRestockAlert, formatPrice, currentUser } = useContext(ShopContext);
   
   const product = products.find((p) => p.id === id);
   const [activeImage, setActiveImage] = useState(() => product?.images?.[0] || "");
@@ -39,8 +39,8 @@ const ProductDetails = () => {
   const [deliveryStatus, setDeliveryStatus] = useState(null); // null, 'local', 'national', 'invalid'
 
   // Booking Form State
-  const [bookingName, setBookingName] = useState("");
-  const [bookingPhone, setBookingPhone] = useState("");
+  const [bookingName, setBookingName] = useState(currentUser?.name || "");
+  const [bookingPhone, setBookingPhone] = useState(currentUser?.phone || "");
   const [bookingDate, setBookingDate] = useState("");
   const [bookingTime, setBookingTime] = useState("11:00");
 
@@ -49,6 +49,13 @@ const ProductDetails = () => {
       addRecentlyViewed(product.id);
     }
   }, [id, addRecentlyViewed, product]);
+
+  useEffect(() => {
+    if (currentUser) {
+      if (!bookingName) setBookingName(currentUser.name || "");
+      if (!bookingPhone) setBookingPhone(currentUser.phone || "");
+    }
+  }, [currentUser]);
 
   if (!product) {
     return (
@@ -93,7 +100,8 @@ const ProductDetails = () => {
       phone: bookingPhone,
       date: bookingDate,
       time: bookingTime,
-      purpose: `Bespoke Viewing: ${product.brand} ${product.name}`
+      purpose: `Bespoke Viewing: ${product.brand} ${product.name}`,
+      email: currentUser?.email || ""
     };
 
     // 1. Log booking to local database (ShopContext)
