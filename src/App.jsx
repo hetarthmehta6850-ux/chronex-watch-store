@@ -92,7 +92,7 @@ function AppContent() {
       {!hideHeaderFooter && <Navbar />}
 
       {/* Primary Route Stage */}
-      <main className={`grow flex flex-col ${!hideHeaderFooter ? (promoBanner?.isVisible ? "pt-[116px] sm:pt-[116px]" : "pt-[76px]") : ""}`}>
+      <main className={`grow flex flex-col ${!hideHeaderFooter ? (promoBanner?.isVisible ? "pt-29 sm:pt-29" : "pt-19") : ""}`}>
         <Suspense fallback={<RouteLoader />}>
           <Routes>
             <Route path="/" element={<Home />} />
