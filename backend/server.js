@@ -12,7 +12,7 @@ app.use(cors());
 // Parse large JSON payloads (in case of large base64 images or logs)
 app.use(express.json({ limit: '50mb' }));
 
-const dbPath = path.join(__dirname, 'db.json');
+
 
 // Parse local .env file manually if it exists to retrieve MONGODB_URI
 try {
@@ -35,21 +35,20 @@ try {
 }
 
 const mongoUri = process.env.MONGODB_URI;
-let dbConnected = false;
-
-if (mongoUri) {
-  console.log("Connecting to MongoDB Atlas...");
-  mongoose.connect(mongoUri)
-    .then(() => {
-      console.log("🚀 Connected to MongoDB Atlas successfully!");
-      dbConnected = true;
-    })
-    .catch(err => {
-      console.error("❌ MongoDB connection error:", err.message);
-    });
-} else {
-  console.log("ℹ️ MONGODB_URI not found in process environment or .env. Running in local file-based database mode (db.json).");
+if (!mongoUri) {
+  console.error("❌ CRITICAL ERROR: MONGODB_URI environment variable is required but not defined! The server will not start.");
+  process.exit(1);
 }
+
+console.log("Connecting to MongoDB Atlas...");
+mongoose.connect(mongoUri)
+  .then(() => {
+    console.log("🚀 Connected to MongoDB Atlas successfully!");
+  })
+  .catch(err => {
+    console.error("❌ MongoDB connection error:", err.message);
+    process.exit(1);
+  });
 
 // Database Schema definition for key-value records
 const StoreRecordSchema = new mongoose.Schema({
@@ -61,70 +60,36 @@ const StoreRecord = mongoose.model('StoreRecord', StoreRecordSchema);
 
 // GET full database
 app.get('/api/data', async (req, res) => {
-  if (mongoUri) {
-    try {
-      // Mongoose automatically queues queries until connected
-      const records = await StoreRecord.find({});
-      const db = {};
-      records.forEach(rec => {
-        db[rec.key] = rec.value;
-      });
-      return res.json(db);
-    } catch (e) {
-      console.error("Error reading from MongoDB:", e);
-      return res.status(500).json({ error: "Database connection failed. Please refresh." });
-    }
+  try {
+    const records = await StoreRecord.find({});
+    const db = {};
+    records.forEach(rec => {
+      db[rec.key] = rec.value;
+    });
+    return res.json(db);
+  } catch (e) {
+    console.error("Error reading from MongoDB:", e);
+    return res.status(500).json({ error: "Database connection failed. Please refresh." });
   }
-
-  // Fallback to local db.json ONLY if MONGODB_URI is not defined
-  if (fs.existsSync(dbPath)) {
-    try {
-      const data = fs.readFileSync(dbPath, 'utf8');
-      return res.json(JSON.parse(data));
-    } catch (e) {
-      console.error("Error reading db.json", e);
-      return res.status(500).json({ error: "Error reading db.json" });
-    }
-  }
-  res.json({});
 });
 
 // POST to update database (Merge strategy)
 app.post('/api/data', async (req, res) => {
   const newData = req.body;
-
-  if (mongoUri) {
-    try {
-      const keys = Object.keys(newData);
-      const promises = keys.map(key => {
-        return StoreRecord.findOneAndUpdate(
-          { key: key },
-          { key: key, value: newData[key] },
-          { upsert: true, new: true }
-        );
-      });
-      await Promise.all(promises);
-      return res.json({ success: true, dbType: "mongodb", timestamp: Date.now() });
-    } catch (e) {
-      console.error("Error writing to MongoDB:", e);
-      return res.status(500).json({ error: "Database write failed. Please try again." });
-    }
-  }
-
-  // Fallback to local db.json ONLY if MONGODB_URI is not defined
   try {
-    let db = {};
-    if (fs.existsSync(dbPath)) {
-      try {
-        db = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
-      } catch (e) {}
-    }
-    const updatedDb = { ...db, ...newData };
-    fs.writeFileSync(dbPath, JSON.stringify(updatedDb, null, 2));
-    res.json({ success: true, dbType: "file", timestamp: Date.now() });
+    const keys = Object.keys(newData);
+    const promises = keys.map(key => {
+      return StoreRecord.findOneAndUpdate(
+        { key: key },
+        { key: key, value: newData[key] },
+        { upsert: true, new: true }
+      );
+    });
+    await Promise.all(promises);
+    return res.json({ success: true, dbType: "mongodb", timestamp: Date.now() });
   } catch (e) {
-    console.error("Error writing to db.json", e);
-    res.status(500).json({ error: "Error writing to database" });
+    console.error("Error writing to MongoDB:", e);
+    return res.status(500).json({ error: "Database write failed. Please try again." });
   }
 });
 
