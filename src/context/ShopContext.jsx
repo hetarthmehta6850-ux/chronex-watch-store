@@ -849,6 +849,29 @@ export const ShopProvider = ({ children }) => {
             } catch (e) {}
           }
 
+          // Sync any missing custom keys starting with chronex_ from localStorage to the server database
+          Object.keys(localStorage).forEach(key => {
+            if (key.startsWith("chronex_")) {
+              // Skip large arrays that are merged separately
+              if (["chronex_products", "chronex_orders", "chronex_users", "chronex_services", "chronex_appointments", "chronex_newsletter", "chronex_recently_viewed", "chronex_compare", "chronex_tradeins", "chronex_returns"].includes(key)) {
+                return;
+              }
+              if (data[key] === undefined) {
+                const val = localStorage.getItem(key);
+                if (val !== null) {
+                  try {
+                    // Try to parse if it is JSON, otherwise send as string
+                    syncPayload[key] = JSON.parse(val);
+                  } catch (e) {
+                    syncPayload[key] = val;
+                  }
+                  data[key] = syncPayload[key];
+                  needsSync = true;
+                }
+              }
+            }
+          });
+
           // Newsletter Subscribers merging
           const localNewsStr = localStorage.getItem("chronex_newsletter");
           if (localNewsStr) {
