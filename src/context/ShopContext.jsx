@@ -1004,6 +1004,8 @@ export const ShopProvider = ({ children }) => {
 
   useEffect(() => {
     refreshDbData();
+    const interval = setInterval(refreshDbData, 5000);
+    return () => clearInterval(interval);
   }, []);
 
 
@@ -1845,20 +1847,44 @@ Please let me know how to proceed.`;
       const referrer = users.find(u => u.referralCode === parsedRefCode || localStorage.getItem(`chronex_ref_code_${u.email}`) === parsedRefCode);
 
       if (referrer) {
+        // Prevent self-referral
+        if (referrer.email.toLowerCase() === email.toLowerCase()) {
+          return { success: true, user };
+        }
+
         // Add new user to referrer's list of referrals
         const refKey = `chronex_referrals_${referrer.email}`;
-        const currentRefs = JSON.parse(localStorage.getItem(refKey) || "[]");
-        if (!currentRefs.some(r => r.email === email)) {
+        let currentRefs = [];
+        if (dbData && dbData[refKey]) {
+          currentRefs = typeof dbData[refKey] === "string" ? JSON.parse(dbData[refKey]) : dbData[refKey];
+        } else {
+          const localRefs = localStorage.getItem(refKey);
+          if (localRefs) {
+            try { currentRefs = JSON.parse(localRefs); } catch (e) {}
+          }
+        }
+
+        if (Array.isArray(currentRefs) && !currentRefs.some(r => r.email === email)) {
           const updatedRefs = [...currentRefs, { email: email, date: new Date().toLocaleDateString("en-IN"), status: "Completed" }];
           
           // Increment referrer's earnings
           const earnKey = `chronex_ref_earnings_${referrer.email}`;
-          const currentEarnings = Number(localStorage.getItem(earnKey) || "0");
+          let currentEarnings = 0;
+          if (dbData && dbData[earnKey] !== undefined) {
+            currentEarnings = Number(dbData[earnKey]);
+          } else {
+            currentEarnings = Number(localStorage.getItem(earnKey) || "0");
+          }
           const newEarnings = currentEarnings + 500;
 
           // Increment referrer's wallet balance
           const walletKey = `chronex_wallet_${referrer.email}`;
-          const currentWallet = Number(localStorage.getItem(walletKey) || "0");
+          let currentWallet = 0;
+          if (dbData && dbData[walletKey] !== undefined) {
+            currentWallet = Number(dbData[walletKey]);
+          } else {
+            currentWallet = Number(localStorage.getItem(walletKey) || "0");
+          }
           const newWallet = currentWallet + 500;
 
           // Sync payload to db
