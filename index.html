@@ -12,6 +12,20 @@
     <link rel="apple-touch-icon" href="/favicon.png?v=3" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#d4af37" />
+    <script>
+      // Automatically reload the page when a Vite chunk preload fails (e.g. after a redeploy)
+      window.addEventListener('vite:preloadError', (event) => {
+        console.warn('Vite preload error detected. Reloading page...');
+        window.location.reload();
+      });
+      // Fallback for general chunk fetch errors
+      window.addEventListener('error', (event) => {
+        if (event.message && (event.message.includes('dynamically imported module') || event.message.includes('Failed to fetch'))) {
+          console.warn('Chunk fetch error detected. Reloading page...');
+          window.location.reload();
+        }
+      }, true);
+    </script>
   </head>
   <body class="bg-neutral-950 text-neutral-100 antialiased selection:bg-amber-500/20 selection:text-amber-500">
     <div id="root"></div>
