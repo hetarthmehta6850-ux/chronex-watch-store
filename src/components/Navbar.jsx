@@ -70,6 +70,7 @@ const Navbar = () => {
 
   const handleCheckoutClick = () => {
     setIsCartOpen(false);
+    setIsOpen(false); // Close mobile navigation menu overlay to prevent it from blocking the checkout viewport
     navigate("/checkout");
   };
 
