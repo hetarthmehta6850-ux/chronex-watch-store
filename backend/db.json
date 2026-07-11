@@ -83,6 +83,18 @@
       "name": "admin",
       "email": "admin@chronex.com",
       "role": "admin"
+    },
+    {
+      "name": "Hetarthmehta6850",
+      "email": "hetarthmehta6850@gmail.com",
+      "role": "customer",
+      "referralCode": "CHX-HETA-8678"
+    },
+    {
+      "name": "Gaurav",
+      "email": "gaurav@gmail.com",
+      "role": "customer",
+      "referralCode": "CHX-GAUR-2932"
     }
   ],
   "chronex_orders": [],
