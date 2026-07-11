@@ -61,8 +61,9 @@ const StoreRecord = mongoose.model('StoreRecord', StoreRecordSchema);
 
 // GET full database
 app.get('/api/data', async (req, res) => {
-  if (mongoUri && (dbConnected || mongoose.connection.readyState === 1 || mongoose.connection.readyState === 2)) {
+  if (mongoUri) {
     try {
+      // Mongoose automatically queues queries until connected
       const records = await StoreRecord.find({});
       const db = {};
       records.forEach(rec => {
@@ -70,11 +71,12 @@ app.get('/api/data', async (req, res) => {
       });
       return res.json(db);
     } catch (e) {
-      console.error("Error reading from MongoDB, falling back to local file:", e);
+      console.error("Error reading from MongoDB:", e);
+      return res.status(500).json({ error: "Database connection failed. Please refresh." });
     }
   }
 
-  // Fallback to local db.json
+  // Fallback to local db.json ONLY if MONGODB_URI is not defined
   if (fs.existsSync(dbPath)) {
     try {
       const data = fs.readFileSync(dbPath, 'utf8');
@@ -91,7 +93,7 @@ app.get('/api/data', async (req, res) => {
 app.post('/api/data', async (req, res) => {
   const newData = req.body;
 
-  if (mongoUri && (dbConnected || mongoose.connection.readyState === 1 || mongoose.connection.readyState === 2)) {
+  if (mongoUri) {
     try {
       const keys = Object.keys(newData);
       const promises = keys.map(key => {
@@ -104,11 +106,12 @@ app.post('/api/data', async (req, res) => {
       await Promise.all(promises);
       return res.json({ success: true, dbType: "mongodb", timestamp: Date.now() });
     } catch (e) {
-      console.error("Error writing to MongoDB, falling back to local file:", e);
+      console.error("Error writing to MongoDB:", e);
+      return res.status(500).json({ error: "Database write failed. Please try again." });
     }
   }
 
-  // Fallback to local db.json
+  // Fallback to local db.json ONLY if MONGODB_URI is not defined
   try {
     let db = {};
     if (fs.existsSync(dbPath)) {
