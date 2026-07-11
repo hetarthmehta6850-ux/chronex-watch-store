@@ -65,7 +65,6 @@ const Navbar = () => {
     { name: "Showroom Locator", path: "/showroom-locator" },
     { name: t("serviceLab") || "Service Lab", path: "/service" },
     { name: t("navMagazine") || "Magazine", path: "/blog" },
-    { name: "Admin Panel", path: "/admin?new_session=true" },
   ];
 
   const handleCheckoutClick = () => {
@@ -276,24 +275,12 @@ const Navbar = () => {
         <div className={`flex flex-col gap-5 border-t pt-6 ${
           theme === "light" ? "border-neutral-200" : "border-neutral-900"
         }`}>
-          <div className={`flex items-center gap-3 ${
-            theme === "light" ? "text-neutral-600" : "text-neutral-450"
-          }`}>
-            <Truck size={16} className={theme === "light" ? "text-amber-600" : "text-amber-500"} />
-            <span className="text-xs tracking-widest uppercase">Free Insured Shipping Across India</span>
-          </div>
-          <div className={`flex items-center gap-3 ${
-            theme === "light" ? "text-neutral-600" : "text-neutral-450"
-          }`}>
-            <MapPin size={16} className={theme === "light" ? "text-amber-600" : "text-amber-500"} />
-            <span className="text-xs tracking-wide">Alkapuri, Vadodara, Gujarat</span>
-          </div>
           <a
             href="tel:+918320606850"
             className={`flex items-center justify-center gap-2 w-full py-3 text-xs uppercase tracking-widest rounded-lg transition-colors border font-semibold ${
               theme === "light"
                 ? "bg-neutral-900 hover:bg-neutral-800 text-white border-neutral-950"
-                : "bg-neutral-900 hover:bg-neutral-800 text-white border-neutral-800"
+                : "bg-neutral-950 hover:bg-neutral-800 text-white border-neutral-800"
             }`}
           >
             Call Boutique
