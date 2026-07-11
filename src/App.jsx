@@ -15,34 +15,54 @@ import Chatbot from "./components/Chatbot";
 
 // Pages (Home is loaded eagerly for instant LCP)
 import Home from "./pages/Home";
-const Products = lazy(() => import("./pages/Products"));
-const ProductDetails = lazy(() => import("./pages/ProductDetails"));
-const ServiceCenter = lazy(() => import("./pages/ServiceCenter"));
-const GiftFinder = lazy(() => import("./pages/GiftFinder"));
-const About = lazy(() => import("./pages/About"));
-const Contact = lazy(() => import("./pages/Contact"));
-const Wishlist = lazy(() => import("./pages/Wishlist"));
-const Checkout = lazy(() => import("./pages/Checkout"));
-const OrderSuccess = lazy(() => import("./pages/OrderSuccess"));
-const Profile = lazy(() => import("./pages/Profile"));
-const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
-const Invoice = lazy(() => import("./pages/Invoice"));
-const Compare = lazy(() => import("./pages/Compare"));
-const WatchFinder = lazy(() => import("./pages/WatchFinder"));
-const Brands = lazy(() => import("./pages/Brands"));
-const Blog = lazy(() => import("./pages/Blog"));
-const BlogPost = lazy(() => import("./pages/BlogPost"));
-const FAQ = lazy(() => import("./pages/FAQ"));
-const GiftCards = lazy(() => import("./pages/GiftCards"));
-const AICongierge = lazy(() => import("./pages/AICongierge"));
-const WarrantyPortal = lazy(() => import("./pages/WarrantyPortal"));
-const ShowroomLocator = lazy(() => import("./pages/ShowroomLocator"));
-const Lookbook = lazy(() => import("./pages/Lookbook"));
-const ReferralProgram = lazy(() => import("./pages/ReferralProgram"));
-const SubscriptionBox = lazy(() => import("./pages/SubscriptionBox"));
-const CorporateOrders = lazy(() => import("./pages/CorporateOrders"));
-const TradeIn = lazy(() => import("./pages/TradeIn"));
-const ReturnsExchange = lazy(() => import("./pages/ReturnsExchange"));
+const lazyWithRetry = (componentImport) =>
+  lazy(async () => {
+    const pageHasAlreadyBeenForceRefreshed = JSON.parse(
+      window.sessionStorage.getItem("page-has-been-force-refreshed") || "false"
+    );
+
+    try {
+      const component = await componentImport();
+      window.sessionStorage.setItem("page-has-been-force-refreshed", "false");
+      return component;
+    } catch (error) {
+      if (!pageHasAlreadyBeenForceRefreshed) {
+        window.sessionStorage.setItem("page-has-been-force-refreshed", "true");
+        window.location.reload();
+        return new Promise(() => {});
+      }
+      throw error;
+    }
+  });
+
+const Products = lazyWithRetry(() => import("./pages/Products"));
+const ProductDetails = lazyWithRetry(() => import("./pages/ProductDetails"));
+const ServiceCenter = lazyWithRetry(() => import("./pages/ServiceCenter"));
+const GiftFinder = lazyWithRetry(() => import("./pages/GiftFinder"));
+const About = lazyWithRetry(() => import("./pages/About"));
+const Contact = lazyWithRetry(() => import("./pages/Contact"));
+const Wishlist = lazyWithRetry(() => import("./pages/Wishlist"));
+const Checkout = lazyWithRetry(() => import("./pages/Checkout"));
+const OrderSuccess = lazyWithRetry(() => import("./pages/OrderSuccess"));
+const Profile = lazyWithRetry(() => import("./pages/Profile"));
+const AdminDashboard = lazyWithRetry(() => import("./pages/AdminDashboard"));
+const Invoice = lazyWithRetry(() => import("./pages/Invoice"));
+const Compare = lazyWithRetry(() => import("./pages/Compare"));
+const WatchFinder = lazyWithRetry(() => import("./pages/WatchFinder"));
+const Brands = lazyWithRetry(() => import("./pages/Brands"));
+const Blog = lazyWithRetry(() => import("./pages/Blog"));
+const BlogPost = lazyWithRetry(() => import("./pages/BlogPost"));
+const FAQ = lazyWithRetry(() => import("./pages/FAQ"));
+const GiftCards = lazyWithRetry(() => import("./pages/GiftCards"));
+const AICongierge = lazyWithRetry(() => import("./pages/AICongierge"));
+const WarrantyPortal = lazyWithRetry(() => import("./pages/WarrantyPortal"));
+const ShowroomLocator = lazyWithRetry(() => import("./pages/ShowroomLocator"));
+const Lookbook = lazyWithRetry(() => import("./pages/Lookbook"));
+const ReferralProgram = lazyWithRetry(() => import("./pages/ReferralProgram"));
+const SubscriptionBox = lazyWithRetry(() => import("./pages/SubscriptionBox"));
+const CorporateOrders = lazyWithRetry(() => import("./pages/CorporateOrders"));
+const TradeIn = lazyWithRetry(() => import("./pages/TradeIn"));
+const ReturnsExchange = lazyWithRetry(() => import("./pages/ReturnsExchange"));
 
 const RouteLoader = () => (
   <div className="min-h-[60vh] w-full flex items-center justify-center">
