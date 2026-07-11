@@ -5,11 +5,12 @@ import { ShoppingBag, Truck, ShieldCheck, CheckCircle2, ArrowLeft, Loader2, Land
 import RazorpayModal from "../components/RazorpayModal";
 
 const Checkout = () => {
-  const { cartItems, products, getCartTotal, placeOrder, coupons, giftCards, loyaltyPoints, currentUser } = useContext(ShopContext);
+  const { cartItems, products, getCartTotal, placeOrder, coupons, giftCards, loyaltyPoints, currentUser, walletBalance, deductWalletBalance } = useContext(ShopContext);
   const navigate = useNavigate();
   const [demoOrderId] = useState(() => `order_demo_${Math.floor(100000 + Math.random() * 900000)}`);
 
   const [usePoints, setUsePoints] = useState(false);
+  const [useWallet, setUseWallet] = useState(false);
   const [selectedEmi] = useState(() => {
     return JSON.parse(sessionStorage.getItem("chronex_selected_emi") || "null");
   });
@@ -88,7 +89,13 @@ const Checkout = () => {
     pointsDiscount = Math.min(potentialDiscount, remainingTotal);
   }
 
-  const baseAmount = Math.max(0, cartTotal - couponDiscount - gcDiscount - pointsDiscount);
+  let walletDiscount = 0;
+  if (useWallet && walletBalance > 0) {
+    const remainingTotal = cartTotal - couponDiscount - gcDiscount - pointsDiscount;
+    walletDiscount = Math.min(walletBalance, remainingTotal);
+  }
+
+  const baseAmount = Math.max(0, cartTotal - couponDiscount - gcDiscount - pointsDiscount - walletDiscount);
   const gstAmount = Math.round(baseAmount * 0.18);
   const grandTotal = baseAmount + gstAmount;
 
@@ -193,8 +200,14 @@ const Checkout = () => {
         appliedCoupon?.code,
         appliedGC?.code,
         pointsToRedeem,
-        emiVal
+        emiVal,
+        walletDiscount,
+        grandTotal
       );
+
+      if (useWallet && walletDiscount > 0 && deductWalletBalance) {
+        deductWalletBalance(walletDiscount);
+      }
 
       sessionStorage.removeItem("chronex_selected_emi");
 
@@ -713,6 +726,12 @@ const Checkout = () => {
                   <span>Subtotal</span>
                   <span>₹{cartTotal.toLocaleString("en-IN")}</span>
                 </div>
+                {walletDiscount > 0 && (
+                  <div className="flex justify-between items-center text-emerald-400 font-sans">
+                    <span>Wallet Balance Used</span>
+                    <span>- ₹{walletDiscount.toLocaleString("en-IN")}</span>
+                  </div>
+                )}
                 {couponDiscount > 0 && (
                   <div className="flex justify-between text-amber-500 font-semibold">
                     <span>Coupon Discount ({appliedCoupon.code})</span>
@@ -767,6 +786,21 @@ const Checkout = () => {
                      type="checkbox"
                      checked={usePoints}
                      onChange={(e) => setUsePoints(e.target.checked)}
+                     className="w-4 h-4 rounded border-neutral-800 text-amber-500 focus:ring-amber-500 cursor-pointer"
+                   />
+                 </div>
+               )}
+
+              {currentUser && walletBalance > 0 && (
+                 <div className="mt-3 flex items-center justify-between bg-neutral-950/40 p-4 rounded-xl border border-neutral-900">
+                   <div className="flex flex-col gap-0.5 text-left">
+                     <span className="text-xs font-semibold text-neutral-300">Use Wallet Balance</span>
+                     <span className="text-[10px] text-neutral-500">Available Balance: ₹{walletBalance.toLocaleString("en-IN")}</span>
+                   </div>
+                   <input
+                     type="checkbox"
+                     checked={useWallet}
+                     onChange={(e) => setUseWallet(e.target.checked)}
                      className="w-4 h-4 rounded border-neutral-800 text-amber-500 focus:ring-amber-500 cursor-pointer"
                    />
                  </div>

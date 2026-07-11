@@ -346,7 +346,14 @@ export const ShopProvider = ({ children }) => {
     } catch (e) {}
     return [];
   }); // Stores up to 3 product IDs for comparison
-  const [newsletterSubscribers, setNewsletterSubscribers] = useState([]); // Stores newsletter subscriber emails
+  const [newsletterSubscribers, setNewsletterSubscribers] = useState(() => {
+    try {
+      const saved = localStorage.getItem("chronex_newsletter");
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  }); // Stores newsletter subscriber emails
   
   // New States for Phase 3
   const [coupons, setCoupons] = useState(() => {
@@ -842,6 +849,34 @@ export const ShopProvider = ({ children }) => {
             } catch (e) {}
           }
 
+          // Newsletter Subscribers merging
+          const localNewsStr = localStorage.getItem("chronex_newsletter");
+          if (localNewsStr) {
+            try {
+              const localNews = JSON.parse(localNewsStr);
+              const serverNews = data.chronex_newsletter || [];
+              if (Array.isArray(localNews)) {
+                let mergedNews = [...serverNews];
+                let newsUpdated = false;
+
+                localNews.forEach(ln => {
+                  if (!ln || !ln.email) return;
+                  const idx = mergedNews.findIndex(sn => sn.email.toLowerCase() === ln.email.toLowerCase());
+                  if (idx === -1) {
+                    mergedNews.push(ln);
+                    newsUpdated = true;
+                  }
+                });
+
+                if (newsUpdated) {
+                  syncPayload["chronex_newsletter"] = mergedNews;
+                  data.chronex_newsletter = mergedNews;
+                  needsSync = true;
+                }
+              }
+            } catch (e) {}
+          }
+
           if (needsSync) {
             saveMultipleToDb(syncPayload);
           }
@@ -880,6 +915,7 @@ export const ShopProvider = ({ children }) => {
           if (data.chronex_coupons) setCoupons(data.chronex_coupons);
           if (data.chronex_warranty_ledger) setWarrantyLedger(data.chronex_warranty_ledger);
           if (data.chronex_warranty_valid_dict) setWarrantyValidDict(data.chronex_warranty_valid_dict);
+          if (data.chronex_newsletter) setNewsletterSubscribers(data.chronex_newsletter);
           if (data.chronex_users) {
             setUsersList(data.chronex_users);
             // Self-healing: if the user is logged in locally in browser but missing on the server db (e.g. after a redeploy/restart), automatically re-register them
@@ -1295,7 +1331,7 @@ export const ShopProvider = ({ children }) => {
     }
   };
 
-  const placeOrder = (customerDetails, paymentMethod, paymentDetails) => {
+  const placeOrder = (customerDetails, paymentMethod, paymentDetails, couponCode = null, gcCode = null, pointsToRedeem = 0, emiVal = null, walletDiscount = 0, finalGrandTotal = null) => {
     // eslint-disable-next-line react-hooks/purity
     const orderId = `CHX-${Math.floor(100000 + Math.random() * 900000)}`;
     
@@ -1319,9 +1355,14 @@ export const ShopProvider = ({ children }) => {
       date: new Date().toISOString(),
       customer: customerDetails,
       items: orderedItems,
-      total: getCartTotal(),
+      total: finalGrandTotal !== null ? finalGrandTotal : getCartTotal(),
       paymentMethod,
       paymentDetails,
+      couponApplied: couponCode,
+      giftCardApplied: gcCode,
+      pointsRedeemed: pointsToRedeem,
+      walletDiscount: walletDiscount,
+      emiDetails: emiVal,
       orderStatus: "Processing"
     };
 
@@ -1737,10 +1778,7 @@ Please let me know how to proceed.`;
       }
 
       // Find user who owns this referral code
-      const referrer = users.find(u => {
-        const uCode = localStorage.getItem(`chronex_ref_code_${u.email}`);
-        return uCode === parsedRefCode;
-      });
+      const referrer = users.find(u => u.referralCode === parsedRefCode || localStorage.getItem(`chronex_ref_code_${u.email}`) === parsedRefCode);
 
       if (referrer) {
         // Add new user to referrer's list of referrals
@@ -1769,7 +1807,19 @@ Please let me know how to proceed.`;
       }
     }
 
-    return { success: true, user };
+  const deductWalletBalance = (amount) => {
+    if (!currentUser) return;
+    const newBalance = Math.max(0, walletBalance - amount);
+    setWalletBalance(newBalance);
+    localStorage.setItem(`chronex_wallet_${currentUser.email}`, String(newBalance));
+    
+    // Save updates to database
+    const payload = {};
+    payload[`chronex_wallet_${currentUser.email}`] = String(newBalance);
+    saveMultipleToDb(payload);
+  };
+
+  return { success: true, user };
   };
 
   return (
@@ -1844,6 +1894,7 @@ Please let me know how to proceed.`;
         currentUser,
         loyaltyPoints,
         walletBalance,
+        deductWalletBalance,
         referralCode,
         referrals,
         referralEarnings,
