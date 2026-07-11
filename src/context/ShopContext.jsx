@@ -147,6 +147,9 @@ export const ShopProvider = ({ children }) => {
 
   const saveToDb = (key, data) => {
     localStorage.setItem(key, data);
+    if (["chronex_current_user", "chronex_cart", "chronex_wishlist", "chronex_recently_viewed", "chronex_compare", "chronex_admin_tab"].includes(key)) {
+      return;
+    }
     try {
       const parsedData = JSON.parse(data);
       fetch('/api/data', {
@@ -163,15 +166,20 @@ export const ShopProvider = ({ children }) => {
     }
   };
   const saveMultipleToDb = (payload) => {
+    const syncPayload = {};
     Object.keys(payload).forEach(key => {
       const value = payload[key];
       const strVal = typeof value === 'object' ? JSON.stringify(value) : String(value);
       localStorage.setItem(key, strVal);
+      if (!["chronex_current_user", "chronex_cart", "chronex_wishlist", "chronex_recently_viewed", "chronex_compare", "chronex_admin_tab"].includes(key)) {
+        syncPayload[key] = value;
+      }
     });
+    if (Object.keys(syncPayload).length === 0) return;
     fetch('/api/data', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(syncPayload)
     }).catch(err => console.error("Batch sync failed:", err));
   };
 
@@ -963,8 +971,6 @@ export const ShopProvider = ({ children }) => {
           if (data.chronex_orders) setOrders(data.chronex_orders);
           if (data.chronex_services) setServiceRequests(data.chronex_services);
           if (data.chronex_appointments) setAppointments(data.chronex_appointments);
-          if (data.chronex_recently_viewed) setRecentlyViewed(data.chronex_recently_viewed);
-          if (data.chronex_compare) setCompareList(data.chronex_compare);
           if (data.chronex_coupons) setCoupons(data.chronex_coupons);
           if (data.chronex_warranty_ledger) setWarrantyLedger(data.chronex_warranty_ledger);
           if (data.chronex_warranty_valid_dict) setWarrantyValidDict(data.chronex_warranty_valid_dict);
