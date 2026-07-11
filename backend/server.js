@@ -35,20 +35,19 @@ try {
 }
 
 const mongoUri = process.env.MONGODB_URI;
-if (!mongoUri) {
-  console.error("❌ CRITICAL ERROR: MONGODB_URI environment variable is required but not defined! The server will not start.");
-  process.exit(1);
-}
 
-console.log("Connecting to MongoDB Atlas...");
-mongoose.connect(mongoUri)
-  .then(() => {
-    console.log("🚀 Connected to MongoDB Atlas successfully!");
-  })
-  .catch(err => {
-    console.error("❌ MongoDB connection error:", err.message);
-    process.exit(1);
-  });
+if (!mongoUri) {
+  console.warn("⚠️ WARNING: MONGODB_URI environment variable is not defined! Database requests will fail.");
+} else {
+  console.log("Connecting to MongoDB Atlas...");
+  mongoose.connect(mongoUri)
+    .then(() => {
+      console.log("🚀 Connected to MongoDB Atlas successfully!");
+    })
+    .catch(err => {
+      console.error("❌ MongoDB connection error:", err.message);
+    });
+}
 
 // Database Schema definition for key-value records
 const StoreRecordSchema = new mongoose.Schema({
@@ -60,6 +59,9 @@ const StoreRecord = mongoose.model('StoreRecord', StoreRecordSchema);
 
 // GET full database
 app.get('/api/data', async (req, res) => {
+  if (!mongoUri || mongoose.connection.readyState !== 1) {
+    return res.status(503).json({ error: "Database connection is pending or not configured. Please check MONGODB_URI." });
+  }
   try {
     const records = await StoreRecord.find({});
     const db = {};
@@ -75,6 +77,9 @@ app.get('/api/data', async (req, res) => {
 
 // POST to update database (Merge strategy)
 app.post('/api/data', async (req, res) => {
+  if (!mongoUri || mongoose.connection.readyState !== 1) {
+    return res.status(503).json({ error: "Database connection is pending or not configured. Please check MONGODB_URI." });
+  }
   const newData = req.body;
   try {
     const keys = Object.keys(newData);
