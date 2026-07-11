@@ -65,6 +65,14 @@ const AdminDashboard = () => {
     localStorage.setItem("chronex_admin_tab", activeTab);
   }, [activeTab]);
 
+  // Force authentication login page on every mount (new tab or fresh load) and default to overview tab
+  useEffect(() => {
+    sessionStorage.removeItem('chronex_admin_auth');
+    setIsAuthenticated(false);
+    setActiveTab("overview");
+    localStorage.setItem("chronex_admin_tab", "overview");
+  }, []);
+
   // Sync database data on mount and poll every 15 seconds for real-time order updates
   useEffect(() => {
     refreshDbData();
@@ -162,6 +170,8 @@ const AdminDashboard = () => {
       setIsAuthenticated(true);
       sessionStorage.setItem('chronex_admin_auth', 'true');
       setLoginError(false);
+      setActiveTab("overview");
+      localStorage.setItem("chronex_admin_tab", "overview");
     } else {
       setLoginError(true);
     }
