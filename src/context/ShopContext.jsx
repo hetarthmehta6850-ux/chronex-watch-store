@@ -500,7 +500,6 @@ export const ShopProvider = ({ children }) => {
     const currentLedger = [...warrantyLedger];
     const existsInLedger = currentLedger.some(w => w.serial.toUpperCase() === serial);
     
-    let updatedLedger = currentLedger;
     if (!existsInLedger) {
       const newCert = {
         id: `WARR-${Math.floor(100000 + Math.random() * 900000)}`,
@@ -510,7 +509,7 @@ export const ShopProvider = ({ children }) => {
         expiresOn: expiryDate,
         dateMinted: new Date().toISOString().split('T')[0]
       };
-      updatedLedger = [newCert, ...currentLedger];
+      const updatedLedger = [newCert, ...currentLedger];
       setWarrantyLedger(updatedLedger);
       saveToDb("chronex_warranty_ledger", JSON.stringify(updatedLedger));
     }
@@ -1869,22 +1868,16 @@ Please let me know how to proceed.`;
           
           // Increment referrer's earnings
           const earnKey = `chronex_ref_earnings_${referrer.email}`;
-          let currentEarnings = 0;
-          if (dbData && dbData[earnKey] !== undefined) {
-            currentEarnings = Number(dbData[earnKey]);
-          } else {
-            currentEarnings = Number(localStorage.getItem(earnKey) || "0");
-          }
+          const currentEarnings = dbData && dbData[earnKey] !== undefined
+            ? Number(dbData[earnKey])
+            : Number(localStorage.getItem(earnKey) || "0");
           const newEarnings = currentEarnings + 500;
 
           // Increment referrer's wallet balance
           const walletKey = `chronex_wallet_${referrer.email}`;
-          let currentWallet = 0;
-          if (dbData && dbData[walletKey] !== undefined) {
-            currentWallet = Number(dbData[walletKey]);
-          } else {
-            currentWallet = Number(localStorage.getItem(walletKey) || "0");
-          }
+          const currentWallet = dbData && dbData[walletKey] !== undefined
+            ? Number(dbData[walletKey])
+            : Number(localStorage.getItem(walletKey) || "0");
           const newWallet = currentWallet + 500;
 
           // Sync payload to db

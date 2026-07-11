@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { Wrench, Battery, ShieldAlert, Sparkles, CheckCircle2, MessageSquare } from "lucide-react";
