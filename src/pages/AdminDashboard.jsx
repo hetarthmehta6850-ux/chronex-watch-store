@@ -22,7 +22,8 @@ const AdminDashboard = () => {
     tradeInRequests, updateTradeInStatus, returnRequests, updateReturnStatus, processRefund, approveReview, rejectReview, updateProductStock,
     showrooms, addShowroom, updateShowroom, deleteShowroom, resetShowrooms,
     warrantyLedger, mintWarrantyCertificate,
-    refreshDbData
+    refreshDbData,
+    getGlobalValue
   } = useContext(ShopContext);
 
   // 1. Simulated Auth States
@@ -1978,7 +1979,7 @@ const AdminDashboard = () => {
                             </tr>
                           ) : (
                             filteredCustomers.map((user) => {
-                              const points = Number(localStorage.getItem(`chronex_points_${user.email}`) || "250");
+                              const points = Number(getGlobalValue(`chronex_points_${user.email}`, "250"));
                               const userOrders = orders.filter(o => o.customer && o.customer.email === user.email);
                               const totalSpend = userOrders.reduce((sum, o) => sum + o.total, 0);
                               
@@ -2050,8 +2051,9 @@ const AdminDashboard = () => {
             {/* TAB 14: SUBSCRIPTIONS */}
             {activeTab === "subscriptions" && (() => {
               const allSubscriptions = (usersList || []).map(u => {
-                const savedSub = localStorage.getItem(`chronex_sub_${u.email}`);
-                return savedSub ? { ...JSON.parse(savedSub), user: u } : null;
+                const savedSub = getGlobalValue(`chronex_sub_${u.email}`);
+                const parsedSub = typeof savedSub === "string" ? JSON.parse(savedSub) : savedSub;
+                return parsedSub ? { ...parsedSub, user: u } : null;
               }).filter(Boolean);
 
               const filteredSubs = allSubscriptions.filter(sub => {
@@ -2175,9 +2177,9 @@ const AdminDashboard = () => {
             {/* TAB 15: REFERRALS */}
             {activeTab === "referrals" && (() => {
               const allReferrals = (usersList || []).flatMap(u => {
-                const savedRef = localStorage.getItem(`chronex_referrals_${u.email}`);
-                const code = localStorage.getItem(`chronex_ref_code_${u.email}`) || "Not Generated";
-                const list = savedRef ? JSON.parse(savedRef) : [];
+                const savedRef = getGlobalValue(`chronex_referrals_${u.email}`);
+                const code = getGlobalValue(`chronex_ref_code_${u.email}`, "Not Generated");
+                const list = typeof savedRef === "string" ? JSON.parse(savedRef) : (savedRef || []);
                 return list.map(ref => ({
                   referrer: u,
                   referrerCode: code,
@@ -2196,10 +2198,11 @@ const AdminDashboard = () => {
               });
 
               const uniqueReferrers = (usersList || []).map(u => {
-                const savedRef = localStorage.getItem(`chronex_referrals_${u.email}`);
-                const code = localStorage.getItem(`chronex_ref_code_${u.email}`);
-                const earnings = Number(localStorage.getItem(`chronex_ref_earnings_${u.email}`) || "0");
-                const count = savedRef ? JSON.parse(savedRef).length : 0;
+                const savedRef = getGlobalValue(`chronex_referrals_${u.email}`);
+                const code = getGlobalValue(`chronex_ref_code_${u.email}`);
+                const earnings = Number(getGlobalValue(`chronex_ref_earnings_${u.email}`, "0"));
+                const parsedList = typeof savedRef === "string" ? JSON.parse(savedRef) : (savedRef || []);
+                const count = parsedList.length;
                 return code ? { user: u, code, count, earnings } : null;
               }).filter(Boolean);
 
