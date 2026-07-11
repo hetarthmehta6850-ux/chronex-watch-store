@@ -1807,6 +1807,9 @@ Please let me know how to proceed.`;
       }
     }
 
+    return { success: true, user };
+  };
+
   const deductWalletBalance = (amount) => {
     if (!currentUser) return;
     const newBalance = Math.max(0, walletBalance - amount);
@@ -1817,9 +1820,6 @@ Please let me know how to proceed.`;
     const payload = {};
     payload[`chronex_wallet_${currentUser.email}`] = String(newBalance);
     saveMultipleToDb(payload);
-  };
-
-  return { success: true, user };
   };
 
   return (
