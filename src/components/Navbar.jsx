@@ -65,7 +65,7 @@ const Navbar = () => {
     { name: "Showroom Locator", path: "/showroom-locator" },
     { name: t("serviceLab") || "Service Lab", path: "/service" },
     { name: t("navMagazine") || "Magazine", path: "/blog" },
-    { name: "Admin Panel", path: "/admin" },
+    { name: "Admin Panel", path: "/admin?new_session=true" },
   ];
 
   const handleCheckoutClick = () => {
@@ -255,6 +255,7 @@ const Navbar = () => {
               <Link
                 key={link.name}
                 to={link.path}
+                target={link.path.startsWith("/admin") ? "_blank" : undefined}
                 className={`text-base tracking-widest uppercase border-b pb-3 transition-colors ${
                   theme === "light" 
                     ? "border-neutral-200" 

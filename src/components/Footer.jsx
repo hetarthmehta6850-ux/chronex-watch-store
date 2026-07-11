@@ -196,7 +196,7 @@ const Footer = () => {
             &copy; {currentYear} Chronex Watches Vadodara. All Rights Reserved.
           </p>
           <div className="flex gap-4 text-[10px] transition-colors uppercase tracking-[0.15em]">
-            <Link to="/admin" target="_blank" className="bg-neutral-900/80 border border-amber-900/30 text-amber-500 hover:bg-amber-500 hover:text-black hover:border-amber-500 transition-all px-4 py-2 rounded-full font-bold shadow-lg flex items-center justify-center">
+            <Link to="/admin?new_session=true" target="_blank" className="bg-neutral-900/80 border border-amber-900/30 text-amber-500 hover:bg-amber-500 hover:text-black hover:border-amber-500 transition-all px-4 py-2 rounded-full font-bold shadow-lg flex items-center justify-center">
               Dealer / Admin Login
             </Link>
           </div>

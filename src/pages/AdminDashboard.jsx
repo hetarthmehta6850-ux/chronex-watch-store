@@ -28,6 +28,11 @@ const AdminDashboard = () => {
   // 1. Simulated Auth States
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    const isNewSession = window.location.search.includes('new_session=true');
+    if (isNewSession) {
+      sessionStorage.removeItem('chronex_admin_auth');
+      return false;
+    }
     return sessionStorage.getItem('chronex_admin_auth') === 'true';
   });
   const [loginEmail, setLoginEmail] = useState("");
@@ -58,6 +63,11 @@ const AdminDashboard = () => {
   const [editingShowroomId, setEditingShowroomId] = useState(null);
 
   const [activeTab, setActiveTab] = useState(() => {
+    const isNewSession = window.location.search.includes('new_session=true');
+    if (isNewSession) {
+      localStorage.setItem('chronex_admin_tab', 'overview');
+      return 'overview';
+    }
     return localStorage.getItem("chronex_admin_tab") || "overview";
   });
 
@@ -65,12 +75,13 @@ const AdminDashboard = () => {
     localStorage.setItem("chronex_admin_tab", activeTab);
   }, [activeTab]);
 
-  // Force authentication login page on every mount (new tab or fresh load) and default to overview tab
+  // Clean up new_session query parameter if present on mount
   useEffect(() => {
-    sessionStorage.removeItem('chronex_admin_auth');
-    setIsAuthenticated(false);
-    setActiveTab("overview");
-    localStorage.setItem("chronex_admin_tab", "overview");
+    if (window.location.search.includes('new_session=true')) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('new_session');
+      window.history.replaceState({}, '', url.pathname + url.search);
+    }
   }, []);
 
   // Sync database data on mount and poll every 15 seconds for real-time order updates
