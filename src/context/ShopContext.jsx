@@ -852,8 +852,8 @@ export const ShopProvider = ({ children }) => {
           // Sync any missing custom keys starting with chronex_ from localStorage to the server database
           Object.keys(localStorage).forEach(key => {
             if (key.startsWith("chronex_")) {
-              // Skip large arrays that are merged separately
-              if (["chronex_products", "chronex_orders", "chronex_users", "chronex_services", "chronex_appointments", "chronex_newsletter", "chronex_recently_viewed", "chronex_compare", "chronex_tradeins", "chronex_returns"].includes(key)) {
+              // Skip large arrays and device-specific session states
+              if (["chronex_products", "chronex_orders", "chronex_users", "chronex_services", "chronex_appointments", "chronex_newsletter", "chronex_recently_viewed", "chronex_compare", "chronex_tradeins", "chronex_returns", "chronex_current_user", "chronex_cart", "chronex_wishlist", "chronex_admin_tab"].includes(key)) {
                 return;
               }
               if (data[key] === undefined) {
@@ -906,6 +906,10 @@ export const ShopProvider = ({ children }) => {
 
           // Synchronize localStorage cache
           Object.keys(data).forEach(key => {
+            // NEVER overwrite device-specific / session-specific local keys with global DB state
+            if (["chronex_current_user", "chronex_cart", "chronex_wishlist", "chronex_recently_viewed", "chronex_compare", "chronex_admin_tab"].includes(key)) {
+              return;
+            }
             const value = data[key];
             const strVal = typeof value === 'object' ? JSON.stringify(value) : String(value);
             localStorage.setItem(key, strVal);
