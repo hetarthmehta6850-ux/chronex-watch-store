@@ -406,6 +406,22 @@ export const ShopProvider = ({ children }) => {
     } catch (e) {}
     return [];
   });
+  const [dbData, setDbData] = useState({});
+
+  const getGlobalValue = (key, defaultValue = null) => {
+    if (dbData && dbData[key] !== undefined) {
+      return dbData[key];
+    }
+    const local = localStorage.getItem(key);
+    if (local !== null) {
+      try {
+        return JSON.parse(local);
+      } catch (e) {
+        return local;
+      }
+    }
+    return defaultValue;
+  };
   const [tradeInRequests, setTradeInRequests] = useState(() => {
     try {
       const saved = localStorage.getItem("chronex_tradeins");
@@ -512,6 +528,7 @@ export const ShopProvider = ({ children }) => {
     return fetch('/api/data')
       .then(res => res.json())
       .then(data => {
+        setDbData(data || {});
         if (data && Object.keys(data).length > 0) {
           const syncPayload = {};
           let needsSync = false;
@@ -599,12 +616,17 @@ export const ShopProvider = ({ children }) => {
 
                 const finalRefCode = data[`chronex_ref_code_${uEmail}`] || localStorage.getItem(`chronex_ref_code_${uEmail}`);
                 if (finalRefCode) setReferralCode(finalRefCode);
+                else setReferralCode(null);
 
                 const finalReferrals = data[`chronex_referrals_${uEmail}`] || localStorage.getItem(`chronex_referrals_${uEmail}`);
                 if (finalReferrals) {
                   try {
                     setReferrals(typeof finalReferrals === "string" ? JSON.parse(finalReferrals) : finalReferrals);
-                  } catch (e) {}
+                  } catch (e) {
+                    setReferrals([]);
+                  }
+                } else {
+                  setReferrals([]);
                 }
 
                 const finalEarnings = data[`chronex_ref_earnings_${uEmail}`] || localEarnings || "0";
@@ -614,7 +636,11 @@ export const ShopProvider = ({ children }) => {
                 if (finalSub) {
                   try {
                     setSubscription(typeof finalSub === "string" ? JSON.parse(finalSub) : finalSub);
-                  } catch (e) {}
+                  } catch (e) {
+                    setSubscription(null);
+                  }
+                } else {
+                  setSubscription(null);
                 }
               }
             } catch (e) {}
@@ -1732,6 +1758,11 @@ Please let me know how to proceed.`;
   const logout = () => {
     setCurrentUser(null);
     setLoyaltyPoints(0);
+    setWalletBalance(0);
+    setReferralCode(null);
+    setReferrals([]);
+    setReferralEarnings(0);
+    setSubscription(null);
     localStorage.removeItem("chronex_current_user");
   };
 
@@ -2022,7 +2053,8 @@ Please let me know how to proceed.`;
           const updated = [newInquiry, ...corporateInquiries];
           setCorporateInquiries(updated);
           saveToDb('chronex_corporate_inquiries', JSON.stringify(updated));
-        }
+        },
+        getGlobalValue
       }}
     >
       {children}
