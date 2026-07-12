@@ -65,7 +65,7 @@ app.get('/api/data', async (req, res) => {
   try {
     const records = await StoreRecord.find({});
     const db = {};
-    const leakedKeys = ["chronex_current_user", "chronex_cart", "chronex_wishlist", "chronex_admin_tab"];
+    const leakedKeys = ["chronex_current_user", "chronex_cart", "chronex_wishlist", "chronex_admin_tab", "chronex_compare", "chronex_recently_viewed"];
     records.forEach(rec => {
       if (!leakedKeys.includes(rec.key)) {
         db[rec.key] = rec.value;
@@ -86,7 +86,7 @@ app.post('/api/data', async (req, res) => {
   const newData = req.body;
   try {
     const keys = Object.keys(newData);
-    const leakedKeys = ["chronex_current_user", "chronex_cart", "chronex_wishlist", "chronex_admin_tab"];
+    const leakedKeys = ["chronex_current_user", "chronex_cart", "chronex_wishlist", "chronex_admin_tab", "chronex_compare", "chronex_recently_viewed"];
     const filteredKeys = keys.filter(key => !leakedKeys.includes(key));
 
     const promises = filteredKeys.map(key => {
