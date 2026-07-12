@@ -147,7 +147,7 @@ export const ShopProvider = ({ children }) => {
 
   const saveToDb = (key, data) => {
     localStorage.setItem(key, data);
-    if (["chronex_current_user", "chronex_cart", "chronex_wishlist", "chronex_recently_viewed", "chronex_compare", "chronex_admin_tab"].includes(key)) {
+    if (["chronex_current_user", "chronex_cart", "chronex_wishlist", "chronex_recently_viewed", "chronex_compare", "chronex_admin_tab", "chronex_language", "chronex_theme", "chronex_fontsize", "chronex_contrast"].includes(key)) {
       return;
     }
     try {
@@ -171,7 +171,7 @@ export const ShopProvider = ({ children }) => {
       const value = payload[key];
       const strVal = typeof value === 'object' ? JSON.stringify(value) : String(value);
       localStorage.setItem(key, strVal);
-      if (!["chronex_current_user", "chronex_cart", "chronex_wishlist", "chronex_recently_viewed", "chronex_compare", "chronex_admin_tab"].includes(key)) {
+      if (!["chronex_current_user", "chronex_cart", "chronex_wishlist", "chronex_recently_viewed", "chronex_compare", "chronex_admin_tab", "chronex_language", "chronex_theme", "chronex_fontsize", "chronex_contrast"].includes(key)) {
         syncPayload[key] = value;
       }
     });
@@ -886,7 +886,7 @@ export const ShopProvider = ({ children }) => {
           Object.keys(localStorage).forEach(key => {
             if (key.startsWith("chronex_")) {
               // Skip large arrays and device-specific session states
-              if (["chronex_products", "chronex_orders", "chronex_users", "chronex_services", "chronex_appointments", "chronex_newsletter", "chronex_recently_viewed", "chronex_compare", "chronex_tradeins", "chronex_returns", "chronex_current_user", "chronex_cart", "chronex_wishlist", "chronex_admin_tab"].includes(key)) {
+              if (["chronex_products", "chronex_orders", "chronex_users", "chronex_services", "chronex_appointments", "chronex_newsletter", "chronex_recently_viewed", "chronex_compare", "chronex_tradeins", "chronex_returns", "chronex_current_user", "chronex_cart", "chronex_wishlist", "chronex_admin_tab", "chronex_language", "chronex_theme", "chronex_fontsize", "chronex_contrast"].includes(key)) {
                 return;
               }
               if (data[key] === undefined) {
@@ -940,7 +940,7 @@ export const ShopProvider = ({ children }) => {
           // Synchronize localStorage cache
           Object.keys(data).forEach(key => {
             // NEVER overwrite device-specific / session-specific local keys with global DB state
-            if (["chronex_current_user", "chronex_cart", "chronex_wishlist", "chronex_recently_viewed", "chronex_compare", "chronex_admin_tab"].includes(key)) {
+            if (["chronex_current_user", "chronex_cart", "chronex_wishlist", "chronex_recently_viewed", "chronex_compare", "chronex_admin_tab", "chronex_language", "chronex_theme", "chronex_fontsize", "chronex_contrast"].includes(key)) {
               return;
             }
             const value = data[key];
